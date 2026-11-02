@@ -23,9 +23,15 @@ export function Icon({
 }: {
   name: IconName;
   size?: number;
-  color?: NonNullable<ColorValue>;
+  color?: ColorValue;
 }) {
-  return <Ionicons name={name} size={size} color={color} />;
+  return (
+    <Ionicons
+      name={name}
+      size={size}
+      color={typeof color === 'string' ? color : theme.colors.primary}
+    />
+  );
 }
 export function Button({
   title,
