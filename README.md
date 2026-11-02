@@ -4,7 +4,7 @@
 
 ## 빠른 실행
 
-현재 의존성: Expo SDK **58**, React Native **0.88.0**, React **19.3.0**, TypeScript strict. 정확한 버전은 package-lock.json을 참고하세요.
+현재 의존성: Expo SDK **58**, React Native **0.88.1**, React **19.3.0**, TypeScript strict. 정확한 버전은 package-lock.json을 참고하세요.
 
 ```powershell
 git clone https://github.com/boiledice06/Travel-DNA.git
