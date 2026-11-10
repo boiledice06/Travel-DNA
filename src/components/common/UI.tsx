@@ -129,7 +129,7 @@ export function FadeIn({ children }: React.PropsWithChildren) {
 export function Photo({ uri, style }: { uri: string; style?: StyleProp<ImageStyle> }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [uri]);
-  if (failed)
+  if (failed || !uri)
     return (
       <View
         style={[

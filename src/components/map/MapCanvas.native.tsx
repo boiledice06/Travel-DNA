@@ -34,7 +34,7 @@ const Pin = memo(function Pin({
   onSelect,
 }: {
   place: MapProps['places'][number];
-  score: number;
+  score: number | null;
   selected: boolean;
   onSelect: MapProps['onSelect'];
 }) {
@@ -44,12 +44,12 @@ const Pin = memo(function Pin({
       onPress={() => onSelect(place.id)}
       tracksViewChanges={selected}
       title={place.name}
-      description={`예상 일치도 ${score}점`}
+      description={score === null ? '서버 추천' : `예상 일치도 ${score}점`}
     >
       <View style={[styles.marker, selected && styles.selected]}>
         <Text style={[styles.text, selected && { color: '#fff' }]}>
           {selected ? `${place.name}  ` : ''}
-          {score}
+          {score ?? '추천'}
         </Text>
       </View>
     </Marker>
@@ -104,9 +104,9 @@ export default function MapCanvas({
       >
         {places.map((p) => (
           <Pin
-            key={`${p.id}-${recommendations.find((r) => r.placeId === p.id)?.score ?? 50}-${selectedId === p.id}`}
+            key={`${p.id}-${recommendations.find((r) => r.placeId === p.id)?.score ?? null}-${selectedId === p.id}`}
             place={p}
-            score={recommendations.find((r) => r.placeId === p.id)?.score ?? 50}
+            score={recommendations.find((r) => r.placeId === p.id)?.score ?? null}
             selected={selectedId === p.id}
             onSelect={onSelect}
           />

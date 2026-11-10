@@ -4,12 +4,11 @@ import { Button, Empty, Screen } from '../../components/common/UI';
 import { PlaceCard } from '../../components/place/PlaceCard';
 import { ui } from '../../components/common/ui.styles';
 import { useTravel } from '../../hooks/useTravel';
-import { places } from '../../data/mock/places';
 export default function Saved() {
-  const { data, recommendations, toggleSave } = useTravel();
+  const { data, recommendations, toggleSave, allPlaces } = useTravel();
   const router = useRouter();
   const saved = data.savedIds.flatMap((id) => {
-    const p = places.find((p) => p.id === id);
+    const p = allPlaces.find((p) => p.id === id);
     return p ? [p] : [];
   });
   return (

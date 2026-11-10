@@ -35,7 +35,19 @@ const filters: Attribute[] = [
   'activity',
 ];
 export default function MapHome() {
-  const { data, recommendations, toggleSave, setRegion, dna } = useTravel();
+  const {
+    data,
+    recommendations,
+    toggleSave,
+    setRegion,
+    dna,
+    activePlaces,
+    allPlaces,
+    recommendationOrigin,
+    recommendationStatus,
+    recommendationError,
+    requestRecommendations,
+  } = useTravel();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -46,9 +58,27 @@ export default function MapHome() {
   const [target, setTarget] = useState<MapProps['target']>(null);
   const [expanded, setExpanded] = useState(false);
   const [regionModal, setRegionModal] = useState(false);
+  const [conditionsModal, setConditionsModal] = useState(false);
+  const [budget, setBudget] = useState('');
+  const [availableTime, setAvailableTime] = useState('');
+  const [companions, setCompanions] = useState('');
+  const [purpose, setPurpose] = useState('');
+  const request = () => {
+    setConditionsModal(false);
+    requestRecommendations({
+      region: data.region,
+      ...(budget.trim() && { budget: budget.trim() }),
+      ...(availableTime.trim() && { availableTime: availableTime.trim() }),
+      ...(companions.trim() && { companions: companions.trim() }),
+      ...(purpose.trim() && { purpose: purpose.trim() }),
+    });
+  };
   const [notice, setNotice] = useState('');
   const [locating, setLocating] = useState(false);
-  const regionPlaces = useMemo(() => places.filter((p) => p.region === data.region), [data.region]);
+  const regionPlaces = useMemo(
+    () => (savedOnly ? allPlaces : activePlaces).filter((p) => p.region === data.region),
+    [activePlaces, allPlaces, data.region, savedOnly],
+  );
   const visible = useMemo(
     () =>
       recommendations.flatMap((r) => {
@@ -64,12 +94,15 @@ export default function MapHome() {
   const result = regionPlaces
     .filter((p) => `${p.name} ${p.category} ${p.district}`.includes(query.trim()))
     .slice(0, 5);
-  const select = useCallback((id: string) => {
-    const p = places.find((p) => p.id === id);
-    if (!p) return;
-    setSelected(id);
-    setTarget({ latitude: p.latitude, longitude: p.longitude, token: Date.now() });
-  }, []);
+  const select = useCallback(
+    (id: string) => {
+      const p = regionPlaces.find((p) => p.id === id);
+      if (!p) return;
+      setSelected(id);
+      setTarget({ latitude: p.latitude, longitude: p.longitude, token: Date.now() });
+    },
+    [regionPlaces],
+  );
   useEffect(() => {
     if (!visible.some((p) => p.id === selected)) {
       if (visible[0]) select(visible[0].id);
@@ -133,6 +166,22 @@ export default function MapHome() {
             onPress={() => router.push('/(tabs)/profile')}
           />
         </View>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => setConditionsModal(true)}
+          style={s.search}
+        >
+          <Text style={ui.small}>
+            여행 조건 입력 · 추천 요청 {recommendationStatus === 'loading' ? '(불러오는 중)' : '›'}
+          </Text>
+        </Pressable>
+        {(recommendationStatus === 'error' || recommendationStatus === 'empty') && (
+          <Pressable accessibilityRole="button" onPress={request} style={s.search}>
+            <Text style={ui.small}>
+              {recommendationError ?? '추천 결과가 없습니다.'} · 탭하여 재시도
+            </Text>
+          </Pressable>
+        )}
         <View style={s.search}>
           <Icon name="search-outline" size={20} />
           <TextInput
@@ -245,8 +294,11 @@ export default function MapHome() {
         subtitle={
           visible.length +
           '곳 · ' +
-          (data.demo ? '데모 기록 기반' : dna.evidenceCount + '개 기록 기반') +
-          ' · 예상 일치도'
+          (savedOnly
+            ? '저장된 장소 · 출처는 카드와 상세 참고'
+            : recommendationOrigin === 'api'
+              ? '서버 추천 · 출처는 상세 참고'
+              : '데모 장소 · 규칙 기반 예상 일치도')
         }
         expanded={expanded}
         onExpand={setExpanded}
@@ -259,6 +311,51 @@ export default function MapHome() {
           <Text style={ui.small}>{notice}</Text>
         </View>
       )}
+      <Modal
+        transparent
+        visible={conditionsModal}
+        animationType="slide"
+        onRequestClose={() => setConditionsModal(false)}
+      >
+        <View style={s.scrim}>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={[s.modal, { paddingBottom: insets.bottom + 24 }]}
+          >
+            <Text style={ui.title}>이번 여행 조건</Text>
+            <Text style={ui.body}>
+              지역: {regions[data.region].name} · 다른 조건은 선택 사항입니다.
+            </Text>
+            {(
+              [
+                ['예산', budget, setBudget],
+                ['가용 시간', availableTime, setAvailableTime],
+                ['동행 형태', companions, setCompanions],
+                ['여행 목적', purpose, setPurpose],
+              ] as const
+            ).map(([label, value, change]) => (
+              <TextInput
+                key={label}
+                accessibilityLabel={label}
+                placeholder={label + ' (선택)'}
+                value={value}
+                onChangeText={change}
+                style={s.search}
+              />
+            ))}
+            <Text style={ui.small}>
+              과거 메모의 단어와 취향 점수, 위 조건이 설정된 서버로 전송됩니다. 데모 추천은 추가
+              조건을 반영하지 않습니다.
+            </Text>
+            <Button
+              title="추천 요청"
+              onPress={request}
+              disabled={recommendationStatus === 'loading'}
+            />
+            <Button title="닫기" secondary onPress={() => setConditionsModal(false)} />
+          </ScrollView>
+        </View>
+      </Modal>
       <Modal
         transparent
         visible={regionModal}

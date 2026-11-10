@@ -7,10 +7,19 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { type AppData, type Experience, type RegionId } from '../types';
+import {
+  type AppData,
+  type Experience,
+  type RegionId,
+  type TravelConditions,
+  type RecommendationResponse,
+  type Recommendation,
+} from '../types';
 import { places } from '../data/mock/places';
 import { hasDemoRecords, startProfile } from '../features/onboarding/profile';
 import { calculateDNA } from '../features/travel-dna/calculate';
+import { extractKeywords } from '../features/travel-dna/keywords';
+import { RecommendationClient } from '../services/recommendation/api';
 import { rankPlaces } from '../services/recommendation';
 import { readData, writeData } from '../services/storage';
 import { initialData } from '../services/storage/schema';
@@ -20,7 +29,13 @@ interface TravelContextValue {
   loadError: string | null;
   saveError: string | null;
   dna: ReturnType<typeof calculateDNA>;
-  recommendations: ReturnType<typeof rankPlaces>;
+  recommendations: Recommendation[];
+  allPlaces: typeof places;
+  activePlaces: typeof places;
+  recommendationOrigin: 'demo' | 'api';
+  recommendationStatus: 'idle' | 'loading' | 'error' | 'empty';
+  recommendationError: string | null;
+  requestRecommendations: (conditions: TravelConditions) => void;
   reload: () => void;
   retrySave: () => void;
   start: (nickname: string, demo: boolean) => void;
@@ -72,7 +87,54 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
       });
   }, [data, ready, saveAttempt]);
   const dna = useMemo(() => calculateDNA(data.experiences), [data.experiences]);
-  const recommendations = useMemo(() => rankPlaces(dna, places), [dna]);
+  const demoRecommendations = useMemo(() => rankPlaces(dna, places), [dna]);
+  const [remoteResult, setRemoteResult] = useState<RecommendationResponse | null>(null);
+  const [recommendationStatus, setRecommendationStatus] = useState<
+    'idle' | 'loading' | 'error' | 'empty'
+  >('idle');
+  const [recommendationError, setRecommendationError] = useState<string | null>(null);
+  const requestId = useRef(0);
+  const allPlaces = useMemo(() => {
+    const map = new Map(places.map((p) => [p.id, p]));
+    for (const item of data.savedPlaces) map.set(item.place.id, item.place);
+    for (const p of remoteResult?.places ?? []) map.set(p.id, p);
+    return [...map.values()];
+  }, [data.savedPlaces, remoteResult]);
+  const recommendations = useMemo(() => {
+    const map = new Map<string, Recommendation>(demoRecommendations.map((r) => [r.placeId, r]));
+    for (const item of data.savedPlaces) map.set(item.recommendation.placeId, item.recommendation);
+    for (const r of remoteResult?.recommendations ?? []) map.set(r.placeId, r);
+    return [...map.values()];
+  }, [demoRecommendations, data.savedPlaces, remoteResult]);
+  const requestRecommendations = useCallback(
+    (conditions: TravelConditions) => {
+      const id = ++requestId.current;
+      setRecommendationStatus('loading');
+      setRecommendationError(null);
+      const client = new RecommendationClient(process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL);
+      client
+        .recommend({
+          preferences: dna.preferences,
+          aversions: dna.aversions,
+          keywords: extractKeywords(data.experiences),
+          conditions,
+        })
+        .then((result) => {
+          if (id !== requestId.current) return;
+          setRemoteResult(result);
+          setRecommendationStatus(result.places.length ? 'idle' : 'empty');
+        })
+        .catch((error) => {
+          if (id !== requestId.current) return;
+          setRemoteResult({ places: [], recommendations: [], origin: 'api' });
+          setRecommendationStatus('error');
+          setRecommendationError(
+            error instanceof Error ? error.message : '추천을 불러오지 못했습니다.',
+          );
+        });
+    },
+    [dna, data.experiences],
+  );
   const upsertExperience = useCallback(
     (record: Experience) =>
       setData((d) => ({
@@ -84,14 +146,22 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
     [],
   );
   const toggleSave = useCallback(
-    (id: string) =>
+    (id: string) => {
+      const place = allPlaces.find((p) => p.id === id);
+      const recommendation = recommendations.find((r) => r.placeId === id);
       setData((d) => ({
         ...d,
         savedIds: d.savedIds.includes(id)
           ? d.savedIds.filter((k) => k !== id)
           : [...d.savedIds, id],
-      })),
-    [],
+        savedPlaces: d.savedIds.includes(id)
+          ? d.savedPlaces.filter((item) => item.place.id !== id)
+          : place?.source === 'api' && recommendation
+            ? [...d.savedPlaces.filter((item) => item.place.id !== id), { place, recommendation }]
+            : d.savedPlaces,
+      }));
+    },
+    [allPlaces, recommendations],
   );
   return (
     <Context.Provider
@@ -102,6 +172,12 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
         saveError,
         dna,
         recommendations,
+        allPlaces,
+        activePlaces: remoteResult?.origin === 'api' ? remoteResult.places : places,
+        recommendationOrigin: remoteResult?.origin ?? 'demo',
+        recommendationStatus,
+        recommendationError,
+        requestRecommendations,
         reload: () => setAttempt((n) => n + 1),
         retrySave: () => setSaveAttempt((n) => n + 1),
         start: (nickname, demo) => setData((d) => startProfile(d, nickname, demo)),
@@ -114,7 +190,13 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
             demo: hasDemoRecords(d.experiences.filter((e) => e.id !== id)),
           })),
         toggleSave,
-        setRegion: (region) => setData((d) => ({ ...d, region })),
+        setRegion: (region) => {
+          requestId.current++;
+          setRemoteResult(null);
+          setRecommendationStatus('idle');
+          setRecommendationError(null);
+          setData((d) => ({ ...d, region }));
+        },
       }}
     >
       {children}

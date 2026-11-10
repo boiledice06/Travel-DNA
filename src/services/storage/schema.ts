@@ -1,3 +1,4 @@
+import { validateSavedPlaces } from '../recommendation/api.ts';
 import { ATTRIBUTES, CONFLICTS, type AppData, type Experience } from '../../types/index.ts';
 export const initialData: AppData = {
   version: 1,
@@ -7,6 +8,7 @@ export const initialData: AppData = {
   experiences: [],
   savedIds: [],
   region: 'seoul',
+  savedPlaces: [],
 };
 const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
@@ -46,5 +48,11 @@ export function decodeData(raw: string): AppData {
     throw new Error('저장된 데이터 형식을 확인할 수 없습니다.');
   if (new Set(value.experiences.map((e) => e.id)).size !== value.experiences.length)
     throw new Error('여행 기록 ID가 중복되어 있습니다.');
-  return { ...initialData, ...value, savedIds: [...new Set(value.savedIds)] } as AppData;
+  const savedPlaces = value.savedPlaces === undefined ? [] : validateSavedPlaces(value.savedPlaces);
+  return {
+    ...initialData,
+    ...value,
+    savedPlaces,
+    savedIds: [...new Set(value.savedIds)],
+  } as AppData;
 }

@@ -16,7 +16,10 @@ export interface RecommendationService {
  * Score = round(clamp(50 + 50P - 35C, 0, 100)). No evidence => 50.
  * Sorting ties by ID is deterministic. No popularity or invented reviews.
  */
-export function rankPlaces(dna: TravelDNA, dataset: Place[]): Recommendation[] {
+export function rankPlaces(
+  dna: TravelDNA,
+  dataset: Place[],
+): (Recommendation & { score: number })[] {
   const pTotal = Object.values(dna.preferences).reduce((a, b) => a + b, 0);
   const cTotal = Object.values(dna.aversions).reduce((a, b) => a + b, 0);
   return dataset

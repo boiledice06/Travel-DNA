@@ -104,7 +104,7 @@ export default function MapCanvas({
               }}
             >
               {selected ? `${place.name}  ` : ''}
-              {recommendations.find((r) => r.placeId === place.id)?.score ?? 50}
+              {recommendations.find((r) => r.placeId === place.id)?.score ?? '추천'}
             </Text>
           </Pressable>
         );

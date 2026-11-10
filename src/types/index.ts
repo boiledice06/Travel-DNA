@@ -39,7 +39,9 @@ export interface Place {
   positiveAttributes: Partial<Vector<Attribute>>;
   negativeAttributes: Partial<Vector<Conflict>>;
   reviewKeywords: string[];
-  source: 'curated-demo';
+  source: 'curated-demo' | 'api';
+  sourceName?: string;
+  externalId?: string;
 }
 export interface TravelDNA {
   preferences: Vector<Attribute>;
@@ -49,7 +51,7 @@ export interface TravelDNA {
 }
 export interface Recommendation {
   placeId: string;
-  score: number;
+  score: number | null;
   matchedAttributes: Attribute[];
   conflictingAttributes: Conflict[];
   reason: string;
@@ -62,4 +64,28 @@ export interface AppData {
   experiences: Experience[];
   savedIds: string[];
   region: RegionId;
+  savedPlaces: SavedPlace[];
+}
+
+export interface TravelConditions {
+  region: RegionId;
+  budget?: string;
+  availableTime?: string;
+  companions?: string;
+  purpose?: string;
+}
+export interface RecommendationRequest {
+  preferences: Vector<Attribute>;
+  aversions: Vector<Conflict>;
+  keywords: { positive: string[]; negative: string[] };
+  conditions: TravelConditions;
+}
+export interface RecommendationResponse {
+  places: Place[];
+  recommendations: Recommendation[];
+  origin: 'demo' | 'api';
+}
+export interface SavedPlace {
+  place: Place;
+  recommendation: Recommendation;
 }

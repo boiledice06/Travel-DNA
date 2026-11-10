@@ -42,10 +42,14 @@ export const PlaceCard = memo(function PlaceCard({
           <Text style={ui.small} numberOfLines={compact ? 2 : 3}>
             {recommendation.reason}
           </Text>
-          <Text style={styles.score}>
-            예상 일치도 {recommendation.score}
-            <Text style={{ fontSize: 11, fontWeight: '400' }}> / 100</Text>
-          </Text>
+          {recommendation.score !== null ? (
+            <Text style={styles.score}>
+              예상 일치도 {recommendation.score}
+              <Text style={{ fontSize: 11, fontWeight: '400' }}> / 100</Text>
+            </Text>
+          ) : (
+            <Text style={ui.small}>서버 추천 · {place.sourceName}</Text>
+          )}
         </View>
       </Pressable>
       <IconButton
