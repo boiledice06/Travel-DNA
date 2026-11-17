@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import urllib.error
 import urllib.request
 from typing import Any, Optional, Protocol, Tuple
@@ -24,7 +25,7 @@ FIELD_MASK = ",".join(
     ]
 )
 
-# Seoul City Hall — bias/restriction center
+# Seoul City Hall — search bias center
 SEOUL_CENTER_LAT = 37.5665
 SEOUL_CENTER_LNG = 126.9780
 SEOUL_RADIUS_M = 22000.0
@@ -39,6 +40,15 @@ def places_api_key() -> str:
 
 def places_configured() -> bool:
     return bool(places_api_key())
+
+
+def _has_seoul_address(address: str) -> bool:
+    """Conservatively identify Seoul in Google's Korean or English address."""
+    address = address.strip()
+    return bool(
+        re.match(r"^(?:대한민국\s+)?서울(?:특별시)?(?:\s|,|$)", address)
+        or re.search(r"(?:^|,)\s*Seoul(?:\s+(?:Special|Metropolitan)\s+City)?(?:\s+\d{5})?\s*(?:,|$)", address, re.IGNORECASE)
+    )
 
 
 class PlacesClient(Protocol):
@@ -93,10 +103,8 @@ class GooglePlacesClient:
                     "radius": float(radius),
                 }
             }
-            if strict_location:
-                payload["locationRestriction"] = circle
-            else:
-                payload["locationBias"] = circle
+            # Text Search (New) supports circles only for locationBias.
+            payload["locationBias"] = circle
 
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         req = urllib.request.Request(
@@ -117,11 +125,17 @@ class GooglePlacesClient:
             safe = raw.replace(self.api_key, "[REDACTED]")
             raise RuntimeError(f"Places HTTP {exc.code}: {safe}") from exc
         except urllib.error.URLError as exc:
-            raise RuntimeError(f"Places network error: {exc}") from exc
+            safe = str(exc).replace(self.api_key, "[REDACTED]")
+            raise RuntimeError(f"Places network error: {safe}") from exc
 
         places = data.get("places") or []
         out: list[PlaceCandidate] = []
         for row in places[:max_results]:
+            address = str(row.get("formattedAddress") or "")
+            # A bias is not a boundary. Seoul callers request strict filtering;
+            # unknown addresses are excluded rather than assumed to be in Seoul.
+            if strict_location and not _has_seoul_address(address):
+                continue
             loc = row.get("location") or {}
             display = row.get("displayName") or {}
             name = str(display.get("text") or row.get("name") or "unknown")
@@ -136,7 +150,7 @@ class GooglePlacesClient:
                 PlaceCandidate(
                     name=name,
                     place_id=pid,
-                    address=str(row.get("formattedAddress") or ""),
+                    address=address,
                     lat=loc.get("latitude"),
                     lng=loc.get("longitude"),
                     rating=float(rating) if rating is not None else None,

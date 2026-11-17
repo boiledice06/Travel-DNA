@@ -3,11 +3,14 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import urllib.error
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from typing import Any, Optional, Protocol
 
+from .places_client import _has_seoul_address
 from .schemas import PlaceCandidate
 
 TOUR_BASE = "https://apis.data.go.kr/B551011/KorService2/searchKeyword2"
@@ -55,7 +58,8 @@ class KoreaTourApiClient:
         source_keyword: str = "",
     ) -> list[PlaceCandidate]:
         params = {
-            "serviceKey": self.api_key,
+            # Portal provides encoded and decoded forms; urlencode exactly once.
+            "serviceKey": urllib.parse.unquote(self.api_key),
             "MobileOS": "ETC",
             "MobileApp": "TravelPreferenceMVP",
             "_type": "json",
@@ -69,13 +73,27 @@ class KoreaTourApiClient:
         req = urllib.request.Request(url, method="GET")
         try:
             with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-                data: dict[str, Any] = json.loads(resp.read().decode("utf-8"))
+                raw = resp.read().decode("utf-8-sig")
         except urllib.error.HTTPError as exc:
-            raw = exc.read().decode("utf-8", errors="replace")
-            safe = raw.replace(self.api_key, "[REDACTED]")
-            raise RuntimeError(f"TourAPI HTTP {exc.code}: {safe}") from exc
-        except urllib.error.URLError as exc:
-            raise RuntimeError(f"TourAPI network error: {exc}") from exc
+            raise RuntimeError(f"TourAPI HTTP {exc.code}") from None
+        except urllib.error.URLError:
+            raise RuntimeError("TourAPI network error") from None
+
+        try:
+            data: dict[str, Any] = json.loads(raw)
+        except json.JSONDecodeError:
+            try:
+                root = ET.fromstring(raw)
+                code = root.findtext('.//returnReasonCode') or root.findtext('.//resultCode') or 'unknown'
+            except ET.ParseError:
+                code = 'invalid_response'
+            code = code if re.fullmatch(r"[A-Za-z0-9_-]{1,32}", code) else "invalid_response"
+            raise RuntimeError(f"TourAPI response error: {code}") from None
+        header = (data.get("response") or {}).get("header") or {}
+        code = str(header.get("resultCode") or "")
+        if code not in {"0000", "00"}:
+            safe_code = code if re.fullmatch(r"[A-Za-z0-9_-]{1,32}", code) else "invalid_response"
+            raise RuntimeError(f"TourAPI response error: {safe_code}")
 
         items = (
             ((data.get("response") or {}).get("body") or {}).get("items") or {}
@@ -100,6 +118,10 @@ class KoreaTourApiClient:
                 lng = float(row["mapx"]) if row.get("mapx") else None
             except (TypeError, ValueError):
                 lat, lng = None, None
+            if not content_id or not _has_seoul_address(addr) or lat is None or lng is None:
+                continue
+            if not (37.4 <= lat <= 37.75 and 126.75 <= lng <= 127.2):
+                continue
             out.append(
                 PlaceCandidate(
                     name=name,
@@ -110,11 +132,23 @@ class KoreaTourApiClient:
                     rating=None,
                     user_ratings_total=None,
                     maps_url=None,
+                    image_url=_tour_image_url(row.get("firstimage")),
                     source_keyword=source_keyword or keyword,
                     source="tourapi",
+                    category={"12": "관광지", "14": "문화시설", "15": "축제공연행사", "25": "여행코스", "28": "레포츠", "32": "숙박", "38": "쇼핑", "39": "음식점"}.get(str(row.get("contenttypeid") or "")),
                 )
             )
         return out
+
+
+def _tour_image_url(value: Any) -> Optional[str]:
+    """Accept only official TourAPI image hosts; use HTTPS for web mixed-content safety."""
+    if not isinstance(value, str):
+        return None
+    parsed = urllib.parse.urlsplit(value.strip())
+    if parsed.scheme not in {"http", "https"} or parsed.hostname not in {"tong.visitkorea.or.kr", "cdn.visitkorea.or.kr"} or parsed.username or parsed.password or parsed.port:
+        return None
+    return urllib.parse.urlunsplit(("https", parsed.netloc, parsed.path, parsed.query, ""))
 
 
 def get_tourapi_client() -> Optional[KoreaTourApiClient]:

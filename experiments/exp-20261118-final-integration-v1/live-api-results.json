@@ -1,0 +1,237 @@
+{
+  "/api/trip-profile": {
+    "status": 200,
+    "body": {
+      "id": "fcc323c8e1f2",
+      "city": "서울",
+      "party_size": "2",
+      "companion_type": "friends",
+      "age_band": "skip",
+      "gender": "skip",
+      "duration": "2n3d",
+      "lodging": "none",
+      "lodging_area": null,
+      "transport": "walk_subway",
+      "mobility_preference": "balanced",
+      "budget_level": "mid",
+      "budget_note": null,
+      "time_window": "afternoon",
+      "created_at": "2026-11-17T15:53:24.872038+00:00"
+    }
+  },
+  "/api/dna-chat/start": {
+    "status": 200,
+    "body": {
+      "session_id": "c970e5f17c0d",
+      "phase": "likert",
+      "turn": 0,
+      "assistant_message": "먼저 아래 5문항에 답해 주세요.",
+      "chips": [],
+      "likert_items": [
+        {
+          "id": "ax_authenticity",
+          "statement_ko": "유명 랜드마크보다 골목·로컬 느낌이 더 좋다.",
+          "maps_to": "axes.authenticity",
+          "scale": [
+            {
+              "value": 5,
+              "label_ko": "매우 그렇다"
+            },
+            {
+              "value": 4,
+              "label_ko": "그렇다"
+            },
+            {
+              "value": 3,
+              "label_ko": "보통이다"
+            },
+            {
+              "value": 2,
+              "label_ko": "그렇지 않다"
+            },
+            {
+              "value": 1,
+              "label_ko": "매우 그렇지 않다"
+            }
+          ]
+        },
+        {
+          "id": "ax_energy",
+          "statement_ko": "차분하고 정적인 것보다 활동적인 경험이 더 좋다.",
+          "maps_to": "axes.energy",
+          "scale": [
+            {
+              "value": 5,
+              "label_ko": "매우 그렇다"
+            },
+            {
+              "value": 4,
+              "label_ko": "그렇다"
+            },
+            {
+              "value": 3,
+              "label_ko": "보통이다"
+            },
+            {
+              "value": 2,
+              "label_ko": "그렇지 않다"
+            },
+            {
+              "value": 1,
+              "label_ko": "매우 그렇지 않다"
+            }
+          ]
+        },
+        {
+          "id": "ax_density",
+          "statement_ko": "사람 많고 활기찬 핫플·번화가가 더 좋다.",
+          "maps_to": "axes.density",
+          "scale": [
+            {
+              "value": 5,
+              "label_ko": "매우 그렇다"
+            },
+            {
+              "value": 4,
+              "label_ko": "그렇다"
+            },
+            {
+              "value": 3,
+              "label_ko": "보통이다"
+            },
+            {
+              "value": 2,
+              "label_ko": "그렇지 않다"
+            },
+            {
+              "value": 1,
+              "label_ko": "매우 그렇지 않다"
+            }
+          ]
+        },
+        {
+          "id": "ax_novelty",
+          "statement_ko": "익숙한 활동보다 새롭고 낯선 경험이 더 좋다.",
+          "maps_to": "axes.novelty",
+          "scale": [
+            {
+              "value": 5,
+              "label_ko": "매우 그렇다"
+            },
+            {
+              "value": 4,
+              "label_ko": "그렇다"
+            },
+            {
+              "value": 3,
+              "label_ko": "보통이다"
+            },
+            {
+              "value": 2,
+              "label_ko": "그렇지 않다"
+            },
+            {
+              "value": 1,
+              "label_ko": "매우 그렇지 않다"
+            }
+          ]
+        },
+        {
+          "id": "ax_setting",
+          "statement_ko": "실내·도심보다 야외·자연 쪽 일정이 더 편하다.",
+          "maps_to": "axes.setting",
+          "scale": [
+            {
+              "value": 5,
+              "label_ko": "매우 그렇다"
+            },
+            {
+              "value": 4,
+              "label_ko": "그렇다"
+            },
+            {
+              "value": 3,
+              "label_ko": "보통이다"
+            },
+            {
+              "value": 2,
+              "label_ko": "그렇지 않다"
+            },
+            {
+              "value": 1,
+              "label_ko": "매우 그렇지 않다"
+            }
+          ]
+        }
+      ],
+      "scale_labels": {
+        "5": "매우 그렇다",
+        "4": "그렇다",
+        "3": "보통이다",
+        "2": "그렇지 않다",
+        "1": "매우 그렇지 않다"
+      }
+    }
+  },
+  "/api/dna-chat/likert": {
+    "status": 200,
+    "body": {
+      "session_id": "c970e5f17c0d",
+      "phase": "asking",
+      "turn": 0,
+      "assistant_message": "설문이 고르게 나왔어요. 구체적으로 좋아하는 장소·분위기를 알려 주세요.",
+      "chips": [
+        "골목 카페",
+        "야외 산책",
+        "실내 전시"
+      ],
+      "seed_dna": {
+        "pillars": {
+          "do_play": 0.25,
+          "see_learn": 0.25,
+          "stay_vibe": 0.25,
+          "eat_local": 0.25
+        },
+        "axes": {
+          "authenticity": 0.0,
+          "energy": 0.0,
+          "density": 0.0,
+          "novelty": 0.0,
+          "setting": 0.0
+        },
+        "micro_keywords": []
+      },
+      "draft_dna": {
+        "pillars": {
+          "do_play": 0.25,
+          "see_learn": 0.25,
+          "stay_vibe": 0.25,
+          "eat_local": 0.25
+        },
+        "axes": {
+          "authenticity": 0.0,
+          "energy": 0.0,
+          "density": 0.0,
+          "novelty": 0.0,
+          "setting": 0.0
+        },
+        "micro_keywords": []
+      },
+      "followups": [
+        {
+          "axis_or_pillar": "axes.general",
+          "reason": "all_mid",
+          "suggested_chips": [
+            "골목 카페",
+            "야외 산책",
+            "실내 전시"
+          ]
+        }
+      ]
+    }
+  },
+  "/api/dna-chat/message": {
+    "status": 502,
+    "error": "{\"detail\":\"Gemini HTTP 503\"}"
+  }
+}

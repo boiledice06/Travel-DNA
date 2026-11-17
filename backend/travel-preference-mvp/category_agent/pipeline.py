@@ -12,7 +12,7 @@ from .schemas import (
     NlPipelineResponse,
     TravelDNA,
 )
-from .search.places_client import places_configured
+from .search.kakao_client import places_configured
 from .search.schemas import PlacesSearchRequest, PlacesSearchResponse
 from .search.service import search_places
 
@@ -35,7 +35,7 @@ def run_nl_pipeline(
     if req.city and req.run_places:
         if not places_configured():
             raise RuntimeError(
-                "city provided with run_places=true but GOOGLE_PLACES_API_KEY is not set"
+                "city provided with run_places=true but KAKAO_REST_API_KEY is not set"
             )
         places = search_places(
             PlacesSearchRequest(

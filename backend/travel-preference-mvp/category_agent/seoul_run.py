@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 from .recommend import plan_industries_from_dna
 from .schemas import DEFAULT_TOTAL_SLOTS, IndustryPlanResponse, TravelDNA
-from .search.places_client import places_configured
+from .search.kakao_client import places_configured
 from .search.seoul_find import (
     DEFAULT_SHORTLIST,
     SeoulFindResult,
@@ -99,7 +99,7 @@ def run_seoul_pipeline(
     if req.run_places:
         if places_client is None and not places_configured():
             raise RuntimeError(
-                "Seoul place finding needs GOOGLE_PLACES_API_KEY "
+                "Seoul place finding needs KAKAO_REST_API_KEY "
                 "(TourAPI optional via TOUR_API_KEY)"
             )
         find = find_seoul_places(

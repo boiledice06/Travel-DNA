@@ -30,7 +30,7 @@ export const PlaceCard = memo(function PlaceCard({
         onPress={onOpen}
         style={({ pressed }) => [styles.main, { opacity: pressed ? 0.7 : 1 }]}
       >
-        <Photo uri={place.image} style={styles.photo} />
+        <Photo uri={place.image} category={place.category} style={styles.photo} />
         <View style={{ flex: 1, gap: 6 }}>
           <Text style={styles.category}>
             {orderLabel ? `${orderLabel} · ` : ''}
@@ -46,6 +46,9 @@ export const PlaceCard = memo(function PlaceCard({
             <Text style={ui.small} numberOfLines={1}>
               {place.district}
             </Text>
+          )}
+          {!!place.image && place.source === 'api' && (
+            <Text style={ui.small}>사진: 한국관광공사</Text>
           )}
           {!compact && (
             <Text style={ui.small} numberOfLines={3}>

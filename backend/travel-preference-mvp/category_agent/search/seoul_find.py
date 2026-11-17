@@ -9,8 +9,8 @@ from pydantic import BaseModel, Field
 
 from category_agent.trip_profile import TripProfile
 
-from .places_client import (
-    PlacesClient,
+from .places_client import PlacesClient
+from .kakao_client import (
     get_places_client,
     places_configured,
     seoul_location_circle,
@@ -33,10 +33,14 @@ class SeoulPlaceHit(BaseModel):
     source_keyword: str = ""
     source: str = "places"
     maps_url: Optional[str] = None
+    image_url: Optional[str] = None
     lat: Optional[float] = None
     lng: Optional[float] = None
     score: float = 0.0
     user_ratings_total: Optional[int] = None
+    category: Optional[str] = None
+    sources: list[str] = Field(default_factory=list)
+    source_ids: dict[str, str] = Field(default_factory=dict)
 
 
 class SeoulFindResult(BaseModel):
@@ -52,6 +56,8 @@ class SeoulFindResult(BaseModel):
     tourapi_configured: bool = False
     visitseoul: dict = Field(default_factory=dict)
     raw_hit_count: int = 0
+    source_hit_counts: dict[str, int] = Field(default_factory=dict)
+    merged_hit_count: int = 0
 
 
 def _tokens_free_text(text: Optional[str]) -> list[str]:
@@ -90,31 +96,32 @@ def _geo_close(a: PlaceCandidate, b: PlaceCandidate, *, meters: float = 120.0) -
 
 
 def merge_candidates(rows: list[PlaceCandidate]) -> list[PlaceCandidate]:
-    """Dedupe by place_id, else name+geo proximity."""
+    """Dedupe within sources by ID and across sources by name plus location."""
     kept: list[PlaceCandidate] = []
-    seen_ids: set[str] = set()
     for row in rows:
-        pid = (row.place_id or "").strip()
-        if pid and not pid.startswith("tourapi:"):
-            if pid in seen_ids:
-                continue
-            seen_ids.add(pid)
-            kept.append(row)
-            continue
-        dup = False
-        for k in kept:
-            if _normalize_name(k.name) == _normalize_name(row.name) and (
-                _geo_close(k, row) or (not row.lat and not k.lat)
-            ):
-                # prefer places source / higher rating
-                if (row.rating or 0) > (k.rating or 0) and row.source == "places":
-                    kept[kept.index(k)] = row
-                dup = True
+        pid = row.place_id.strip()
+        for i, prior in enumerate(kept):
+            same_id = bool(pid and row.source == prior.source and pid == prior.place_id)
+            same_name = bool(_normalize_name(row.name) and _normalize_name(row.name) == _normalize_name(prior.name))
+            same_address = bool(row.address and prior.address and _normalize_name(row.address) == _normalize_name(prior.address))
+            if same_id or (same_name and (_geo_close(prior, row) or same_address)):
+                sources = list(dict.fromkeys([*(prior.sources or [prior.source]), *(row.sources or [row.source])]))
+                ids = {**prior.source_ids, **row.source_ids}
+                if prior.place_id:
+                    ids.setdefault(prior.source, prior.place_id)
+                if pid:
+                    ids.setdefault(row.source, pid)
+                kept[i] = prior.model_copy(update={
+                    "sources": sources, "source_ids": ids,
+                    "image_url": prior.image_url or row.image_url,
+                    "category": prior.category or row.category,
+                    "address": prior.address or row.address,
+                    "lat": prior.lat if prior.lat is not None else row.lat,
+                    "lng": prior.lng if prior.lng is not None else row.lng,
+                })
                 break
-        if not dup:
-            if pid:
-                seen_ids.add(pid)
-            kept.append(row)
+        else:
+            kept.append(row.model_copy(update={"sources": row.sources or [row.source], "source_ids": row.source_ids or ({row.source: pid} if pid else {})}))
     return kept
 
 
@@ -129,12 +136,12 @@ def score_candidate(
 
     must_avoid / must_have come from the DNA session (not TripProfile).
     """
-    blob = f"{c.name} {c.address} {c.source_keyword}".lower()
+    blob = f"{c.name} {c.address} {c.source_keyword} {c.category or ''}".lower()
     for tok in _tokens_must_avoid(must_avoid):
         if tok in blob:
             return None, f"must_avoid:{tok}"
 
-    rating = c.rating if c.rating is not None else 3.6
+    rating = c.rating if c.rating is not None else 0.0
     reviews = c.user_ratings_total or 0
     score = rating + min(math.log10(reviews + 1), 2.0) * 0.35
 
@@ -200,6 +207,16 @@ def filter_and_shortlist(
     scored: list[SeoulPlaceHit] = []
     excluded = 0
     for c in candidates:
+        # Lodging is not a sight by default; retain it when explicitly requested.
+        lodging_terms = ("숙박", "호텔", "모텔", "펜션", "리조트", "게스트하우스", "호스텔")
+        if any(term in (c.category or "") for term in lodging_terms) and not any(term in (must_have or "") for term in lodging_terms):
+            excluded += 1
+            continue
+        convention_terms = ("컨벤션", "convention")
+        event_terms = ("컨벤션", "convention", "박람회", "전시회", "컨퍼런스", "학회")
+        if any(term in f"{c.name} {c.category or ''}".lower() for term in convention_terms) and not any(term in (must_have or "").lower() for term in event_terms):
+            excluded += 1
+            continue
         sc, reason = score_candidate(
             c, profile, must_avoid=must_avoid, must_have=must_have
         )
@@ -215,10 +232,14 @@ def filter_and_shortlist(
                 source_keyword=c.source_keyword,
                 source=c.source,
                 maps_url=c.maps_url,
+                image_url=c.image_url,
                 lat=c.lat,
                 lng=c.lng,
                 score=round(sc, 3),
                 user_ratings_total=c.user_ratings_total,
+                category=c.category,
+                sources=c.sources or [c.source],
+                source_ids=c.source_ids or ({c.source: c.place_id} if c.place_id else {}),
             )
         )
     scored.sort(key=lambda x: x.score, reverse=True)
@@ -253,6 +274,7 @@ def find_seoul_places(
 
     sources_used: list[str] = []
     raw: list[PlaceCandidate] = []
+    source_hit_counts: dict[str, int] = {}
     attempted = 0
     succeeded = 0
 
@@ -280,22 +302,8 @@ def find_seoul_places(
                 )
                 succeeded += 1
             except Exception:
-                # try bias-only fallback once style: re-raise isolation per keyword
-                try:
-                    raw.extend(
-                        places_client.text_search(
-                            query,
-                            language="ko",
-                            max_results=max_per_keyword,
-                            source_keyword=kw,
-                            region_code="KR",
-                            location_circle=circle,
-                            strict_location=False,
-                        )
-                    )
-                    succeeded += 1
-                except Exception:
-                    continue
+                # Do not retry without Seoul address validation or repeat a paid call.
+                continue
 
     tour: Optional[TourApiClient] = tour_client
     if use_tourapi and tour is None:
@@ -318,6 +326,8 @@ def find_seoul_places(
         raise RuntimeError("장소 검색 서비스에 연결하지 못했습니다. 서버 설정을 확인해 주세요.")
 
     merged = merge_candidates(raw)
+    for candidate in raw:
+        source_hit_counts[candidate.source] = source_hit_counts.get(candidate.source, 0) + 1
     shortlist, excluded, filters = filter_and_shortlist(
         merged,
         profile,
@@ -339,4 +349,6 @@ def find_seoul_places(
         tourapi_configured=tour_ok or tourapi_configured(),
         visitseoul=visitseoul_status(),
         raw_hit_count=len(raw),
+        source_hit_counts=source_hit_counts,
+        merged_hit_count=len(merged),
     )

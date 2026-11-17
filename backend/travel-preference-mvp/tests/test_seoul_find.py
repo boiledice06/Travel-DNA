@@ -171,13 +171,17 @@ def test_filter_shortlist_cap():
 
 def test_failed_provider_is_not_reported_as_successful_empty_result():
     class FailingPlaces:
+        calls = 0
         def text_search(self, *args, **kwargs):
+            self.calls += 1
             raise RuntimeError('provider error containing a hypothetical secret')
 
     import pytest
+    failing = FailingPlaces()
     with pytest.raises(RuntimeError, match='장소 검색 서비스') as exc:
-        find_seoul_places(profile=_profile(), industries=['카페'], micro_industries=[], places_client=FailingPlaces(), use_tourapi=False)
+        find_seoul_places(profile=_profile(), industries=['카페'], micro_industries=[], places_client=failing, use_tourapi=False)
     assert 'hypothetical secret' not in str(exc.value)
+    assert failing.calls == 1
 
 
 def test_successful_empty_provider_remains_a_valid_empty_result():

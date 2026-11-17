@@ -5,8 +5,8 @@ from typing import Optional
 
 from category_agent.schemas import IndustryKind, IndustryPlanResponse, MicroIndustryKind
 
-from .places_client import (
-    PlacesClient,
+from .places_client import PlacesClient
+from .kakao_client import (
     get_places_client,
     places_configured,
     seoul_location_circle,
@@ -78,7 +78,7 @@ def search_places(
     return PlacesSearchResponse(
         city=req.city,
         keywords=keywords,
-        provider="google_places",
+        provider="kakao",
         results=results,
         configured=places_configured() if client is None else True,
     )

@@ -37,7 +37,7 @@ load_dotenv(ROOT / ".env")
 os.environ.setdefault("VERTEXAI_PROJECT", "bright-anagram-505514-h2")
 os.environ.setdefault("VERTEXAI_LOCATION", "global")
 os.environ.setdefault("VERTEXAI_MODEL", "gemini-3.8-flash")
-os.environ.setdefault("TRAVEL_MVP_LLM_PROVIDER", "vertex")
+os.environ.setdefault("TRAVEL_MVP_LLM_PROVIDER", "gemini")
 
 
 def _cors_allow_origins() -> list[str]:
@@ -84,7 +84,9 @@ def health() -> dict:
         "itinerary": False,
         "region_agnostic": True,
         "default_total_slots": 16,
-        "llm_provider": os.getenv("TRAVEL_MVP_LLM_PROVIDER", "vertex"),
+        "llm_provider": os.getenv("TRAVEL_MVP_LLM_PROVIDER", "gemini"),
+        "gemini_configured": bool(os.getenv("GEMINI_API_KEY", "").strip()),
+        "gemini_model": os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite"),
         "vertex_project": os.getenv("VERTEXAI_PROJECT") or os.getenv("GOOGLE_CLOUD_PROJECT"),
         "vertex_location": os.getenv("VERTEXAI_LOCATION") or os.getenv("GOOGLE_CLOUD_LOCATION"),
         "vertex_model": os.getenv("VERTEXAI_MODEL", "gemini-3.8-flash"),
@@ -242,7 +244,7 @@ def api_places_search(body: PlacesSearchRequest) -> JSONResponse:
     if not places_configured():
         raise HTTPException(
             status_code=503,
-            detail="GOOGLE_PLACES_API_KEY (or GOOGLE_MAPS_API_KEY) not set",
+            detail="KAKAO_REST_API_KEY not set",
         )
     try:
         result = search_places(body)

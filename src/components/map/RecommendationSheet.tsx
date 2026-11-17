@@ -10,11 +10,13 @@ import {
 } from 'react-native';
 import type { Place, Recommendation } from '../../types';
 import { PlaceCard } from '../place/PlaceCard';
-import { Empty, Icon } from '../common/UI';
+import { Chip, Empty, Icon } from '../common/UI';
 import { ui } from '../common/ui.styles';
 import { s } from '../../features/recommendations/map-home.styles';
 interface Props {
   places: Place[];
+  day: number | null;
+  onDayChange: (day: number | null) => void;
   recommendations: Recommendation[];
   selectedId: string | null;
   savedIds: string[];
@@ -29,6 +31,8 @@ interface Props {
 }
 export function RecommendationSheet({
   places,
+  day,
+  onDayChange,
   recommendations,
   selectedId,
   savedIds,
@@ -55,7 +59,7 @@ export function RecommendationSheet({
   useEffect(syncOffset, [selectedId, expanded, cardWidth, places]);
   useEffect(() => {
     Animated.timing(sheetHeight, {
-      toValue: expanded ? Math.min(height * 0.62, 560) : state === 'collapsed' ? 56 : 275,
+      toValue: expanded ? Math.min(height * 0.62, 560) : state === 'collapsed' ? 56 : 320,
       duration: 280,
       useNativeDriver: false,
     }).start();
@@ -105,6 +109,16 @@ export function RecommendationSheet({
       </View>
       {state !== 'collapsed' && (
         <>
+          <View style={{ flexDirection: 'row', gap: 6, paddingHorizontal: 20, paddingBottom: 8 }}>
+            {(['전체', 'Day 1', 'Day 2', 'Day 3'] as const).map((label, i) => (
+              <Chip
+                key={label}
+                label={label}
+                selected={day === (i ? i - 1 : null)}
+                onPress={() => onDayChange(i ? i - 1 : null)}
+              />
+            ))}
+          </View>
           <View style={s.sheetHeader}>
             <View style={{ flex: 1 }}>
               <Text style={s.sheetTitle}>{title}</Text>
