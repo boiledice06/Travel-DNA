@@ -31,21 +31,21 @@ export default function Welcome() {
           </View>
           <View style={s.heroShade}>
             <Text style={ui.eyebrow}>A JOURNEY THAT FEELS LIKE YOU</Text>
-            <Text style={s.heroTitle}>다음 여행은,{'\n'}더 나답게.</Text>
+            <Text style={s.heroTitle}>나의 취향으로 완성하는{'\n'}서울 3일</Text>
           </View>
         </View>
         <View style={s.content}>
-          <Text style={ui.title}>좋았던 기억이{'\n'}다음 목적지가 되도록.</Text>
+          <Text style={ui.title}>서울에서 만나는{'\n'}나만의 여행</Text>
           <Text style={ui.body}>
-            사람들이 많이 찾는 곳보다, 내가 좋아할 곳.{'\n'}지난 여행의 경험에서 당신만의 취향을
-            발견해요.
+            여행 취향을 발견하고, 나에게 맞는 장소를 연결해 보세요.{'\n'}여행 조건을 정하고 · 취향을
+            발견하고 · 서울을 탐색해요.
           </Text>
           <View style={ui.row}>
             <Icon name="map-outline" color="#3DB8BC" />
             <Text style={ui.small}>기억을 남기고 · 취향을 발견하고 · 지도로 떠나요</Text>
           </View>
           <Button
-            title="나의 여행 취향 찾기"
+            title="서울 여행 시작하기"
             icon="arrow-forward"
             onPress={() => router.push('/onboarding/start')}
           />

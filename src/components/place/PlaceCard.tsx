@@ -11,6 +11,7 @@ interface Props {
   onSave: () => void;
   onOpen: () => void;
   compact?: boolean;
+  orderLabel?: string;
 }
 export const PlaceCard = memo(function PlaceCard({
   place,
@@ -19,6 +20,7 @@ export const PlaceCard = memo(function PlaceCard({
   onSave,
   onOpen,
   compact,
+  orderLabel,
 }: Props) {
   return (
     <View style={[styles.card, compact && { borderWidth: 0, padding: 0 }]}>
@@ -31,6 +33,7 @@ export const PlaceCard = memo(function PlaceCard({
         <Photo uri={place.image} style={styles.photo} />
         <View style={{ flex: 1, gap: 6 }}>
           <Text style={styles.category}>
+            {orderLabel ? `${orderLabel} · ` : ''}
             {place.category} · {place.region === 'seoul' ? '서울' : '부산'}
           </Text>
           <Text
@@ -39,6 +42,11 @@ export const PlaceCard = memo(function PlaceCard({
           >
             {place.name}
           </Text>
+          {!!place.district && (
+            <Text style={ui.small} numberOfLines={1}>
+              {place.district}
+            </Text>
+          )}
           <Text style={ui.small} numberOfLines={compact ? 2 : 3}>
             {recommendation.reason}
           </Text>

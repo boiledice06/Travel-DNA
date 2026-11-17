@@ -109,6 +109,16 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
   const requestRecommendations = useCallback(
     (conditions: TravelConditions) => {
       const id = ++requestId.current;
+      // The supplied server cannot represent a three-day profile. Do not send
+      // the older proposed /recommendations contract or misstate the duration.
+      if (process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL?.trim()) {
+        setRemoteResult({ places: [], recommendations: [], origin: 'api' });
+        setRecommendationStatus('error');
+        setRecommendationError(
+          '서버가 아직 3일 여행 조건을 지원하지 않아 추천을 요청할 수 없어요.',
+        );
+        return;
+      }
       setRecommendationStatus('loading');
       setRecommendationError(null);
       const client = new RecommendationClient(process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL);

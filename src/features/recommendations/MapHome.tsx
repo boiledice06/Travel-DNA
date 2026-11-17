@@ -19,9 +19,10 @@ import { Button, Chip, Icon, IconButton } from '../../components/common/UI';
 import { RecommendationSheet } from '../../components/map/RecommendationSheet';
 import { ui } from '../../components/common/ui.styles';
 import { useTravel } from '../../hooks/useTravel';
-import { attributeLabels, places, regions } from '../../data/mock/places';
-import type { Attribute, RegionId } from '../../types';
+import { attributeLabels, regions } from '../../data/mock/places';
+import type { Attribute } from '../../types';
 import { s } from './map-home.styles';
+import { createItinerary } from '../../services/itinerary';
 const filters: Attribute[] = [
   'walk',
   'nature',
@@ -39,7 +40,6 @@ export default function MapHome() {
     data,
     recommendations,
     toggleSave,
-    setRegion,
     dna,
     activePlaces,
     allPlaces,
@@ -53,11 +53,11 @@ export default function MapHome() {
   const { height } = useWindowDimensions();
   const [filter, setFilter] = useState<Attribute | null>(null);
   const [savedOnly, setSavedOnly] = useState(false);
+  const [day, setDay] = useState<number | null>(null);
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<string | null>(null);
   const [target, setTarget] = useState<MapProps['target']>(null);
-  const [expanded, setExpanded] = useState(false);
-  const [regionModal, setRegionModal] = useState(false);
+  const [sheetState, setSheetState] = useState<'collapsed' | 'compact' | 'expanded'>('compact');
   const [conditionsModal, setConditionsModal] = useState(false);
   const [budget, setBudget] = useState('');
   const [availableTime, setAvailableTime] = useState('');
@@ -66,7 +66,7 @@ export default function MapHome() {
   const request = () => {
     setConditionsModal(false);
     requestRecommendations({
-      region: data.region,
+      region: 'seoul',
       ...(budget.trim() && { budget: budget.trim() }),
       ...(availableTime.trim() && { availableTime: availableTime.trim() }),
       ...(companions.trim() && { companions: companions.trim() }),
@@ -76,10 +76,10 @@ export default function MapHome() {
   const [notice, setNotice] = useState('');
   const [locating, setLocating] = useState(false);
   const regionPlaces = useMemo(
-    () => (savedOnly ? allPlaces : activePlaces).filter((p) => p.region === data.region),
+    () => (savedOnly ? allPlaces : activePlaces).filter((p) => p.region === 'seoul'),
     [activePlaces, allPlaces, data.region, savedOnly],
   );
-  const visible = useMemo(
+  const candidates = useMemo(
     () =>
       recommendations.flatMap((r) => {
         const p = regionPlaces.find((p) => p.id === r.placeId);
@@ -91,6 +91,11 @@ export default function MapHome() {
       }),
     [recommendations, regionPlaces, filter, savedOnly, data.savedIds],
   );
+  const itinerary = useMemo(() => createItinerary(candidates), [candidates]);
+  const orderLabels = Object.fromEntries(
+    itinerary.flatMap((route, d) => route.map((p, i) => [p.id, `Day ${d + 1} · ${i + 1}`])),
+  );
+  const visible = day === null ? itinerary.flat() : itinerary[day];
   const result = regionPlaces
     .filter((p) => `${p.name} ${p.category} ${p.district}`.includes(query.trim()))
     .slice(0, 5);
@@ -115,15 +120,6 @@ export default function MapHome() {
     return () => clearTimeout(timer);
   }, [notice]);
   const open = (id: string) => router.push({ pathname: '/place/[id]', params: { id } });
-  const changeRegion = (id: RegionId) => {
-    setRegion(id);
-    setFilter(null);
-    setQuery('');
-    setSavedOnly(false);
-    setSelected(null);
-    setTarget({ ...regions[id], token: Date.now() });
-    setRegionModal(false);
-  };
   const locate = async () => {
     if (locating) return;
     setLocating(true);
@@ -146,12 +142,14 @@ export default function MapHome() {
     <View style={s.root}>
       <MapBoundary>
         <MapCanvas
-          region={data.region}
+          region="seoul"
           places={visible}
           recommendations={recommendations}
           selectedId={selected}
           onSelect={select}
           target={target}
+          routes={day === null ? itinerary : [itinerary[day]]}
+          orderLabels={orderLabels}
         />
       </MapBoundary>
       <View pointerEvents="box-none" style={[s.header, { paddingTop: insets.top + 12 }]}>
@@ -165,6 +163,16 @@ export default function MapHome() {
             label="나의 Travel DNA 보기"
             onPress={() => router.push('/(tabs)/profile')}
           />
+        </View>
+        <View style={ui.wrap}>
+          {(['전체', 'Day 1', 'Day 2', 'Day 3'] as const).map((label, i) => (
+            <Chip
+              key={label}
+              label={label}
+              selected={day === (i ? i - 1 : null)}
+              onPress={() => setDay(i ? i - 1 : null)}
+            />
+          ))}
         </View>
         <Pressable
           accessibilityRole="button"
@@ -186,7 +194,7 @@ export default function MapHome() {
           <Icon name="search-outline" size={20} />
           <TextInput
             accessibilityLabel="여행지 검색"
-            placeholder={`${regions[data.region].name}, 어디로 떠나볼까요?`}
+            placeholder={`${regions.seoul.name}, 어디로 떠나볼까요?`}
             placeholderTextColor="#84929E"
             value={query}
             onChangeText={setQuery}
@@ -202,16 +210,7 @@ export default function MapHome() {
               <Icon name="close" size={18} />
             </Pressable>
           ) : (
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => setRegionModal(true)}
-              style={ui.row}
-            >
-              <Text style={[ui.small, { color: '#174A7E', fontWeight: '700' }]}>
-                {regions[data.region].name}
-              </Text>
-              <Icon name="chevron-down" size={15} />
-            </Pressable>
+            <Text style={[ui.small, { color: '#174A7E', fontWeight: '700' }]}>서울</Text>
           )}
         </View>
         {query.trim() ? (
@@ -227,7 +226,7 @@ export default function MapHome() {
                     setSavedOnly(false);
                     setQuery('');
                     select(p.id);
-                    setExpanded(false);
+                    setSheetState('compact');
                   }}
                 >
                   <Icon name="location-outline" size={18} />
@@ -260,8 +259,20 @@ export default function MapHome() {
           </ScrollView>
         )}
       </View>
-      <View style={[s.floats, { bottom: expanded ? Math.min(height * 0.62, 560) + 30 : 278 }]}>
-        {!expanded && (
+      <View
+        style={[
+          s.floats,
+          {
+            bottom:
+              sheetState === 'expanded'
+                ? Math.min(height * 0.62, 560) + 30
+                : sheetState === 'collapsed'
+                  ? 90
+                  : 278,
+          },
+        ]}
+      >
+        {sheetState !== 'expanded' && (
           <IconButton
             icon={locating ? 'hourglass-outline' : 'locate-outline'}
             label="현재 위치로 이동"
@@ -274,34 +285,35 @@ export default function MapHome() {
           active={savedOnly}
           onPress={() => setSavedOnly((v) => !v)}
         />
-        {!expanded && (
+        {sheetState !== 'expanded' && (
           <IconButton
             icon="expand-outline"
             label="선택 지역 지도 초기화"
             onPress={() => {
-              setTarget({ ...regions[data.region], token: Date.now() });
-              setNotice(`${regions[data.region].name} 전체 지도로 이동했어요.`);
+              setTarget({ ...regions.seoul, token: Date.now() });
+              setNotice(`${regions.seoul.name} 전체 지도로 이동했어요.`);
             }}
           />
         )}
       </View>
       <RecommendationSheet
         places={visible}
+        orderLabels={orderLabels}
         recommendations={recommendations}
         selectedId={selected}
         savedIds={data.savedIds}
         title={savedOnly ? '저장한 발견' : data.nickname + '님을 위한 발견'}
         subtitle={
           visible.length +
-          '곳 · ' +
+          '곳 · 직선 연결 (실제 이동 경로 아님) · ' +
           (savedOnly
             ? '저장된 장소 · 출처는 카드와 상세 참고'
             : recommendationOrigin === 'api'
               ? '서버 추천 · 출처는 상세 참고'
               : '데모 장소 · 규칙 기반 예상 일치도')
         }
-        expanded={expanded}
-        onExpand={setExpanded}
+        state={sheetState}
+        onStateChange={setSheetState}
         onSelect={select}
         onSave={toggleSave}
         onOpen={open}
@@ -323,13 +335,11 @@ export default function MapHome() {
             contentContainerStyle={[s.modal, { paddingBottom: insets.bottom + 24 }]}
           >
             <Text style={ui.title}>이번 여행 조건</Text>
-            <Text style={ui.body}>
-              지역: {regions[data.region].name} · 다른 조건은 선택 사항입니다.
-            </Text>
+            <Text style={ui.body}>지역: 서울 (변경 불가) · 여행 기간: 3일</Text>
             {(
               [
-                ['예산', budget, setBudget],
-                ['가용 시간', availableTime, setAvailableTime],
+                ['전체 여행 예산', budget, setBudget],
+                ['인원', availableTime, setAvailableTime],
                 ['동행 형태', companions, setCompanions],
                 ['여행 목적', purpose, setPurpose],
               ] as const
@@ -344,8 +354,8 @@ export default function MapHome() {
               />
             ))}
             <Text style={ui.small}>
-              과거 메모의 단어와 취향 점수, 위 조건이 설정된 서버로 전송됩니다. 데모 추천은 추가
-              조건을 반영하지 않습니다.
+              데모 추천과 일정은 추가 조건을 반영하지 않습니다. 서버는 아직 3일 여행을 지원하지
+              않습니다.
             </Text>
             <Button
               title="추천 요청"
@@ -355,32 +365,6 @@ export default function MapHome() {
             <Button title="닫기" secondary onPress={() => setConditionsModal(false)} />
           </ScrollView>
         </View>
-      </Modal>
-      <Modal
-        transparent
-        visible={regionModal}
-        animationType="slide"
-        onRequestClose={() => setRegionModal(false)}
-      >
-        <Pressable style={s.scrim} onPress={() => setRegionModal(false)}>
-          <Pressable
-            style={[s.modal, { paddingBottom: insets.bottom + 24 }]}
-            onPress={(event) => event.stopPropagation()}
-          >
-            <Text style={ui.eyebrow}>YOUR NEXT CHAPTER</Text>
-            <Text style={ui.title}>어디를 발견할까요?</Text>
-            <Text style={ui.body}>선택한 도시의 장소만 지도에 표시됩니다.</Text>
-            {(Object.keys(regions) as RegionId[]).map((id) => (
-              <Button
-                key={id}
-                title={`${regions[id].name}  ·  ${places.filter((p) => p.region === id).length}개의 장소`}
-                secondary={data.region !== id}
-                onPress={() => changeRegion(id)}
-              />
-            ))}
-            <Button title="닫기" secondary onPress={() => setRegionModal(false)} />
-          </Pressable>
-        </Pressable>
       </Modal>
     </View>
   );

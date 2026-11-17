@@ -20,6 +20,8 @@ export default function MapCanvas({
   selectedId,
   onSelect,
   target,
+  routes = [],
+  orderLabels = {},
 }: MapProps) {
   const [zoom, setZoom] = useState(13);
   const [center, setCenter] = useState(() =>
@@ -76,6 +78,28 @@ export default function MapCanvas({
           }}
         />
       ))}
+      {routes.flatMap((route, day) =>
+        route.slice(1).map((place, index) => {
+          const a = project(route[index].latitude, route[index].longitude, zoom);
+          const b = project(place.latitude, place.longitude, zoom);
+          const length = Math.hypot(b.x - a.x, b.y - a.y);
+          return (
+            <View
+              key={`${day}-${index}`}
+              pointerEvents="none"
+              style={{
+                position: 'absolute',
+                left: (a.x + b.x) / 2 - left - length / 2,
+                top: (a.y + b.y) / 2 - top,
+                width: length,
+                height: 3,
+                backgroundColor: '#3DB8BC',
+                transform: [{ rotate: `${Math.atan2(b.y - a.y, b.x - a.x)}rad` }],
+              }}
+            />
+          );
+        }),
+      )}
       {places.map((place) => {
         const p = project(place.latitude, place.longitude, zoom);
         const selected = place.id === selectedId;
@@ -104,7 +128,9 @@ export default function MapCanvas({
               }}
             >
               {selected ? `${place.name}  ` : ''}
-              {recommendations.find((r) => r.placeId === place.id)?.score ?? '추천'}
+              {orderLabels[place.id] ??
+                recommendations.find((r) => r.placeId === place.id)?.score ??
+                '추천'}
             </Text>
           </Pressable>
         );
