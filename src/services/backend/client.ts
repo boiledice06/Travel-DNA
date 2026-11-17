@@ -48,6 +48,22 @@ function parseTurn(raw: unknown): ChatTurn {
   };
 }
 
+export function safeTourImage(value: unknown): string {
+  if (typeof value !== 'string') return '';
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' &&
+      ['tong.visitkorea.or.kr', 'cdn.visitkorea.or.kr'].includes(url.hostname) &&
+      !url.username &&
+      !url.password &&
+      !url.port
+      ? url.toString()
+      : '';
+  } catch {
+    return '';
+  }
+}
+
 /** The server's ranking score is deliberately not converted into an app match score. */
 export function adaptShortlist(raw: unknown): RecommendationResponse {
   if (!object(raw) || !Array.isArray(raw.shortlist))
@@ -83,7 +99,7 @@ export function adaptShortlist(raw: unknown): RecommendationResponse {
       latitude: row.lat,
       longitude: row.lng,
       description: '',
-      image: '',
+      image: safeTourImage(row.image_url),
       category: text(row.source_keyword) ? row.source_keyword : '장소',
       positiveAttributes: {},
       negativeAttributes: {},

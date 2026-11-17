@@ -112,7 +112,7 @@ export default function MapCanvas({
             style={[
               s.pin,
               {
-                left: p.x - left - 24,
+                left: p.x - left - (selected ? 80 : 24),
                 top: p.y - top - 16,
                 backgroundColor: selected ? theme.colors.primary : '#fff',
                 borderColor: selected ? theme.colors.accent : '#fff',
@@ -121,7 +121,10 @@ export default function MapCanvas({
             ]}
           >
             <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
               style={{
+                maxWidth: 145,
                 color: selected ? '#fff' : theme.colors.primary,
                 fontSize: 12,
                 fontWeight: '700',

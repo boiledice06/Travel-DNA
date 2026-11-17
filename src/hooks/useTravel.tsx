@@ -129,8 +129,10 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
   }, [data.savedPlaces, remoteResult]);
   const recommendations = useMemo(() => {
     const map = new Map<string, Recommendation>(demoRecommendations.map((r) => [r.placeId, r]));
-    for (const item of data.savedPlaces) map.set(item.recommendation.placeId, item.recommendation);
     for (const r of remoteResult?.recommendations ?? []) map.set(r.placeId, r);
+    for (const item of data.savedPlaces)
+      if (!map.has(item.recommendation.placeId))
+        map.set(item.recommendation.placeId, item.recommendation);
     return [...map.values()];
   }, [demoRecommendations, data.savedPlaces, remoteResult]);
   const requestRecommendations = useCallback(

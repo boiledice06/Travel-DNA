@@ -11,8 +11,16 @@ export default function PlaceDetail() {
   const { data, recommendations, toggleSave, allPlaces } = useTravel();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const place = allPlaces.find((p) => p.id === id);
-  const r = recommendations.find((r) => r.placeId === id);
+  const place =
+    allPlaces.find((p) => p.id === id) ??
+    allPlaces.find((p) => {
+      try {
+        return decodeURIComponent(p.id) === id;
+      } catch {
+        return false;
+      }
+    });
+  const r = recommendations.find((r) => r.placeId === place?.id);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/(tabs)'));
   if (!place || !r)
     return (
@@ -21,13 +29,13 @@ export default function PlaceDetail() {
         <Button title="지도 홈으로" onPress={() => router.replace('/(tabs)')} />
       </Screen>
     );
-  const saved = data.savedIds.includes(id);
+  const saved = data.savedIds.includes(place.id);
   return (
     <View style={s.root}>
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom }}>
         <View>
           {place.image ? (
-            <Photo uri={place.image} style={s.image} />
+            <Photo uri={place.image} category={place.category} style={s.image} />
           ) : (
             <View style={s.noImage}>
               <Icon name="location-outline" size={36} color="#3DB8BC" />
@@ -41,7 +49,7 @@ export default function PlaceDetail() {
             <View style={s.imageCaption}>
               <Text style={ui.small}>
                 {place.source === 'api'
-                  ? '장소 사진 없음'
+                  ? '사진 출처: 한국관광공사 TourAPI'
                   : '여행 분위기 참고 이미지 · 실제 장소 사진 아님'}
               </Text>
             </View>
@@ -58,7 +66,7 @@ export default function PlaceDetail() {
               icon={saved ? 'bookmark' : 'bookmark-outline'}
               label={saved ? '장소 저장 취소' : '장소 저장'}
               active={saved}
-              onPress={() => toggleSave(id)}
+              onPress={() => toggleSave(place.id)}
             />
           </View>
           <Text style={ui.body}>{place.description}</Text>

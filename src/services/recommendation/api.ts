@@ -1,3 +1,4 @@
+import { safeTourImage } from '../backend/client.ts';
 import {
   ATTRIBUTES,
   CONFLICTS,
@@ -126,7 +127,7 @@ export function validateSavedPlaces(raw: unknown): SavedPlace[] {
       typeof p.country !== 'string' ||
       typeof p.district !== 'string' ||
       typeof p.description !== 'string' ||
-      p.image !== '' ||
+      (p.image !== '' && (typeof p.image !== 'string' || safeTourImage(p.image) !== p.image)) ||
       !object(p.positiveAttributes) ||
       Object.keys(p.positiveAttributes).length ||
       !object(p.negativeAttributes) ||

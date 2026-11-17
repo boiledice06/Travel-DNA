@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ATTRIBUTES, CONFLICTS } from '../../types';
@@ -6,8 +7,42 @@ import { Button, FadeIn, Icon, Screen } from '../../components/common/UI';
 import { DNABars } from '../../components/profile/DNABars';
 import { ui } from '../../components/common/ui.styles';
 import { useTravel } from '../../hooks/useTravel';
+import { BackendClient } from '../../services/backend/client';
+import { TripFlow } from '../trip/TripFlow';
 export default function DNAScreen({ onboarding = false }: { onboarding?: boolean }) {
-  const { data, dna, completeOnboarding } = useTravel();
+  const { data, dna, completeOnboarding, serverTrip, applyServerResult } = useTravel();
+  const [editing, setEditing] = useState(false);
+  const [session, setSession] = useState<{
+    keywords: string[];
+    mustHave: string;
+    mustAvoid: string;
+  } | null>(null);
+  useEffect(() => {
+    let active = true;
+    setSession(null);
+    if (serverTrip)
+      new BackendClient(serverTrip.serverUrl)
+        .getSession(serverTrip.sessionId)
+        .then((value) => {
+          if (!active || !value || typeof value !== 'object') return;
+          const v = value as Record<string, unknown>;
+          const confirmed =
+            v.confirmed_dna && typeof v.confirmed_dna === 'object'
+              ? (v.confirmed_dna as Record<string, unknown>)
+              : {};
+          setSession({
+            keywords: Array.isArray(confirmed.micro_keywords)
+              ? confirmed.micro_keywords.filter((x): x is string => typeof x === 'string')
+              : [],
+            mustHave: typeof v.must_have === 'string' ? v.must_have : '',
+            mustAvoid: typeof v.must_avoid === 'string' ? v.must_avoid : '',
+          });
+        })
+        .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [serverTrip]);
   const router = useRouter();
   const top = [...ATTRIBUTES]
     .filter((k) => dna.preferences[k] > 0)
@@ -21,6 +56,25 @@ export default function DNAScreen({ onboarding = false }: { onboarding?: boolean
           {data.demo ? '데모 프로필' : data.experiences.length + '개의 기억'}
         </Text>
       </View>
+      {serverTrip && (
+        <View style={ui.card}>
+          <Text style={ui.subtitle}>최근 확정한 서버 취향</Text>
+          {session ? (
+            <>
+              <Text style={ui.body}>주요 키워드 · {session.keywords.join(', ') || '없음'}</Text>
+              <Text style={ui.body}>필수 조건 · {session.mustHave || '없음'}</Text>
+              <Text style={ui.body}>제외 조건 · {session.mustAvoid || '없음'}</Text>
+            </>
+          ) : (
+            <Text style={ui.body}>
+              서버 세션을 불러올 수 없어요. 일정은 이 기기에 남아 있지만 취향 대화와 조건은 서버
+              세션에 보관됩니다.
+            </Text>
+          )}
+          <Button title="여행 취향 다시 설정" secondary onPress={() => setEditing(true)} />
+        </View>
+      )}
+      <Text style={ui.small}>아래는 이 기기의 여행 기록으로 계산한 별도의 로컬 취향입니다.</Text>
       <FadeIn>
         <View style={{ gap: 16 }}>
           <View
@@ -97,11 +151,20 @@ export default function DNAScreen({ onboarding = false }: { onboarding?: boolean
           router.replace('/(tabs)');
         }}
       />
+      <TripFlow
+        visible={editing}
+        previousTrip={serverTrip}
+        onClose={() => setEditing(false)}
+        onResult={(trip) => {
+          applyServerResult(trip);
+          setEditing(false);
+        }}
+      />
       <Button
         title="여행 기록 다듬기"
         secondary
         icon="journal-outline"
-        onPress={() => router.push(onboarding ? '/onboarding/experiences' : '/(tabs)/experiences')}
+        onPress={() => router.push('/onboarding/experiences')}
       />
     </Screen>
   );

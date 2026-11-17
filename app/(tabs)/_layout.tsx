@@ -15,28 +15,28 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: '발견',
+          title: '지도',
           tabBarIcon: ({ color }) => <Icon name="compass-outline" color={color} />,
         }}
       />
       <Tabs.Screen
         name="saved"
         options={{
-          title: '저장',
+          title: '찜한 장소',
           tabBarIcon: ({ color }) => <Icon name="bookmark-outline" color={color} />,
         }}
       />
       <Tabs.Screen
         name="experiences"
         options={{
-          title: '여행 기록',
+          title: '내 여행',
           tabBarIcon: ({ color }) => <Icon name="journal-outline" color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: '나의 DNA',
+          title: '취향 DNA',
           tabBarIcon: ({ color }) => <Icon name="finger-print-outline" color={color} />,
         }}
       />

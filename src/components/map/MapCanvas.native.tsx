@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     ...theme.shadows.card,
   },
   selected: { backgroundColor: theme.colors.primary, borderColor: theme.colors.accent },
-  text: { fontSize: 11, fontWeight: '700', color: theme.colors.primary },
+  text: { maxWidth: 145, fontSize: 11, fontWeight: '700', color: theme.colors.primary },
   notice: {
     position: 'absolute',
     top: '45%',
@@ -49,7 +49,11 @@ const Pin = memo(function Pin({
       description={score === null ? '서버 추천' : `예상 일치도 ${score}점`}
     >
       <View style={[styles.marker, selected && styles.selected]}>
-        <Text style={[styles.text, selected && { color: '#fff' }]}>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={[styles.text, selected && { color: '#fff' }]}
+        >
           {selected ? `${place.name}  ` : ''}
           {orderLabel ?? score ?? '추천'}
         </Text>

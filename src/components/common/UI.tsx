@@ -126,7 +126,15 @@ export function FadeIn({ children }: React.PropsWithChildren) {
   }, [opacity]);
   return <Animated.View style={{ opacity }}>{children}</Animated.View>;
 }
-export function Photo({ uri, style }: { uri: string; style?: StyleProp<ImageStyle> }) {
+export function Photo({
+  uri,
+  style,
+  category,
+}: {
+  uri: string;
+  style?: StyleProp<ImageStyle>;
+  category?: string;
+}) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [uri]);
   if (failed || !uri)
@@ -137,8 +145,22 @@ export function Photo({ uri, style }: { uri: string; style?: StyleProp<ImageStyl
           style,
         ]}
       >
-        <Icon name="image-outline" size={32} color={theme.colors.accent} />
-        <Text style={ui.small}>여행의 한 장면</Text>
+        <Icon
+          name={
+            category && /음식|맛집|카페/.test(category)
+              ? 'cafe-outline'
+              : category && /자연|공원|산책/.test(category)
+                ? 'leaf-outline'
+                : category && /문화|박물|미술|건축/.test(category)
+                  ? 'business-outline'
+                  : 'location-outline'
+          }
+          size={32}
+          color={theme.colors.accent}
+        />
+        <Text style={ui.small} numberOfLines={1}>
+          {category || '장소'} · 사진 없음
+        </Text>
       </View>
     );
   return (
