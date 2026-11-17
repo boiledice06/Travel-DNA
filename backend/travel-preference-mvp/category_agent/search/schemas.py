@@ -17,9 +17,13 @@ class PlaceCandidate(BaseModel):
     rating: Optional[float] = None
     user_ratings_total: Optional[int] = None
     maps_url: Optional[str] = None
+    image_url: Optional[str] = None
     source_keyword: str = Field(..., description="Industry/micro kind that drove this query")
     price_level: Optional[str] = None
+    category: Optional[str] = None
     source: str = "places"  # places | tourapi | visitseoul
+    sources: List[str] = Field(default_factory=list)
+    source_ids: dict[str, str] = Field(default_factory=dict)
 
 
 class KeywordSearchResult(BaseModel):
@@ -69,6 +73,6 @@ class PlacesSearchRequest(BaseModel):
 class PlacesSearchResponse(BaseModel):
     city: str
     keywords: List[str]
-    provider: str = "google_places"
+    provider: str = "kakao"
     results: List[KeywordSearchResult]
     configured: bool = True

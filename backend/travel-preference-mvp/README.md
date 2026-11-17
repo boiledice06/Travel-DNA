@@ -27,13 +27,33 @@ Absolute store docs root (this machine):
 ```powershell
 cd <this-folder>
 Copy-Item .env.example .env
-# Edit .env: GOOGLE_PLACES_API_KEY, VERTEXAI_*, optional CORS_ALLOW_ORIGINS
-# Vertex auth: gcloud auth application-default login
+# Edit .env: GEMINI_API_KEY, KAKAO_REST_API_KEY, optional CORS_ALLOW_ORIGINS
 uv sync
 uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8765
 ```
 
 Health: `GET http://127.0.0.1:8765/api/health`
+
+The default LLM is Gemini Developer API `gemini-3.5-flash-lite` using `v1beta`; set
+`GEMINI_MODEL` to another model available to your key if necessary. Kakao Local
+keyword search supplies place names, addresses, coordinates, categories and IDs.
+It does not supply Google ratings or review counts. Seoul results use an address
+check, not an administrative boundary dataset; missing/unrecognized addresses
+are excluded. TourAPI remains optional. Existing API paths remain unchanged.
+Google's free tier and model availability depend on the project and quota; see
+https://ai.google.dev/gemini-api/docs/pricing.
+
+TourAPI's existing `searchKeyword2` adapter uses `TOUR_API_KEY` or
+`DATA_GO_KR_SERVICE_KEY`, accepts either portal key form, and requests Seoul
+(`areaCode=1`). It checks the service result code and excludes records without
+a Seoul address, usable coordinates or content ID. Without a key it is skipped.
+Candidate merging retains source IDs and identifies cross-source matches by
+normalized name plus nearby coordinates or matching address. Lodging categories
+are excluded unless explicitly requested in `must_have`; convention venues are
+also excluded unless event intent is explicit. As in the original
+pipeline, `must_have` otherwise boosts matching candidates rather than requiring
+every result to match; `must_avoid` excludes matches. Address and name matching
+are heuristics, not official geographic boundaries or identity verification.
 
 ## Not included (by design)
 

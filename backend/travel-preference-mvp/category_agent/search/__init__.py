@@ -1,6 +1,6 @@
 """Stage 4 Places search + Seoul find (Places + optional TourAPI)."""
 
-from .places_client import places_api_key, places_configured
+from .kakao_client import places_api_key, places_configured
 from .schemas import (
     KeywordSearchResult,
     PlaceCandidate,

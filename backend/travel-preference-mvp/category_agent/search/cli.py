@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 
 from category_agent.schemas import IndustryPlanResponse
 
-from .places_client import places_configured
+from .kakao_client import places_configured
 from .schemas import PlacesSearchRequest
 from .service import search_places
 
@@ -78,7 +78,7 @@ def main() -> None:
 
     if not places_configured():
         print(
-            "ERROR: GOOGLE_PLACES_API_KEY (or GOOGLE_MAPS_API_KEY) not set in env/.env",
+            "ERROR: KAKAO_REST_API_KEY not set in env/.env",
             file=sys.stderr,
         )
         sys.exit(1)

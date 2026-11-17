@@ -30,7 +30,7 @@ def main() -> None:
     os.environ.setdefault("VERTEXAI_PROJECT", "bright-anagram-505514-h2")
     os.environ.setdefault("VERTEXAI_LOCATION", "global")
     os.environ.setdefault("VERTEXAI_MODEL", "gemini-3.8-flash")
-    os.environ.setdefault("TRAVEL_MVP_LLM_PROVIDER", "vertex")
+    os.environ.setdefault("TRAVEL_MVP_LLM_PROVIDER", "gemini")
 
     parser = argparse.ArgumentParser(
         description="NL or numeric DNA → industry name lists (optional Places)"

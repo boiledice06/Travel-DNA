@@ -66,7 +66,7 @@ def test_search_places_with_fake_client():
     assert fake.queries == ["안산 갤러리", "안산 방탈출"]
 
 
-def test_seoul_search_uses_location_restriction():
+def test_seoul_search_requests_strict_address_check():
     fake = FakePlacesClient()
     search_places(
         PlacesSearchRequest(city="서울", keywords=["카페"], max_results_per_keyword=2),
