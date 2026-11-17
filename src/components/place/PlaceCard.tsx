@@ -38,7 +38,7 @@ export const PlaceCard = memo(function PlaceCard({
           </Text>
           <Text
             style={[ui.subtitle, !compact && { fontSize: 18, lineHeight: 24 }]}
-            numberOfLines={compact ? 1 : 2}
+            numberOfLines={2}
           >
             {place.name}
           </Text>
@@ -47,9 +47,11 @@ export const PlaceCard = memo(function PlaceCard({
               {place.district}
             </Text>
           )}
-          <Text style={ui.small} numberOfLines={compact ? 2 : 3}>
-            {recommendation.reason}
-          </Text>
+          {!compact && (
+            <Text style={ui.small} numberOfLines={3}>
+              {recommendation.reason}
+            </Text>
+          )}
           {recommendation.score !== null ? (
             <Text style={styles.score}>
               예상 일치도 {recommendation.score}

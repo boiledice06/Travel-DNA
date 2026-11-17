@@ -1,5 +1,15 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, Modal, ScrollView, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Chip } from '../../components/common/UI';
 import { ui } from '../../components/common/ui.styles';
@@ -11,6 +21,7 @@ import {
   type TripProfileInput,
 } from '../../services/backend/client';
 import type { ServerTrip } from '../../services/storage/serverTrip';
+import { tripStyles as ts } from './trip.styles';
 
 type Phase = 'profile' | 'likert' | 'asking' | 'constraints' | 'draft' | 'confirmed';
 const initial: TripProfileInput = {
@@ -60,6 +71,7 @@ interface Props {
 }
 export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
   const insets = useSafeAreaInsets();
+  const scroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
   const [profile, setProfile] = useState(initial);
   const [purpose, setPurpose] = useState('');
   const [profileId, setProfileId] = useState('');
@@ -73,6 +85,9 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
   const [mustAvoid, setMustAvoid] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  useEffect(() => {
+    if (visible) scroll.current?.scrollTo({ y: 0, animated: false });
+  }, [phase, visible]);
   const url = process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL ?? '';
   const client = new BackendClient(url, 30000);
   const act = async (work: () => Promise<void>) => {
@@ -169,8 +184,17 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
   };
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: '#fff' }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
         <ScrollView
+          ref={scroll}
+          automaticallyAdjustKeyboardInsets
+          onContentSizeChange={() => {
+            if (phase === 'asking' && history.length > 1)
+              scroll.current?.scrollToEnd({ animated: true });
+          }}
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={[
             s.modal,
@@ -270,27 +294,40 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
           {phase === 'likert' && session && (
             <>
               <Text style={ui.body}>{turn?.assistant_message}</Text>
-              {session.likert_items.map((item) => (
-                <View key={item.id} style={ui.card}>
-                  <Text style={ui.label}>{item.statement_ko}</Text>
-                  <View style={ui.wrap}>
+              <View style={ts.scale}>
+                <Text style={ts.progress}>
+                  응답 {Object.keys(answers).length} / {session.likert_items.length}
+                </Text>
+                <Text style={ui.small}>
+                  {[...session.likert_items[0].scale]
+                    .sort((a, b) => a.value - b.value)
+                    .map((o) => `${o.value} ${o.label_ko}`)
+                    .join(' · ')}
+                </Text>
+              </View>
+              {session.likert_items.map((item, index) => (
+                <View key={item.id} style={ts.question}>
+                  <Text style={ts.questionTitle}>
+                    {index + 1}. {item.statement_ko}
+                  </Text>
+                  <View style={ts.numbers}>
                     {[...item.scale]
                       .sort((a, b) => a.value - b.value)
-                      .map(({ value: n }) => (
-                        <Chip
+                      .map(({ value: n, label_ko: label }) => (
+                        <Pressable
                           key={n}
-                          label={String(n)}
-                          selected={answers[item.id] === n}
+                          accessibilityRole="radio"
+                          accessibilityLabel={`${index + 1}번 문항 ${n}점 ${label}`}
+                          accessibilityState={{ checked: answers[item.id] === n }}
                           onPress={() => setAnswers({ ...answers, [item.id]: n })}
-                        />
+                          style={[ts.number, answers[item.id] === n && ts.numberSelected]}
+                        >
+                          <Text style={[ts.numberText, answers[item.id] === n && ts.userText]}>
+                            {n}
+                          </Text>
+                        </Pressable>
                       ))}
                   </View>
-                  <Text style={ui.small}>
-                    {[...item.scale]
-                      .sort((a, b) => a.value - b.value)
-                      .map((o) => `${o.value} ${o.label_ko}`)
-                      .join(' · ')}
-                  </Text>
                 </View>
               ))}
               <Button
@@ -304,9 +341,11 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
             <>
               <Text style={ui.subtitle}>취향 대화</Text>
               {history.map((m, i) => (
-                <View key={i} style={ui.card}>
-                  <Text style={ui.small}>{m.role === 'user' ? '나' : '서버'}</Text>
-                  <Text style={ui.body}>{m.text}</Text>
+                <View key={i} style={[ts.bubble, m.role === 'user' && ts.userBubble]}>
+                  <Text style={[ui.small, m.role === 'user' && ts.userText]}>
+                    {m.role === 'user' ? '나' : 'Travel DNA'}
+                  </Text>
+                  <Text style={[ui.body, m.role === 'user' && ts.userText]}>{m.text}</Text>
                 </View>
               ))}
               <View style={ui.wrap}>
@@ -314,18 +353,26 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
                   <Chip key={chip} label={chip} selected={false} onPress={() => send(chip)} />
                 ))}
               </View>
-              <TextInput
-                accessibilityLabel="대화 답변"
-                placeholder="여행 취향을 입력해 주세요"
-                value={message}
-                onChangeText={setMessage}
-                style={ui.input}
-              />
-              <Button
-                title="답변 보내기"
-                onPress={() => send(message)}
-                disabled={loading || !message.trim()}
-              />
+              <View style={ts.composer}>
+                <TextInput
+                  accessibilityLabel="대화 답변"
+                  placeholder="여행 취향을 입력해 주세요"
+                  value={message}
+                  onChangeText={setMessage}
+                  style={[ui.input, ts.messageInput]}
+                  multiline
+                />
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="답변 보내기"
+                  accessibilityState={{ disabled: loading || !message.trim() }}
+                  disabled={loading || !message.trim()}
+                  onPress={() => send(message)}
+                  style={[ts.send, (loading || !message.trim()) && { opacity: 0.45 }]}
+                >
+                  <Text style={ts.sendText}>전송</Text>
+                </Pressable>
+              </View>
             </>
           )}
           {phase === 'constraints' && (
@@ -389,7 +436,7 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
           )}
           <Button title="닫기" secondary onPress={onClose} disabled={loading} />
         </ScrollView>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

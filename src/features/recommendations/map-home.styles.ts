@@ -29,7 +29,13 @@ export const s = StyleSheet.create({
     overflow: 'hidden',
     ...t.shadows.card,
   },
-  handle: { alignItems: 'center', paddingTop: 12, paddingBottom: 10 },
+  handle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
   handleBar: { height: 4, width: 36, backgroundColor: '#D5DDE5', borderRadius: 4 },
   sheetHeader: {
     paddingHorizontal: 20,
@@ -42,7 +48,8 @@ export const s = StyleSheet.create({
   list: { paddingHorizontal: 16, paddingBottom: 18, gap: 10 },
   footer: {
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 4,
+    paddingBottom: 4,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

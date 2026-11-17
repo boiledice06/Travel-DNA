@@ -1,13 +1,15 @@
-import { ScrollView, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Image, Linking, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Button, Icon, Photo } from '../../components/common/UI';
+import { Button, Icon } from '../../components/common/UI';
 import { ui } from '../../components/common/ui.styles';
 import { useTravel } from '../../hooks/useTravel';
 import { s } from './onboarding.styles';
 export default function Welcome() {
   const router = useRouter();
   const { start } = useTravel();
+  const [imageFailed, setImageFailed] = useState(false);
   return (
     <SafeAreaView style={s.root}>
       <ScrollView
@@ -19,10 +21,15 @@ export default function Welcome() {
         }}
       >
         <View style={s.hero}>
-          <Photo
-            uri="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1200&q=85"
-            style={s.heroPhoto}
-          />
+          {!imageFailed && (
+            <Image
+              source={require('../../../assets/seoul-night.jpg')}
+              style={s.heroPhoto}
+              resizeMode="cover"
+              onError={() => setImageFailed(true)}
+              accessibilityLabel="N서울타워에서 바라본 서울 야경"
+            />
+          )}
           <View style={s.logo}>
             <Icon name="finger-print-outline" size={26} />
             <Text style={{ fontWeight: '700', color: '#174A7E', letterSpacing: 1 }}>
@@ -31,10 +38,31 @@ export default function Welcome() {
           </View>
           <View style={s.heroShade}>
             <Text style={ui.eyebrow}>A JOURNEY THAT FEELS LIKE YOU</Text>
-            <Text style={s.heroTitle}>나의 취향으로 완성하는{'\n'}서울 3일</Text>
+            <Text style={s.heroTitle}>나의 취향으로{'\n'}완성하는 서울 3일</Text>
           </View>
         </View>
         <View style={s.content}>
+          <Text style={s.credit}>
+            서울 야경 사진:{' '}
+            <Text
+              accessibilityRole="link"
+              onPress={() =>
+                Linking.openURL(
+                  'https://commons.wikimedia.org/wiki/File:City_of_Seoul_View_From_N_Seoul_Tower.JPG',
+                )
+              }
+            >
+              Penmerahpenbiru
+            </Text>{' '}
+            ·{' '}
+            <Text
+              accessibilityRole="link"
+              onPress={() => Linking.openURL('https://creativecommons.org/licenses/by/3.0/')}
+            >
+              CC BY 3.0
+            </Text>{' '}
+            (크기 조정·화면 자름)
+          </Text>
           <Text style={ui.title}>서울에서 만나는{'\n'}나만의 여행</Text>
           <Text style={ui.body}>
             여행 취향을 발견하고, 나에게 맞는 장소를 연결해 보세요.{'\n'}여행 조건을 정하고 · 취향을

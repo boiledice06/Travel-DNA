@@ -1,13 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import { Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
@@ -53,7 +45,6 @@ export default function MapHome() {
   } = useTravel();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { height } = useWindowDimensions();
   const [filter, setFilter] = useState<Attribute | null>(null);
   const [savedOnly, setSavedOnly] = useState(false);
   const [day, setDay] = useState<number | null>(null);
@@ -158,17 +149,19 @@ export default function MapHome() {
         />
       </MapBoundary>
       <View pointerEvents="box-none" style={[s.header, { paddingTop: insets.top + 12 }]}>
-        <View style={ui.between}>
-          <View>
-            <Text style={ui.eyebrow}>TRAVEL DNA</Text>
-            <Text style={s.heading}>나의 취향이 닿는 곳</Text>
+        {sheetState !== 'collapsed' && (
+          <View style={ui.between}>
+            <View>
+              <Text style={ui.eyebrow}>TRAVEL DNA</Text>
+              <Text style={s.heading}>나의 취향이 닿는 곳</Text>
+            </View>
+            <IconButton
+              icon="finger-print-outline"
+              label="나의 Travel DNA 보기"
+              onPress={() => router.push('/(tabs)/profile')}
+            />
           </View>
-          <IconButton
-            icon="finger-print-outline"
-            label="나의 Travel DNA 보기"
-            onPress={() => router.push('/(tabs)/profile')}
-          />
-        </View>
+        )}
         <View style={ui.wrap}>
           {(['전체', 'Day 1', 'Day 2', 'Day 3'] as const).map((label, i) => (
             <Chip
@@ -179,122 +172,120 @@ export default function MapHome() {
             />
           ))}
         </View>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => (serverConfigured ? setTripVisible(true) : setConditionsModal(true))}
-          style={s.search}
-        >
-          <Text style={ui.small}>
-            여행 조건 입력 · 추천 요청 {recommendationStatus === 'loading' ? '(불러오는 중)' : '›'}
-          </Text>
-        </Pressable>
-        {(recommendationStatus === 'error' || recommendationStatus === 'empty') && (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => (serverConfigured ? setTripVisible(true) : request())}
-            style={s.search}
-          >
-            <Text style={ui.small}>
-              {recommendationError ?? '추천 결과가 없습니다.'} · 탭하여 재시도
-            </Text>
-          </Pressable>
-        )}
-        <View style={s.search}>
-          <Icon name="search-outline" size={20} />
-          <TextInput
-            accessibilityLabel="여행지 검색"
-            placeholder={`${regions.seoul.name}, 어디로 떠나볼까요?`}
-            placeholderTextColor="#84929E"
-            value={query}
-            onChangeText={setQuery}
-            style={s.input}
-            returnKeyType="search"
-          />
-          {query ? (
+        {sheetState !== 'collapsed' && (
+          <>
             <Pressable
-              accessibilityLabel="검색 지우기"
-              onPress={() => setQuery('')}
-              style={{ padding: 8 }}
+              accessibilityRole="button"
+              onPress={() => (serverConfigured ? setTripVisible(true) : setConditionsModal(true))}
+              style={s.search}
             >
-              <Icon name="close" size={18} />
+              <Text style={ui.small}>
+                여행 조건 입력 · 추천 요청{' '}
+                {recommendationStatus === 'loading' ? '(불러오는 중)' : '›'}
+              </Text>
             </Pressable>
-          ) : (
-            <Text style={[ui.small, { color: '#174A7E', fontWeight: '700' }]}>서울</Text>
-          )}
-        </View>
-        {query.trim() ? (
-          <View style={s.resultBox}>
-            {result.length ? (
-              result.map((p) => (
-                <Pressable
-                  accessibilityRole="button"
-                  key={p.id}
-                  style={s.result}
-                  onPress={() => {
-                    setFilter(null);
-                    setSavedOnly(false);
-                    setQuery('');
-                    select(p.id);
-                    setSheetState('compact');
-                  }}
-                >
-                  <Icon name="location-outline" size={18} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ color: '#16263A', fontWeight: '600' }}>{p.name}</Text>
-                    <Text style={ui.small}>{p.district}</Text>
-                  </View>
-                  <Icon name="arrow-up-outline" size={16} />
-                </Pressable>
-              ))
-            ) : (
-              <Text style={{ padding: 16 }}>이 지역에서 검색 결과가 없어요.</Text>
+            {(recommendationStatus === 'error' || recommendationStatus === 'empty') && (
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => (serverConfigured ? setTripVisible(true) : request())}
+                style={s.search}
+              >
+                <Text style={ui.small}>
+                  {recommendationError ?? '추천 결과가 없습니다.'} · 탭하여 재시도
+                </Text>
+              </Pressable>
             )}
-          </View>
-        ) : (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={s.filters}
-          >
-            <Chip label="✦ 나의 추천" selected={!filter} onPress={() => setFilter(null)} />
-            {filters.map((k) => (
-              <Chip
-                key={k}
-                label={attributeLabels[k]}
-                selected={filter === k}
-                onPress={() => setFilter(filter === k ? null : k)}
+            <View style={s.search}>
+              <Icon name="search-outline" size={20} />
+              <TextInput
+                accessibilityLabel="여행지 검색"
+                placeholder={`${regions.seoul.name}, 어디로 떠나볼까요?`}
+                placeholderTextColor="#84929E"
+                value={query}
+                onChangeText={setQuery}
+                style={s.input}
+                returnKeyType="search"
               />
-            ))}
-          </ScrollView>
+              {query ? (
+                <Pressable
+                  accessibilityLabel="검색 지우기"
+                  onPress={() => setQuery('')}
+                  style={{ padding: 8 }}
+                >
+                  <Icon name="close" size={18} />
+                </Pressable>
+              ) : (
+                <Text style={[ui.small, { color: '#174A7E', fontWeight: '700' }]}>서울</Text>
+              )}
+            </View>
+            {query.trim() ? (
+              <View style={s.resultBox}>
+                {result.length ? (
+                  result.map((p) => (
+                    <Pressable
+                      accessibilityRole="button"
+                      key={p.id}
+                      style={s.result}
+                      onPress={() => {
+                        setFilter(null);
+                        setSavedOnly(false);
+                        setQuery('');
+                        select(p.id);
+                        setSheetState('compact');
+                      }}
+                    >
+                      <Icon name="location-outline" size={18} />
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ color: '#16263A', fontWeight: '600' }}>{p.name}</Text>
+                        <Text style={ui.small}>{p.district}</Text>
+                      </View>
+                      <Icon name="arrow-up-outline" size={16} />
+                    </Pressable>
+                  ))
+                ) : (
+                  <Text style={{ padding: 16 }}>이 지역에서 검색 결과가 없어요.</Text>
+                )}
+              </View>
+            ) : (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={s.filters}
+              >
+                <Chip label="✦ 나의 추천" selected={!filter} onPress={() => setFilter(null)} />
+                {filters.map((k) => (
+                  <Chip
+                    key={k}
+                    label={attributeLabels[k]}
+                    selected={filter === k}
+                    onPress={() => setFilter(filter === k ? null : k)}
+                  />
+                ))}
+              </ScrollView>
+            )}
+          </>
         )}
       </View>
-      <View
-        style={[
-          s.floats,
-          {
-            bottom:
-              sheetState === 'expanded'
-                ? Math.min(height * 0.62, 560) + 30
-                : sheetState === 'collapsed'
-                  ? 90
-                  : 278,
-          },
-        ]}
-      >
-        {sheetState !== 'expanded' && (
+      {sheetState !== 'expanded' && (
+        <View
+          style={[
+            s.floats,
+            {
+              bottom: sheetState === 'collapsed' ? 90 : 309,
+            },
+          ]}
+        >
           <IconButton
             icon={locating ? 'hourglass-outline' : 'locate-outline'}
             label="현재 위치로 이동"
             onPress={locate}
           />
-        )}
-        <IconButton
-          icon={savedOnly ? 'bookmark' : 'bookmark-outline'}
-          label="지도에서 저장 장소 필터"
-          active={savedOnly}
-          onPress={() => setSavedOnly((v) => !v)}
-        />
-        {sheetState !== 'expanded' && (
+          <IconButton
+            icon={savedOnly ? 'bookmark' : 'bookmark-outline'}
+            label="지도에서 저장 장소 필터"
+            active={savedOnly}
+            onPress={() => setSavedOnly((v) => !v)}
+          />
           <IconButton
             icon="expand-outline"
             label="선택 지역 지도 초기화"
@@ -303,8 +294,8 @@ export default function MapHome() {
               setNotice(`${regions.seoul.name} 전체 지도로 이동했어요.`);
             }}
           />
-        )}
-      </View>
+        </View>
+      )}
       <RecommendationSheet
         places={visible}
         orderLabels={orderLabels}

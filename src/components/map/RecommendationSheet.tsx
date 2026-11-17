@@ -55,7 +55,7 @@ export function RecommendationSheet({
   useEffect(syncOffset, [selectedId, expanded, cardWidth, places]);
   useEffect(() => {
     Animated.timing(sheetHeight, {
-      toValue: expanded ? Math.min(height * 0.62, 560) : state === 'collapsed' ? 56 : 244,
+      toValue: expanded ? Math.min(height * 0.62, 560) : state === 'collapsed' ? 56 : 275,
       duration: 280,
       useNativeDriver: false,
     }).start();
@@ -63,7 +63,8 @@ export function RecommendationSheet({
   const pan = useMemo(
     () =>
       PanResponder.create({
-        onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dy) > 8,
+        onMoveShouldSetPanResponder: (_, g) =>
+          Math.abs(g.dy) > 8 && Math.abs(g.dy) > Math.abs(g.dx) * 1.3,
         onPanResponderRelease: (_, g) => {
           if (g.dy < -20) onStateChange(state === 'collapsed' ? 'compact' : 'expanded');
           if (g.dy > 20) onStateChange(state === 'expanded' ? 'compact' : 'collapsed');
@@ -105,9 +106,11 @@ export function RecommendationSheet({
       {state !== 'collapsed' && (
         <>
           <View style={s.sheetHeader}>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={s.sheetTitle}>{title}</Text>
-              <Text style={ui.small}>{subtitle}</Text>
+              <Text numberOfLines={2} style={ui.small}>
+                {subtitle}
+              </Text>
             </View>
             <Pressable
               accessibilityRole="button"
