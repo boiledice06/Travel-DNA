@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>서울 · TripProfile + Taste DNA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink:#1c2420; --muted:#5a6a62; --paper:#f3efe6; --accent:#0f6b57; --line:rgba(28,36,32,.12); --ok:#1a7a4c; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:"Instrument Sans",system-ui,sans-serif; color:var(--ink);
+      background:radial-gradient(1000px 420px at 0% 0%,#e7f2ea,transparent 55%),linear-gradient(180deg,#f7f4ee,var(--paper)); min-height:100vh; }
+    main { width:min(980px, calc(100% - 2rem)); margin:0 auto; padding:2rem 0 4rem; }
+    h1 { font-family:"Fraunces",Georgia,serif; font-size:clamp(1.7rem,3.5vw,2.3rem); margin:0 0 .35rem; }
+    .lede { color:var(--muted); margin:0 0 1.5rem; }
+    section { border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,.55); padding:1rem 1.1rem 1.2rem; margin-bottom:1.1rem; }
+    section h2 { font-size:1.05rem; margin:0 0 .75rem; }
+    .badge { display:inline-block; font-size:.72rem; font-weight:700; padding:.15rem .5rem; border-radius:999px; background:#e8f3ee; color:var(--ok); margin-left:.4rem; vertical-align:middle; }
+    .badge.wait { background:#f3eee0; color:#7a6230; }
+    label { font-size:.78rem; font-weight:600; display:block; margin-top:.55rem; }
+    input, select, textarea { width:100%; border:1px solid var(--line); border-radius:8px; padding:.5rem .65rem; font:inherit; margin-top:.2rem; background:rgba(255,255,255,.85); }
+    textarea { min-height:4.2rem; resize:vertical; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:.65rem; }
+    .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.65rem; }
+    @media (max-width:720px){ .grid2,.grid3{ grid-template-columns:1fr; } }
+    .hint { font-size:.75rem; color:var(--muted); margin-top:.2rem; }
+    button { border:0; background:var(--accent); color:#f7fffb; font-weight:700; padding:.7rem 1.1rem; border-radius:999px; cursor:pointer; margin-top:.8rem; }
+    button:disabled { opacity:.5; cursor:not-allowed; }
+    button.secondary { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+    .chips { display:flex; flex-wrap:wrap; gap:.4rem; margin:.5rem 0; }
+    .chips button { margin:0; padding:.4rem .75rem; font-size:.85rem; background:#fff; color:var(--ink); border:1px solid var(--line); }
+    .chat-log { max-height:280px; overflow:auto; display:flex; flex-direction:column; gap:.55rem; margin-bottom:.6rem; }
+    .bubble { padding:.55rem .75rem; border-radius:10px; max-width:92%; font-size:.92rem; line-height:1.45; }
+    .bubble.assistant { background:#eef6f2; align-self:flex-start; }
+    .bubble.user { background:#fff; border:1px solid var(--line); align-self:flex-end; }
+    .chat-row { display:flex; gap:.5rem; align-items:flex-start; }
+    .chat-row input { flex:1; margin-top:0; }
+    .chat-row button { margin-top:0; }
+    .status { color:var(--muted); font-size:.85rem; margin:.5rem 0 1rem; }
+    pre.dna { background:rgba(255,255,255,.75); border:1px solid var(--line); border-radius:10px; padding:.7rem .9rem; font-size:.8rem; overflow:auto; }
+    ul { margin:.3rem 0 0; padding-left:1.2rem; line-height:1.65; }
+    .run-box { opacity:.55; pointer-events:none; }
+    .run-box.ready { opacity:1; pointer-events:auto; }
+    .likert-row { border-top:1px solid var(--line); padding:.75rem 0 .55rem; }
+    .likert-row:first-child { border-top:0; }
+    .likert-q { font-size:.9rem; font-weight:600; margin-bottom:.4rem; }
+    .likert-scale { display:flex; flex-wrap:wrap; gap:.35rem; }
+    .likert-scale label { margin:0; font-weight:500; font-size:.72rem; display:flex; align-items:center; gap:.25rem;
+      padding:.35rem .5rem; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.85); cursor:pointer; }
+    .likert-scale input { width:auto; margin:0; }
+    #panel-likert[hidden], #panel-chat[hidden], #panel-constraints[hidden] { display:none !important; }
+    .panel-disabled { opacity:.45; pointer-events:none; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>서울 인테이크</h1>
+    <p class="lede">순서: <strong>1 물류 폼</strong> → <strong>2 설문 5문항 → 짧은 → 원하는/피할 것 → DNA 확정</strong> → <strong>3 서울에서 찾기</strong>. 일정 생성 없음.</p>
+
+    <section id="sec-profile">
+      <h2>1. TripProfile (물류 폼)<span class="badge wait" id="badge-profile">미저장</span></h2>
+      <p class="hint">물류만 입력합니다. 원하는 것/피하고 싶은 것은 DNA 단계에서.</p>
+      <div class="grid3">
+        <div><label>인원</label>
+          <select id="party_size"><option value="1">1</option><option value="2" selected>2</option><option value="3-4">3–4</option><option value="5+">5+</option></select>
+        </div>
+        <div><label>동행</label>
+          <select id="companion_type">
+            <option value="solo">혼자</option><option value="couple" selected>커플</option>
+            <option value="friends">친구</option><option value="family">가족</option><option value="with_kids">아이동반</option>
+          </select>
+        </div>
+        <div><label>기간</label>
+          <select id="duration"><option value="half_day">반나절</option><option value="full_day" selected>당일</option><option value="1n2d">1박2일</option></select>
+        </div>
+      </div>
+      <div class="grid3">
+        <div><label>연령대 (건너뛰기 가능)</label>
+          <select id="age_band"><option value="skip" selected>응답 안 함</option><option value="teens">10대</option><option value="20s">20대</option><option value="30s">30대</option><option value="40s">40대</option><option value="50s">50대</option><option value="60plus">60+</option></select>
+        </div>
+        <div><label>성별 (건너뛰기 가능)</label>
+          <select id="gender"><option value="skip" selected>응답 안 함</option><option value="female">여성</option><option value="male">남성</option><option value="other">기타</option></select>
+        </div>
+        <div><label>시간대</label>
+          <select id="time_window"><option value="morning">오전</option><option value="afternoon" selected>오후</option><option value="evening">저녁·야간</option></select>
+        </div>
+      </div>
+      <div class="grid3">
+        <div><label>숙소</label>
+          <select id="lodging"><option value="none" selected>없음</option><option value="has">있음</option></select>
+        </div>
+        <div><label>숙소 희망 권역</label><input id="lodging_area" placeholder="예: 홍대·연남" /></div>
+        <div><label>이동</label>
+          <select id="transport">
+            <option value="walk_subway" selected>도보+지하철</option><option value="bus_ok">버스 OK</option>
+            <option value="taxi_car">택시·차</option><option value="minimize">이동 최소화</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid3">
+        <div><label>이동 성향</label>
+          <select id="mobility_preference">
+            <option value="high_mobility">많이 이동</option><option value="balanced" selected>균형</option><option value="one_neighborhood">한 동네</option>
+          </select>
+        </div>
+        <div><label>예산</label>
+          <select id="budget_level"><option value="low">저예산</option><option value="mid" selected>보통</option><option value="high">여유</option></select>
+        </div>
+        <div><label>예산 메모 (선택)</label><input id="budget_note" placeholder="예: 식사 1인 2만 내외" /></div>
+      </div>
+      <button type="button" id="save-profile">TripProfile 저장</button>
+      <p class="status" id="profile-status"></p>
+    </section>
+
+    <section id="sec-chat">
+      <h2>2. Travel DNA<span class="badge wait" id="badge-dna">미시작</span></h2>
+      <p class="hint">설문(5축) → 구체 취향 대화 → 꼭 원하는 것 / 피해야 하는 것 → 확정.</p>
+      <button type="button" class="secondary" id="chat-start">DNA 시작 (설문)</button>
+
+      <div id="panel-likert" hidden>
+        <h3 style="font-size:.95rem;margin:1rem 0 .4rem">A. 설문 5문항 (취향 축)</h3>
+        <p class="hint">척도: 매우 그렇다 … 매우 그렇지 않다</p>
+        <div id="likert-form"></div>
+        <button type="button" id="likert-submit">설문 제출</button>
+      </div>
+
+      <div id="panel-chat" class="panel-disabled" hidden>
+        <h3 style="font-size:.95rem;margin:1rem 0 .4rem">B. 취향 대화</h3>
+        <div class="chat-log" id="chat-log"></div>
+        <div class="chips" id="chips"></div>
+        <div class="chat-row">
+          <input id="chat-input" placeholder="구체적 취향을 입력하거나 칩을 누르세요" disabled />
+          <button type="button" id="chat-send" disabled>보내기</button>
+        </div>
+      </div>
+
+      <div id="panel-constraints" hidden>
+        <h3 style="font-size:.95rem;margin:1rem 0 .4rem">C. 꼭 원하는 것 / 피해야 하는 것</h3>
+        <p class="hint">반드시 한 번 작성·제출합니다. 없으면 「없음」이라고 적어도 됩니다.</p>
+        <label for="must_have">꼭 원하는 것 (must_have)</label>
+        <textarea id="must_have" placeholder="예: 채식 식당, 한강 산책, 독립서점"></textarea>
+        <label for="must_avoid">피해야 하는 것 (must_avoid)</label>
+        <textarea id="must_avoid" placeholder="예: 클럽, 너무 시끄러운 술집, 줄 긴 핫플…"></textarea>
+        <button type="button" id="constraints-submit">제약 제출 → 초안</button>
+      </div>
+
+      <button type="button" id="chat-finalize" disabled>DNA 확정</button>
+      <pre class="dna" id="dna-preview" hidden></pre>
+      <p class="status" id="chat-status"></p>
+    </section>
+
+    <section id="sec-run" class="run-box">
+      <h2>3. 서울 장소 찾기<span class="badge wait" id="badge-run">1·2 완료 후</span></h2>
+      <p class="hint">Profile + DNA 확정 후: 업종명 → 서울 Places → shortlist. avoid=하드 제외, have=소프트 가산.</p>
+      <div class="grid2">
+        <div><label>업종 슬롯</label><input id="run-slots" type="number" min="1" max="30" value="12" /></div>
+        <div><label>shortlist 크기</label><input id="run-shortlist" type="number" min="4" max="20" value="16" /></div>
+      </div>
+      <button type="button" id="run-btn">서울에서 찾기</button>
+      <p class="status" id="run-status"></p>
+      <div id="run-out"></div>
+    </section>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let profileId = null;
+    let sessionId = null;
+    let dnaReady = false;
+    let likertItems = [];
+
+    function syncRun() {
+      const ready = Boolean(profileId && dnaReady);
+      $("sec-run").classList.toggle("ready", ready);
+      $("run-btn").disabled = !ready;
+      if ($("badge-run")) setBadge($("badge-run"), ready, ready ? "준비됨" : "1·2 완료 후");
+    }
+
+    function setBadge(el, ok, label) {
+      el.textContent = label;
+      el.classList.toggle("wait", !ok);
+    }
+
+    function appendBubble(role, text) {
+      const div = document.createElement("div");
+      div.className = `bubble ${role}`;
+      div.textContent = text;
+      $("chat-log").appendChild(div);
+      $("chat-log").scrollTop = $("chat-log").scrollHeight;
+    }
+
+    function setChatEnabled(on) {
+      $("panel-chat").classList.toggle("panel-disabled", !on);
+      $("chat-input").disabled = !on;
+      $("chat-send").disabled = !on;
+    }
+
+    function renderLikert(items) {
+      const box = $("likert-form");
+      box.innerHTML = "";
+      (items || []).forEach((it) => {
+        const row = document.createElement("div");
+        row.className = "likert-row";
+        const q = document.createElement("div");
+        q.className = "likert-q";
+        q.textContent = it.statement_ko;
+        const scale = document.createElement("div");
+        scale.className = "likert-scale";
+        (it.scale || []).forEach((s) => {
+          const lab = document.createElement("label");
+          const inp = document.createElement("input");
+          inp.type = "radio";
+          inp.name = `likert_${it.id}`;
+          inp.value = String(s.value);
+          if (s.value === 3) inp.checked = true;
+          lab.appendChild(inp);
+          lab.appendChild(document.createTextNode(s.label_ko));
+          scale.appendChild(lab);
+        });
+        row.appendChild(q);
+        row.appendChild(scale);
+        box.appendChild(row);
+      });
+    }
+
+    function collectLikertAnswers() {
+      return (likertItems || []).map((it) => {
+        const sel = document.querySelector(`input[name="likert_${it.id}"]:checked`);
+        if (!sel) throw new Error(`미응답: ${it.statement_ko}`);
+        return { id: it.id, value: Number(sel.value) };
+      });
+    }
+
+    function renderChips(chips) {
+      const box = $("chips");
+      box.innerHTML = "";
+      (chips || []).forEach((c) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = c;
+        b.onclick = () => {
+          if (c === "확정") {
+            $("chat-finalize").click();
+            return;
+          }
+          $("chat-input").value = c;
+          $("chat-send").click();
+        };
+        box.appendChild(b);
+      });
+    }
+
+    function showConstraints(fromPhase) {
+      $("panel-constraints").hidden = false;
+      setChatEnabled(false);
+      setBadge($("badge-dna"), false, fromPhase === "constraints" ? "제약 입력" : "제약 · 초안 전");
+    }
+
+    $("save-profile").onclick = async () => {
+      $("profile-status").textContent = "저장 중…";
+      const body = {
+        party_size: $("party_size").value,
+        companion_type: $("companion_type").value,
+        age_band: $("age_band").value,
+        gender: $("gender").value,
+        duration: $("duration").value,
+        lodging: $("lodging").value,
+        lodging_area: $("lodging_area").value.trim() || null,
+        transport: $("transport").value,
+        mobility_preference: $("mobility_preference").value,
+        budget_level: $("budget_level").value,
+        budget_note: $("budget_note").value.trim() || null,
+        time_window: $("time_window").value,
+      };
+      try {
+        const res = await fetch("/api/trip-profile", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body) });
+        const data = await res.json();
+        if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail||data));
+        profileId = data.id;
+        setBadge($("badge-profile"), true, `저장됨 · ${profileId}`);
+        $("profile-status").textContent = `도시 ${data.city} · 물류만 저장`;
+        syncRun();
+      } catch (err) {
+        $("profile-status").textContent = `오류: ${err.message||err}`;
+      }
+    };
+
+    $("chat-start").onclick = async () => {
+      $("chat-status").textContent = "세션 시작…";
+      $("chat-log").innerHTML = "";
+      $("dna-preview").hidden = true;
+      $("panel-constraints").hidden = true;
+      $("must_have").value = "";
+      $("must_avoid").value = "";
+      dnaReady = false;
+      syncRun();
+      try {
+        const res = await fetch("/api/dna-chat/start", { method:"POST" });
+        const data = await res.json();
+        if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail||data));
+        sessionId = data.session_id;
+        likertItems = data.likert_items || [];
+        renderLikert(likertItems);
+        $("panel-likert").hidden = false;
+        $("panel-chat").hidden = false;
+        setChatEnabled(false);
+        $("chat-finalize").disabled = true;
+        setBadge($("badge-dna"), false, `설문 · ${sessionId}`);
+        $("chat-status").textContent = data.assistant_message || "5문항에 답해 주세요";
+      } catch (err) {
+        $("chat-status").textContent = `오류: ${err.message||err}`;
+      }
+    };
+
+    $("likert-submit").onclick = async () => {
+      if (!sessionId) return;
+      $("chat-status").textContent = "설문 반영 중…";
+      try {
+        const answers = collectLikertAnswers();
+        const res = await fetch("/api/dna-chat/likert", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ session_id: sessionId, answers }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail||data));
+        $("panel-likert").hidden = true;
+        setChatEnabled(true);
+        appendBubble("assistant", data.assistant_message);
+        renderChips(data.chips);
+        if (data.draft_dna || data.seed_dna) {
+          $("dna-preview").hidden = false;
+          $("dna-preview").textContent = JSON.stringify(data.draft_dna || data.seed_dna, null, 2);
+        }
+        setBadge($("badge-dna"), false, "대화 중");
+        $("chat-status").textContent = `phase=${data.phase}`;
+      } catch (err) {
+        $("chat-status").textContent = `오류: ${err.message||err}`;
+      }
+    };
+
+    async function sendChat() {
+      if (!sessionId) return;
+      const message = $("chat-input").value.trim();
+      if (!message) return;
+      $("chat-input").value = "";
+      appendBubble("user", message);
+      $("chat-send").disabled = true;
+      $("chat-status").textContent = "생각 중…";
+      try {
+        const res = await fetch("/api/dna-chat/message", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ session_id: sessionId, message }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail||data));
+        appendBubble("assistant", data.assistant_message);
+        renderChips(data.chips);
+        if (data.draft_dna) {
+          $("dna-preview").hidden = false;
+          $("dna-preview").textContent = JSON.stringify(data.draft_dna, null, 2);
+        }
+        if (data.phase === "constraints") {
+          showConstraints("constraints");
+        }
+        $("chat-status").textContent = `phase=${data.phase} · turn=${data.turn}`;
+      } catch (err) {
+        $("chat-status").textContent = `오류: ${err.message||err}`;
+      } finally {
+        if ($("panel-constraints").hidden) $("chat-send").disabled = false;
+      }
+    }
+
+    $("chat-send").onclick = sendChat;
+    $("chat-input").addEventListener("keydown", (e) => { if (e.key === "Enter") sendChat(); });
+
+    $("constraints-submit").onclick = async () => {
+      if (!sessionId) return;
+      const must_have = $("must_have").value.trim();
+      const must_avoid = $("must_avoid").value.trim();
+      if (!must_have && !must_avoid) {
+        const ok = confirm("꼭 원하는 것 / 피해야 하는 것이 모두 비어 있습니다. ‘없음’으로 진행할까요?");
+        if (!ok) return;
+      }
+      $("chat-status").textContent = "제약 저장 중…";
+      try {
+        const res = await fetch("/api/dna-chat/constraints", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({
+            session_id: sessionId,
+            must_have: must_have || null,
+            must_avoid: must_avoid || null,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail||data));
+        appendBubble("assistant", data.assistant_message);
+        renderChips(data.chips);
+        if (data.draft_dna) {
+          $("dna-preview").hidden = false;
+          $("dna-preview").textContent = JSON.stringify(data.draft_dna, null, 2);
+        }
+        $("chat-finalize").disabled = false;
+        setBadge($("badge-dna"), false, "초안 대기 · 확정하세요");
+        $("chat-status").textContent = `phase=${data.phase} · constraints saved`;
+      } catch (err) {
+        $("chat-status").textContent = `오류: ${err.message||err}`;
+      }
+    };
+
+    $("chat-finalize").onclick = async () => {
+      if (!sessionId) return;
+      $("chat-status").textContent = "확정 중…";
+      try {
+        const res = await fetch("/api/dna-chat/finalize", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ session_id: sessionId, confirm: true }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail||data));
+        dnaReady = true;
+        appendBubble("assistant", "Travel DNA 확정");
+        $("dna-preview").hidden = false;
+        $("dna-preview").textContent = JSON.stringify({
+          travel_dna: data.travel_dna,
+          must_have: data.must_have,
+          must_avoid: data.must_avoid,
+        }, null, 2);
+        setBadge($("badge-dna"), true, "확정됨");
+        $("chat-status").textContent = "DNA 확정 완료";
+        $("chat-finalize").disabled = true;
+        syncRun();
+      } catch (err) {
+        $("chat-status").textContent = `오류: ${err.message||err}`;
+      }
+    };
+
+    $("run-btn").onclick = async () => {
+      if (!profileId || !sessionId || !dnaReady) return;
+      $("run-status").textContent = "서울 장소 찾는 중…";
+      $("run-out").innerHTML = "";
+      try {
+        const res = await fetch("/api/seoul-find", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({
+            profile_id: profileId,
+            dna_session_id: sessionId,
+            total_slots: Number($("run-slots").value || 12),
+            shortlist_size: Number($("run-shortlist").value || 16),
+            run_places: true,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail||data));
+        const n = (data.shortlist || []).length;
+        $("run-status").textContent = `완료 · ${data.model} · places ${n} · filters: ${(data.filters_applied||[]).join(", ")}`;
+        let html = `<h3 style="margin:.6rem 0 .3rem;font-size:1rem">업종</h3><ul>${(data.industries||[]).map(n=>`<li>${n}</li>`).join("")}</ul>`;
+        if (data.micro_industries?.length) html += `<h3 style="margin:.6rem 0 .3rem;font-size:1rem">마이크로</h3><ul>${data.micro_industries.map(n=>`<li>${n}</li>`).join("")}</ul>`;
+        html += `<h3 style="margin:.8rem 0 .3rem;font-size:1rem">서울 장소 shortlist</h3><ul>`;
+        (data.shortlist || []).forEach((p) => {
+          const rating = p.rating != null ? `★${p.rating}` : "";
+          html += `<li><strong>${p.name}</strong> ${rating}<br/><span class="hint">${p.address || ""} · ${p.source_keyword} · ${p.source}${p.place_id ? " · " + p.place_id : ""}</span></li>`;
+        });
+        html += `</ul>`;
+        if (data.constraints?.must_have) html += `<p class="hint">must_have: ${data.constraints.must_have}</p>`;
+        if (data.constraints?.must_avoid) html += `<p class="hint">must_avoid: ${data.constraints.must_avoid}</p>`;
+        $("run-out").innerHTML = html;
+      } catch (err) {
+        $("run-status").textContent = `오류: ${err.message||err}`;
+      }
+    };
+
+    syncRun();
+  </script>
+</body>
+</html>

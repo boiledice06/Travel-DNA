@@ -23,6 +23,7 @@ import { RecommendationClient } from '../services/recommendation/api';
 import { rankPlaces } from '../services/recommendation';
 import { readData, writeData } from '../services/storage';
 import { initialData } from '../services/storage/schema';
+import { readServerTrip, writeServerTrip, type ServerTrip } from '../services/storage/serverTrip';
 interface TravelContextValue {
   data: AppData;
   ready: boolean;
@@ -36,6 +37,8 @@ interface TravelContextValue {
   recommendationStatus: 'idle' | 'loading' | 'error' | 'empty';
   recommendationError: string | null;
   requestRecommendations: (conditions: TravelConditions) => void;
+  applyServerResult: (trip: ServerTrip) => void;
+  serverTrip: ServerTrip | null;
   reload: () => void;
   retrySave: () => void;
   start: (nickname: string, demo: boolean) => void;
@@ -89,6 +92,30 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
   const dna = useMemo(() => calculateDNA(data.experiences), [data.experiences]);
   const demoRecommendations = useMemo(() => rankPlaces(dna, places), [dna]);
   const [remoteResult, setRemoteResult] = useState<RecommendationResponse | null>(null);
+  const [serverTrip, setServerTrip] = useState<ServerTrip | null>(null);
+  useEffect(() => {
+    if (!ready) return;
+    let active = true;
+    readServerTrip()
+      .then((trip) => {
+        if (
+          active &&
+          trip &&
+          trip.serverUrl === process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL?.trim() &&
+          requestId.current === 0
+        ) {
+          setServerTrip(trip);
+          setRemoteResult(trip.result);
+          setRecommendationStatus(trip.result.places.length ? 'idle' : 'empty');
+        }
+      })
+      .catch(() => {
+        if (active) setSaveError('이전 서버 여행을 불러오지 못했어요. 저장 데이터는 보존됩니다.');
+      });
+    return () => {
+      active = false;
+    };
+  }, [ready]);
   const [recommendationStatus, setRecommendationStatus] = useState<
     'idle' | 'loading' | 'error' | 'empty'
   >('idle');
@@ -109,16 +136,6 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
   const requestRecommendations = useCallback(
     (conditions: TravelConditions) => {
       const id = ++requestId.current;
-      // The supplied server cannot represent a three-day profile. Do not send
-      // the older proposed /recommendations contract or misstate the duration.
-      if (process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL?.trim()) {
-        setRemoteResult({ places: [], recommendations: [], origin: 'api' });
-        setRecommendationStatus('error');
-        setRecommendationError(
-          '서버가 아직 3일 여행 조건을 지원하지 않아 추천을 요청할 수 없어요.',
-        );
-        return;
-      }
       setRecommendationStatus('loading');
       setRecommendationError(null);
       const client = new RecommendationClient(process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL);
@@ -188,6 +205,22 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
         recommendationStatus,
         recommendationError,
         requestRecommendations,
+        serverTrip,
+        applyServerResult: (trip) => {
+          const result = trip.result;
+          requestId.current++;
+          setServerTrip(trip);
+          setRemoteResult(result);
+          writeServerTrip(trip).catch(() =>
+            setSaveError('서버 여행을 기기에 저장하지 못했어요. 다시 추천을 요청해 주세요.'),
+          );
+          setRecommendationStatus(result.places.length ? 'idle' : 'empty');
+          setRecommendationError(
+            result.places.length
+              ? null
+              : '유효한 서울 장소가 없어요. 조건을 바꾸어 다시 시도해 주세요.',
+          );
+        },
         reload: () => setAttempt((n) => n + 1),
         retrySave: () => setSaveAttempt((n) => n + 1),
         start: (nickname, demo) => setData((d) => startProfile(d, nickname, demo)),

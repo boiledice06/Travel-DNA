@@ -23,6 +23,7 @@ import { attributeLabels, regions } from '../../data/mock/places';
 import type { Attribute } from '../../types';
 import { s } from './map-home.styles';
 import { createItinerary } from '../../services/itinerary';
+import { TripFlow } from '../trip/TripFlow';
 const filters: Attribute[] = [
   'walk',
   'nature',
@@ -47,6 +48,8 @@ export default function MapHome() {
     recommendationStatus,
     recommendationError,
     requestRecommendations,
+    applyServerResult,
+    serverTrip,
   } = useTravel();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -59,6 +62,8 @@ export default function MapHome() {
   const [target, setTarget] = useState<MapProps['target']>(null);
   const [sheetState, setSheetState] = useState<'collapsed' | 'compact' | 'expanded'>('compact');
   const [conditionsModal, setConditionsModal] = useState(false);
+  const [tripVisible, setTripVisible] = useState(false);
+  const serverConfigured = !!process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL?.trim();
   const [budget, setBudget] = useState('');
   const [availableTime, setAvailableTime] = useState('');
   const [companions, setCompanions] = useState('');
@@ -176,7 +181,7 @@ export default function MapHome() {
         </View>
         <Pressable
           accessibilityRole="button"
-          onPress={() => setConditionsModal(true)}
+          onPress={() => (serverConfigured ? setTripVisible(true) : setConditionsModal(true))}
           style={s.search}
         >
           <Text style={ui.small}>
@@ -184,7 +189,11 @@ export default function MapHome() {
           </Text>
         </Pressable>
         {(recommendationStatus === 'error' || recommendationStatus === 'empty') && (
-          <Pressable accessibilityRole="button" onPress={request} style={s.search}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => (serverConfigured ? setTripVisible(true) : request())}
+            style={s.search}
+          >
             <Text style={ui.small}>
               {recommendationError ?? '추천 결과가 없습니다.'} · 탭하여 재시도
             </Text>
@@ -323,6 +332,17 @@ export default function MapHome() {
           <Text style={ui.small}>{notice}</Text>
         </View>
       )}
+      <TripFlow
+        visible={tripVisible}
+        previousTrip={serverTrip}
+        onClose={() => setTripVisible(false)}
+        onResult={(trip) => {
+          setFilter(null);
+          setSavedOnly(false);
+          setDay(null);
+          applyServerResult(trip);
+        }}
+      />
       <Modal
         transparent
         visible={conditionsModal}
@@ -354,8 +374,8 @@ export default function MapHome() {
               />
             ))}
             <Text style={ui.small}>
-              데모 추천과 일정은 추가 조건을 반영하지 않습니다. 서버는 아직 3일 여행을 지원하지
-              않습니다.
+              데모 추천과 일정은 추가 조건을 반영하지 않습니다. 실제 분석에는 서버 주소 설정이
+              필요합니다.
             </Text>
             <Button
               title="추천 요청"

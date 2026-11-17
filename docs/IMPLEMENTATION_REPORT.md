@@ -1,3 +1,17 @@
+# 2026-11-17 실제 백엔드 연동 후속 기록
+
+이 절은 아래 이전 작업 기록보다 우선한다. 기존 구현 보고는 당시 상태를 보존한다.
+
+- `backend/travel-preference-mvp/`는 원본 ZIP의 별도 복사본이다. 애플리케이션 코드에서 `category_agent/trip_profile.py`의 `Duration`에 `2n3d`만 추가했다. `duration` 참조를 조사한 결과 프로필 저장·요약 이외 추천 분기는 없었다. 이전 세 값은 그대로 허용된다. 기존 서버에 이 변경을 적용하고 서버를 재시작해야 한다. 설정과 실행은 루트 README의 추천 서버 연결을 따른다.
+- 설정된 서버에 실제 API 단계별 요청을 연결했다. 여행 조건, 설문, 대화, 필수·제외, 확정, 후보 요청의 UI 및 실패 후 재시도를 제공한다. 확정된 결과와 서버 ID를 기존 저장 스키마와 별도의 키에 저장한다. 앱을 다시 시작한 뒤에는 저장 결과를 표시하고 이전 확정 세션으로 재요청할 수 있다. 서버 세션이 사라졌으면 오류와 처음부터 시작 경로를 제공한다. 진행 중 설문·대화는 앱 재시작 후 복원되지 않는다.
+- 원래 `/recommendations` 제안 서비스는 데모에만 사용하며 실제 서버 흐름은 `BackendClient`를 사용한다. 404, 인증·외부 서비스 오류, 네트워크, 잘못된 JSON, 타임아웃을 사용자에게 표시한다. 부작용이 있는 POST는 자동 중복 재시도하지 않고 사용자가 같은 단계에서 다시 시도한다.
+- 실제 로컬 FastAPI HTTP: `half_day`, `full_day`, `1n2d`, `2n3d` 프로필 생성 성공 및 값 보존, 잘못된 세션 404, 잘못된 JSON 422. 서버의 실제 외부 AI/Places 자격증명이 없어 실제 외부 API 성공은 확인하지 않았다.
+- 모의 외부 의존성을 주입한 실제 FastAPI HTTP 서버와 프런트 클라이언트의 자동 테스트: 조건 → Likert → 대화 → 제약 → 확정 → shortlist → 3일 배정까지 성공, 후보 9개와 날짜별 3/3/3 확인. 이는 외부 서비스의 성공을 의미하지 않는다. `scripts/verify-mock-flow.ts`와 `backend/travel-preference-mvp/tests/http_mock_app.py`는 테스트용이며 실제 키나 가짜 결과를 프로덕션 서버에 연결하지 않는다.
+- 최종 자동 검사: `npm run typecheck` 통과, `npm test` 24개 통과, `npm run format:check` 통과, Python `pytest -q` 29개 통과. `npx expo-doctor@latest`는 19/20이며 기존 SDK 58 패키지 9개의 권장 버전 불일치를 보고했다. Web/Android export 결과는 실제 기기 실행을 뜻하지 않는다.
+- Expo Web 브라우저에서 동일한 모의 서버를 사용해 설문, 서버 선택지, 제약, 확정, 9개 마커·카드, Day 2 필터, 패널 접기와 다시 열기, 상세 복귀를 직접 확인했다. 이 브라우저 검사는 수동 조작이며 자동 UI 테스트가 아니다. Android/iOS 실기기는 미검증이다.
+
+---
+
 # 서울 3일 통합 작업 보고
 
 검증일: 2026-11-17 (Asia/Seoul). 브랜치: `codex/seoul-three-day-integration`.
