@@ -212,3 +212,5 @@ Expo Web 모바일 검증 실험 `exp-20261118-expo-web-e2e-v1`: [검증 보고�
 UX 개선 중간 검증: `verification/UX_REDESIGN_REPORT.md` (실험 `exp-20261118-ux-redesign-v1`, 미완료).
 
 최종 통합 검증: [보고서](verification/FINAL_INTEGRATION_REPORT.md), [실험 설명](experiments/exp-20261118-final-integration-v1/README.md), `verification/final-e2e-screenshots/`. 실제 API 및 사진 확인과 남은 제약을 구분해 기록합니다.
+
+최종 잔여 수정과 제한: [보고서](verification/FINAL_POLISH_REPORT.md), [실험 설명](experiments/exp-20261118-final-polish-v1/README.md).

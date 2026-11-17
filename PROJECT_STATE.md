@@ -28,3 +28,8 @@
 - `exp-20261118-final-integration-v1`: 실제 브라우저 세션에서 Gemini 요청, 카카오 11곳·TourAPI 4곳, 3일 각 5곳과 관광 사진 3곳을 확인했다. 증거: `verification/FINAL_INTEGRATION_REPORT.md`, `verification/final-e2e-screenshots/`.
 - 장소 상세 ID, 저장 후 일정 순서, 긴 웹 마커 겹침을 수정했다. 포인터/터치 시트 드래그, 개별 사진 이용 조건, 네이티브 동작 및 전체 콘솔 로그는 미검증이다. 필터 선택 시 일정이 재배치되는 동작은 제품 판단이 필요하다.
 - Drive에 ZIP 스냅샷을 업로드하고 부모·크기·다운로드 참조를 확인했다. 체크섬은 미검증이며 ZIP은 보관 상태 추가 전 버전이다. 위치와 한계는 실험 README 참조. 다음 검증은 사진 이용 조건, 시트 제스처, 네이티브 지도 및 필터의 날짜 보존 여부를 우선한다.
+
+## 2026-11-18 최종 잔여 수정
+
+- `exp-20261118-final-polish-v1`: 기존 일정의 날짜·순서를 유지하도록 필터 수정, 실제 저장 추천과 단위 테스트로 확인. 상세 사진 출처·이용 안내와 URL 없는 사진 fallback을 확인했다.
+- 시트 포인터 드래그는 재현되지 않았고 자동화 한계와 앱 결함을 구분하지 못했다. 모의 질문 표시는 확인했으나 실제 Gemini 질문 화면과 이미지 요청 실패 fallback은 미검증이다. 증거 및 재현: `verification/FINAL_POLISH_REPORT.md`, `experiments/exp-20261118-final-polish-v1/`.

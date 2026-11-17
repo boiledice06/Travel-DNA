@@ -20,3 +20,16 @@ export function matchesMapFilter(place: Place, filter: Attribute | null): boolea
   const category = place.category.toLowerCase();
   return terms[filter].some((term) => category.includes(term));
 }
+
+export function filterItinerary(
+  itinerary: Place[][],
+  filter: Attribute | null,
+  savedOnly: boolean,
+  savedIds: string[],
+): Place[][] {
+  return itinerary.map((day) =>
+    day.filter(
+      (place) => matchesMapFilter(place, filter) && (!savedOnly || savedIds.includes(place.id)),
+    ),
+  );
+}

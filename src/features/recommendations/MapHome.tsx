@@ -16,7 +16,7 @@ import type { Attribute } from '../../types';
 import { s } from './map-home.styles';
 import { createItinerary } from '../../services/itinerary';
 import { TripFlow } from '../trip/TripFlow';
-import { matchesMapFilter } from './mapFilters';
+import { filterItinerary } from './mapFilters';
 const filters: Attribute[] = [
   'walk',
   'nature',
@@ -36,7 +36,6 @@ export default function MapHome() {
     toggleSave,
     dna,
     activePlaces,
-    allPlaces,
     recommendationOrigin,
     recommendationStatus,
     recommendationError,
@@ -82,24 +81,26 @@ export default function MapHome() {
   const [notice, setNotice] = useState('');
   const [locating, setLocating] = useState(false);
   const regionPlaces = useMemo(
-    () => (savedOnly ? allPlaces : activePlaces).filter((p) => p.region === 'seoul'),
-    [activePlaces, allPlaces, data.region, savedOnly],
+    () => activePlaces.filter((p) => p.region === 'seoul'),
+    [activePlaces],
   );
   const candidates = useMemo(
     () =>
       recommendations.flatMap((r) => {
         const p = regionPlaces.find((p) => p.id === r.placeId);
-        return p && matchesMapFilter(p, filter) && (!savedOnly || data.savedIds.includes(p.id))
-          ? [p]
-          : [];
+        return p ? [p] : [];
       }),
-    [recommendations, regionPlaces, filter, savedOnly, data.savedIds],
+    [recommendations, regionPlaces],
   );
   const itinerary = useMemo(() => createItinerary(candidates), [candidates]);
+  const filteredItinerary = useMemo(
+    () => filterItinerary(itinerary, filter, savedOnly, data.savedIds),
+    [itinerary, filter, savedOnly, data.savedIds],
+  );
   const orderLabels = Object.fromEntries(
     itinerary.flatMap((route, d) => route.map((p, i) => [p.id, `Day ${d + 1} · ${i + 1}`])),
   );
-  const visible = day === null ? itinerary.flat() : itinerary[day];
+  const visible = day === null ? filteredItinerary.flat() : filteredItinerary[day];
   const result = regionPlaces
     .filter((p) => `${p.name} ${p.category} ${p.district}`.includes(query.trim()))
     .slice(0, 5);
@@ -155,7 +156,7 @@ export default function MapHome() {
             select(id);
           }}
           target={target}
-          routes={day === null ? itinerary : [itinerary[day]]}
+          routes={day === null ? filteredItinerary : [filteredItinerary[day]]}
           orderLabels={orderLabels}
         />
       </MapBoundary>
