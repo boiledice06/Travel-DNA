@@ -204,3 +204,11 @@ npx expo export --platform android --output-dir dist-android
 서울 3일 데모와 서버 취향 분석·후보 추천 흐름을 제공합니다. AI와 장소 서비스의 실제 동작은 서버 인증과 외부 서비스에 의존합니다. 일정은 직선거리 기반 제안이며 실제 경로·영업시간·가격은 검증하지 않습니다. 로그인, 오프라인 지도 및 실제 리뷰 분석은 제공하지 않습니다.
 
 실제 외부 API의 인증 전 검증 결과와 설정 안내는 [라이브 API 검증 보고](docs/LIVE_API_VERIFICATION.md), 현재 연구 상태는 [PROJECT_STATE](PROJECT_STATE.md)를 참고하세요. 실험 ID `exp-20261117-live-api-preflight-v1`의 로컬 증거는 `experiments/`에 있습니다.
+
+
+Expo Web 모바일 검증 실험 `exp-20261118-expo-web-e2e-v1`: [검증 보고서](verification/E2E_VERIFICATION_REPORT.md), [실험 설명](experiments/exp-20261118-expo-web-e2e-v1/README.md).
+
+
+UX 개선 중간 검증: `verification/UX_REDESIGN_REPORT.md` (실험 `exp-20261118-ux-redesign-v1`, 미완료).
+
+최종 통합 검증: [보고서](verification/FINAL_INTEGRATION_REPORT.md), [실험 설명](experiments/exp-20261118-final-integration-v1/README.md), `verification/final-e2e-screenshots/`. 실제 API 및 사진 확인과 남은 제약을 구분해 기록합니다.

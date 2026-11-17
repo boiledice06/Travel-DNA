@@ -12,3 +12,19 @@
 ## 원격 보관 상태
 
 `Research/Travel-DNA/experiments/exp-20261117-live-api-preflight-v1/`에 실험 README, HTTP 결과, 스크립트, 상세 보고 파일 4개를 업로드했다. Drive 메타데이터에서 네 파일의 이름·부모·크기가 로컬과 일치했고 README 및 상세 보고는 텍스트를 재조회해 일치함을 확인했다. 커넥터가 체크섬을 반환하지 않아 JSON·Python 파일의 바이트 단위 일치는 검증하지 못했다. 따라서 전체 동기화의 완전한 무결성 검증은 미완료다. 로컬 파일을 보존한다.
+
+
+## 2026-11-18 Expo Web 검증 — exp-20261118-expo-web-e2e-v1
+
+실제 서버 추천 15곳의 3일 지도 렌더링 및 날짜 전환을 확인했다. 모바일 긴 마커 라벨과 지도 버튼이 겹치며, AI 대화 캡처와 시작부터 연속 흐름은 미확보다. 따라서 전체 E2E는 미완료. 증거와 재현: `verification/E2E_VERIFICATION_REPORT.md`, `verification/e2e-screenshots/`; 실험 설명: `experiments/exp-20261118-expo-web-e2e-v1/README.md`.
+
+
+## 2026-11-18 UX 개선 중간 검증
+
+- 실험 ID: `exp-20261118-ux-redesign-v1`. 작업 및 한계: `verification/UX_REDESIGN_REPORT.md`. 이미지 경로와 지도/탭 개선은 진행 중이며 실제 API 브라우저 재검증 및 스크린샷이 남아 있다. Drive 동기화는 미검증이다.
+
+## 2026-11-18 최종 통합 검증
+
+- `exp-20261118-final-integration-v1`: 실제 브라우저 세션에서 Gemini 요청, 카카오 11곳·TourAPI 4곳, 3일 각 5곳과 관광 사진 3곳을 확인했다. 증거: `verification/FINAL_INTEGRATION_REPORT.md`, `verification/final-e2e-screenshots/`.
+- 장소 상세 ID, 저장 후 일정 순서, 긴 웹 마커 겹침을 수정했다. 포인터/터치 시트 드래그, 개별 사진 이용 조건, 네이티브 동작 및 전체 콘솔 로그는 미검증이다. 필터 선택 시 일정이 재배치되는 동작은 제품 판단이 필요하다.
+- Drive에 ZIP 스냅샷을 업로드하고 부모·크기·다운로드 참조를 확인했다. 체크섬은 미검증이며 ZIP은 보관 상태 추가 전 버전이다. 위치와 한계는 실험 README 참조. 다음 검증은 사진 이용 조건, 시트 제스처, 네이티브 지도 및 필터의 날짜 보존 여부를 우선한다.
