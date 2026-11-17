@@ -253,6 +253,8 @@ def find_seoul_places(
 
     sources_used: list[str] = []
     raw: list[PlaceCandidate] = []
+    attempted = 0
+    succeeded = 0
 
     places_ok = places_configured() if places_client is None else True
     if places_client is None and places_ok:
@@ -262,6 +264,7 @@ def find_seoul_places(
     if places_client is not None:
         sources_used.append("places")
         for kw in keywords:
+            attempted += 1
             query = f"{SEOUL_CITY} {kw}"
             try:
                 raw.extend(
@@ -275,6 +278,7 @@ def find_seoul_places(
                         strict_location=True,
                     )
                 )
+                succeeded += 1
             except Exception:
                 # try bias-only fallback once style: re-raise isolation per keyword
                 try:
@@ -289,6 +293,7 @@ def find_seoul_places(
                             strict_location=False,
                         )
                     )
+                    succeeded += 1
                 except Exception:
                     continue
 
@@ -299,12 +304,18 @@ def find_seoul_places(
     if tour is not None:
         sources_used.append("tourapi")
         for kw in keywords[:8]:  # keep TourAPI lighter
+            attempted += 1
             try:
                 raw.extend(
                     tour.keyword_search(kw, max_results=max(1, max_per_keyword - 1), source_keyword=kw)
                 )
+                succeeded += 1
             except Exception:
                 continue
+
+    if attempted and not succeeded:
+        # Do not expose provider exception bodies: they may contain keys or request data.
+        raise RuntimeError("장소 검색 서비스에 연결하지 못했습니다. 서버 설정을 확인해 주세요.")
 
     merged = merge_candidates(raw)
     shortlist, excluded, filters = filter_and_shortlist(

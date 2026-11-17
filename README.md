@@ -202,3 +202,5 @@ npx expo export --platform android --output-dir dist-android
 ## 현재 범위
 
 서울 3일 데모와 서버 취향 분석·후보 추천 흐름을 제공합니다. AI와 장소 서비스의 실제 동작은 서버 인증과 외부 서비스에 의존합니다. 일정은 직선거리 기반 제안이며 실제 경로·영업시간·가격은 검증하지 않습니다. 로그인, 오프라인 지도 및 실제 리뷰 분석은 제공하지 않습니다.
+
+실제 외부 API의 인증 전 검증 결과와 설정 안내는 [라이브 API 검증 보고](docs/LIVE_API_VERIFICATION.md), 현재 연구 상태는 [PROJECT_STATE](PROJECT_STATE.md)를 참고하세요. 실험 ID `exp-20261117-live-api-preflight-v1`의 로컬 증거는 `experiments/`에 있습니다.

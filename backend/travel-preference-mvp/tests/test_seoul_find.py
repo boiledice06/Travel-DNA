@@ -167,3 +167,23 @@ def test_filter_shortlist_cap():
     assert len(short) == 16
     assert excluded == 0
     assert "city=서울" in filters
+
+
+def test_failed_provider_is_not_reported_as_successful_empty_result():
+    class FailingPlaces:
+        def text_search(self, *args, **kwargs):
+            raise RuntimeError('provider error containing a hypothetical secret')
+
+    import pytest
+    with pytest.raises(RuntimeError, match='장소 검색 서비스') as exc:
+        find_seoul_places(profile=_profile(), industries=['카페'], micro_industries=[], places_client=FailingPlaces(), use_tourapi=False)
+    assert 'hypothetical secret' not in str(exc.value)
+
+
+def test_successful_empty_provider_remains_a_valid_empty_result():
+    class EmptyPlaces:
+        def text_search(self, *args, **kwargs):
+            return []
+
+    result = find_seoul_places(profile=_profile(), industries=['카페'], micro_industries=[], places_client=EmptyPlaces(), use_tourapi=False)
+    assert result.shortlist == []
