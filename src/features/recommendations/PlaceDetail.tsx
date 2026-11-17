@@ -26,17 +26,26 @@ export default function PlaceDetail() {
     <View style={s.root}>
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom }}>
         <View>
-          <Photo uri={place.image} style={s.image} />
+          {place.image ? (
+            <Photo uri={place.image} style={s.image} />
+          ) : (
+            <View style={s.noImage}>
+              <Icon name="location-outline" size={36} color="#3DB8BC" />
+              <Text style={ui.small}>사진을 제공하지 않는 장소예요</Text>
+            </View>
+          )}
           <View style={[s.back, { top: insets.top + 12 }]}>
             <IconButton icon="arrow-back" label="이전 화면으로" onPress={back} />
           </View>
-          <View style={s.imageCaption}>
-            <Text style={ui.small}>
-              {place.source === 'api'
-                ? '장소 사진 없음'
-                : '여행 분위기 참고 이미지 · 실제 장소 사진 아님'}
-            </Text>
-          </View>
+          {place.image ? (
+            <View style={s.imageCaption}>
+              <Text style={ui.small}>
+                {place.source === 'api'
+                  ? '장소 사진 없음'
+                  : '여행 분위기 참고 이미지 · 실제 장소 사진 아님'}
+              </Text>
+            </View>
+          ) : null}
         </View>
         <View style={s.body}>
           <Text style={ui.eyebrow}>{regions[place.region].english}</Text>
@@ -53,31 +62,39 @@ export default function PlaceDetail() {
             />
           </View>
           <Text style={ui.body}>{place.description}</Text>
-          <View style={s.reason}>
-            <View style={ui.between}>
-              <View>
-                <Text style={ui.small}>
-                  {place.source === 'api' ? '서버 추천 근거' : '데모 · 예상 일치도'}
-                </Text>
-                {r.score !== null && (
-                  <Text style={s.score}>
-                    {r.score}
-                    <Text style={{ fontSize: 16, letterSpacing: 0, color: '#68788A' }}> / 100</Text>
+          {place.source === 'api' &&
+          r.reason === '서버에서 별도의 추천 이유를 제공하지 않았어요.' ? (
+            <Text style={ui.small}>{r.reason}</Text>
+          ) : (
+            <View style={s.reason}>
+              <View style={ui.between}>
+                <View>
+                  <Text style={ui.small}>
+                    {place.source === 'api' ? '서버 추천 근거' : '데모 · 예상 일치도'}
                   </Text>
-                )}
+                  {r.score !== null && (
+                    <Text style={s.score}>
+                      {r.score}
+                      <Text style={{ fontSize: 16, letterSpacing: 0, color: '#68788A' }}>
+                        {' '}
+                        / 100
+                      </Text>
+                    </Text>
+                  )}
+                </View>
+                <Icon name="finger-print-outline" size={42} color="#3DB8BC" />
               </View>
-              <Icon name="finger-print-outline" size={42} color="#3DB8BC" />
-            </View>
-            <Text style={{ fontSize: 16, lineHeight: 25, fontWeight: '600', color: '#174A7E' }}>
-              {r.reason}
-            </Text>
-            {place.source === 'curated-demo' && (
-              <Text style={ui.small}>
-                선호 일치 가점과 기피 충돌 감점을 반영한 규칙 기반 지수입니다. 실제 만족 확률이
-                아닙니다.
+              <Text style={{ fontSize: 16, lineHeight: 25, fontWeight: '600', color: '#174A7E' }}>
+                {r.reason}
               </Text>
-            )}
-          </View>
+              {place.source === 'curated-demo' && (
+                <Text style={ui.small}>
+                  선호 일치 가점과 기피 충돌 감점을 반영한 규칙 기반 지수입니다. 실제 만족 확률이
+                  아닙니다.
+                </Text>
+              )}
+            </View>
+          )}
           {place.source === 'curated-demo' && (
             <>
               <Text style={ui.subtitle}>이 장소를 이루는 장면</Text>

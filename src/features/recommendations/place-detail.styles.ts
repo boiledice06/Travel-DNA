@@ -3,6 +3,14 @@ import { theme } from '../../theme';
 export const s = StyleSheet.create({
   root: { flex: 1, backgroundColor: theme.colors.background },
   image: { width: '100%', height: 330 },
+  noImage: {
+    height: 150,
+    paddingTop: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: theme.colors.pale,
+  },
   back: { position: 'absolute', left: 20 },
   imageCaption: {
     position: 'absolute',

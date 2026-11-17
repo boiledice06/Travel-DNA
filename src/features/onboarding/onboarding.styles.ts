@@ -5,7 +5,7 @@ export const s = StyleSheet.create({
   hero: {
     height: 370,
     overflow: 'hidden',
-    backgroundColor: '#DDE9EE',
+    backgroundColor: t.colors.primary,
     borderBottomLeftRadius: 44,
     borderBottomRightRadius: 44,
   },
@@ -20,7 +20,13 @@ export const s = StyleSheet.create({
     padding: 28,
     justifyContent: 'flex-end',
   },
-  heroTitle: { fontSize: 44, fontWeight: '700', color: '#fff', letterSpacing: -2 },
+  heroTitle: {
+    fontSize: 33,
+    lineHeight: 44,
+    fontWeight: '700',
+    color: '#fff',
+    letterSpacing: -1.1,
+  },
   logo: {
     position: 'absolute',
     top: 25,
@@ -33,4 +39,5 @@ export const s = StyleSheet.create({
     backgroundColor: '#ffffffea',
   },
   content: { padding: 28, gap: 20 },
+  credit: { color: t.colors.muted, fontSize: 10, lineHeight: 15, textDecorationLine: 'underline' },
 });

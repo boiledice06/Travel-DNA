@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import { regions } from '../../data/mock/places';
 import { theme } from '../../theme';
 import type { MapProps } from './types';
@@ -32,11 +32,13 @@ const Pin = memo(function Pin({
   score,
   selected,
   onSelect,
+  orderLabel,
 }: {
   place: MapProps['places'][number];
   score: number | null;
   selected: boolean;
   onSelect: MapProps['onSelect'];
+  orderLabel?: string;
 }) {
   return (
     <Marker
@@ -49,7 +51,7 @@ const Pin = memo(function Pin({
       <View style={[styles.marker, selected && styles.selected]}>
         <Text style={[styles.text, selected && { color: '#fff' }]}>
           {selected ? `${place.name}  ` : ''}
-          {score ?? '추천'}
+          {orderLabel ?? score ?? '추천'}
         </Text>
       </View>
     </Marker>
@@ -62,6 +64,8 @@ export default function MapCanvas({
   selectedId,
   onSelect,
   target,
+  routes = [],
+  orderLabels = {},
 }: MapProps) {
   const map = useRef<MapView>(null);
   const [ready, setReady] = useState(false);
@@ -102,10 +106,23 @@ export default function MapCanvas({
         toolbarEnabled={false}
         mapPadding={{ top: 190, right: 20, bottom: 250, left: 20 }}
       >
+        {routes.map(
+          (route, i) =>
+            route.length > 1 && (
+              <Polyline
+                key={i}
+                coordinates={route.map((p) => ({ latitude: p.latitude, longitude: p.longitude }))}
+                strokeColor="#3DB8BC"
+                strokeWidth={3}
+                lineDashPattern={[5, 5]}
+              />
+            ),
+        )}
         {places.map((p) => (
           <Pin
             key={`${p.id}-${recommendations.find((r) => r.placeId === p.id)?.score ?? null}-${selectedId === p.id}`}
             place={p}
+            orderLabel={orderLabels[p.id]}
             score={recommendations.find((r) => r.placeId === p.id)?.score ?? null}
             selected={selectedId === p.id}
             onSelect={onSelect}

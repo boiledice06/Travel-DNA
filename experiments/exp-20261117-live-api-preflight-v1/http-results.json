@@ -1,0 +1,106 @@
+{
+  "date_utc": "2026-11-17T07:43:46.155265+00:00",
+  "test_type": "actual FastAPI, no injected mock; synthetic input",
+  "measurements": [
+    {
+      "step": "docs",
+      "status": 200,
+      "elapsed_ms": 146.5
+    },
+    {
+      "step": "health",
+      "status": 200,
+      "elapsed_ms": 57.4
+    },
+    {
+      "step": "A:profile",
+      "status": 200,
+      "elapsed_ms": 31.4
+    },
+    {
+      "step": "A:start",
+      "status": 200,
+      "elapsed_ms": 4.7
+    },
+    {
+      "step": "A:likert",
+      "status": 200,
+      "elapsed_ms": 18.2,
+      "returned_phase": "asking"
+    },
+    {
+      "step": "A:vertex_chat",
+      "status": 502,
+      "elapsed_ms": 13129.4,
+      "error_category": "credential_error"
+    },
+    {
+      "step": "A:constraints_after_likert",
+      "status": 200,
+      "elapsed_ms": 10.3
+    },
+    {
+      "step": "A:finalize",
+      "status": 200,
+      "elapsed_ms": 28.5,
+      "returned_phase": "confirmed"
+    },
+    {
+      "step": "A:find",
+      "status": 502,
+      "elapsed_ms": 12037.1,
+      "error_category": "credential_error"
+    },
+    {
+      "step": "B:profile",
+      "status": 200,
+      "elapsed_ms": 5.3
+    },
+    {
+      "step": "B:start",
+      "status": 200,
+      "elapsed_ms": 5.7
+    },
+    {
+      "step": "B:likert",
+      "status": 200,
+      "elapsed_ms": 40.2,
+      "returned_phase": "asking"
+    },
+    {
+      "step": "B:vertex_chat",
+      "status": 502,
+      "elapsed_ms": 12044.7,
+      "error_category": "credential_error"
+    },
+    {
+      "step": "B:constraints_after_likert",
+      "status": 200,
+      "elapsed_ms": 7.7
+    },
+    {
+      "step": "B:finalize",
+      "status": 200,
+      "elapsed_ms": 49.2,
+      "returned_phase": "confirmed"
+    },
+    {
+      "step": "B:find",
+      "status": 502,
+      "elapsed_ms": 12084.6,
+      "error_category": "credential_error"
+    },
+    {
+      "step": "places_search_without_key",
+      "status": 503,
+      "elapsed_ms": 4.2,
+      "error_category": "unclassified_error"
+    }
+  ],
+  "configuration": {
+    "places_configured": false,
+    "tourapi_configured": false,
+    "adc_default_file_present": false,
+    "llm_provider": "vertex"
+  }
+}
