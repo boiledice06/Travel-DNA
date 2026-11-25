@@ -17,6 +17,8 @@ import {
   type PlacePhoto,
 } from '../types';
 import { places } from '../data/mock/places';
+import { withReviewedSeoulPhoto } from '../services/photos/seoul';
+
 import { hasDemoRecords, startProfile } from '../features/onboarding/profile';
 import { calculateDNA } from '../features/travel-dna/calculate';
 import { extractKeywords } from '../features/travel-dna/keywords';
@@ -53,6 +55,8 @@ interface TravelContextValue {
   setRegion: (region: RegionId) => void;
 }
 const Context = createContext<TravelContextValue | null>(null);
+const reviewedDemoPlaces = places.map(withReviewedSeoulPhoto);
+
 export function TravelProvider({ children }: React.PropsWithChildren) {
   const [data, setData] = useState<AppData>(initialData);
   const [ready, setReady] = useState(false);
@@ -176,9 +180,12 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
 
   const remotePlaces = useMemo(() => {
     const source = remoteResult?.places;
-    if (!source || enrichment?.trip !== serverTrip || remoteResult !== serverTrip?.result)
-      return source;
-    return withPlacePhotos(source, enrichment.photos);
+    if (!source) return source;
+    const enriched =
+      enrichment && enrichment.trip === serverTrip && remoteResult === serverTrip?.result
+        ? withPlacePhotos(source, enrichment.photos)
+        : source;
+    return enriched.map(withReviewedSeoulPhoto);
   }, [enrichment, remoteResult, serverTrip]);
   const [recommendationStatus, setRecommendationStatus] = useState<
     'idle' | 'loading' | 'error' | 'empty'
@@ -186,8 +193,8 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
   const [recommendationError, setRecommendationError] = useState<string | null>(null);
   const requestId = useRef(0);
   const allPlaces = useMemo(() => {
-    const map = new Map(places.map((p) => [p.id, p]));
-    for (const item of data.savedPlaces) map.set(item.place.id, item.place);
+    const map = new Map(reviewedDemoPlaces.map((p) => [p.id, p]));
+    for (const item of data.savedPlaces) map.set(item.place.id, withReviewedSeoulPhoto(item.place));
     for (const p of remotePlaces ?? []) map.set(p.id, p);
     return [...map.values()];
   }, [data.savedPlaces, remotePlaces]);
@@ -267,7 +274,9 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
         recommendations,
         allPlaces,
         activePlaces:
-          remoteResult?.origin === 'api' ? (remotePlaces ?? remoteResult.places) : places,
+          remoteResult?.origin === 'api'
+            ? (remotePlaces ?? remoteResult.places)
+            : reviewedDemoPlaces,
         recommendationOrigin: remoteResult?.origin ?? 'demo',
         recommendationStatus,
         recommendationError,

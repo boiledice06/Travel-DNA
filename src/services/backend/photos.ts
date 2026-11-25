@@ -14,7 +14,12 @@ function safeUrl(value: unknown, hosts: readonly string[]): value is string {
       !url.port &&
       !url.username &&
       !url.password &&
-      !url.search &&
+      (!url.search ||
+        (url.hostname === 'www.kcdf.or.kr' &&
+          ((url.pathname === '/com/file/filedown' &&
+            /^\?_ci=\d+&_ck=[a-f\d-]+$/.test(url.search)) ||
+            (url.pathname === '/brd/board/324/L/menu/293' &&
+              /^\?bbIdx=\d+&brdType=R$/.test(url.search))))) &&
       !url.hash &&
       url.pathname !== '/'
     );
@@ -39,18 +44,31 @@ export function decodePlacePhoto(value: unknown): PlacePhoto | undefined {
     description,
     attribution,
   } = value;
-  if (provider !== 'tourapi' && provider !== 'gallery' && provider !== 'commons') return;
+  if (
+    provider !== 'tourapi' &&
+    provider !== 'gallery' &&
+    provider !== 'commons' &&
+    provider !== 'archive'
+  )
+    return;
   const commons = provider === 'commons';
-  const imageHosts = commons
-    ? ['upload.wikimedia.org', 'thumb.wikimedia.org']
-    : provider === 'gallery'
-      ? [...tourHosts, 'phoko.visitkorea.or.kr']
-      : tourHosts;
+  const archive = provider === 'archive';
+  const imageHosts = archive
+    ? ['archive.visitseoul.net', 'www.kcdf.or.kr']
+    : commons
+      ? ['upload.wikimedia.org', 'thumb.wikimedia.org']
+      : provider === 'gallery'
+        ? [...tourHosts, 'phoko.visitkorea.or.kr']
+        : tourHosts;
   if (
     !safeUrl(url, imageHosts) ||
     !safeUrl(
       source_page,
-      commons ? ['commons.wikimedia.org'] : ['www.data.go.kr', 'korean.visitkorea.or.kr'],
+      archive
+        ? ['archive.visitseoul.net', 'www.kcdf.or.kr']
+        : commons
+          ? ['commons.wikimedia.org']
+          : ['www.data.go.kr', 'korean.visitkorea.or.kr'],
     ) ||
     typeof publisher !== 'string' ||
     !publisher.trim() ||
@@ -75,7 +93,13 @@ export function decodePlacePhoto(value: unknown): PlacePhoto | undefined {
     const type = new URL(license_url).pathname.match(
       /^\/licenses\/(by|by-sa)\/(2\.0|2\.5|3\.0|4\.0)\/$/,
     );
-    if (!type || license !== `CC ${type[1].toUpperCase()} ${type[2]}` || !can_modify || !author)
+    const cc0 =
+      license === 'CC0 1.0' && license_url === 'https://creativecommons.org/publicdomain/zero/1.0/';
+    if (
+      (!cc0 && (!type || license !== `CC ${type[1].toUpperCase()} ${type[2]}`)) ||
+      !can_modify ||
+      !author
+    )
       return;
   } else if (
     license_url !== 'https://www.kogl.or.kr/info/license.do' ||

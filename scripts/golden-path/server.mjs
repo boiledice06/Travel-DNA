@@ -39,6 +39,8 @@ const contentTypes = {
   '.html': 'text/html; charset=utf-8',
   '.jpg': 'image/jpeg',
   '.png': 'image/png',
+  '.bmp': 'image/bmp',
+  '.webp': 'image/webp',
   '.woff': 'font/woff',
   '.woff2': 'font/woff2',
   '.ttf': 'font/ttf',

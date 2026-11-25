@@ -139,6 +139,13 @@ export default function MapHome() {
     [day, filteredItinerary],
   );
   const visible = useMemo(() => routes.flat(), [routes]);
+  const expandedPlaces = useMemo(() => {
+    if (sheetState !== 'expanded' || day !== null) return visible;
+    const scheduled = new Set(itinerary.flat().map((place) => place.id));
+    const unscheduled = candidates.filter((place) => !scheduled.has(place.id));
+    const [extra] = filterItinerary([unscheduled], filter, savedOnly, data.savedIds);
+    return [...visible, ...extra];
+  }, [candidates, day, filter, itinerary, savedOnly, data.savedIds, sheetState, visible]);
   const changeDay = (next: number | null) => {
     if (next === day) return;
     setDay(next);
@@ -347,7 +354,7 @@ export default function MapHome() {
         </View>
       )}
       <RecommendationSheet
-        places={visible}
+        places={expandedPlaces}
         day={day}
         onDayChange={changeDay}
         availableHeight={availableHeight}

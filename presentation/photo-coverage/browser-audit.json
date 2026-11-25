@@ -1,0 +1,346 @@
+{
+  "demo": {
+    "mode": "demo",
+    "mapTiles": 8,
+    "externalImages": [],
+    "errors": [],
+    "photos": [
+      {
+        "index": 0,
+        "id": "seochon",
+        "name": "서촌",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/c3f71700d4d928ccdb0d6b8e565bb72f78d6c8e652fcd0aa7a61351c9ab62792.91cd4d540b2978b552fa77de05831daa.jpg"
+      },
+      {
+        "index": 1,
+        "id": "gyeongbokgung",
+        "name": "경복궁",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/b7e4f5504d8a9bc4432ecca810f8fc0c437753a03513e5b6b121bcc0881921a7.cc2c54ea34ca9ede5fe1437839452a1b.jpg"
+      },
+      {
+        "index": 2,
+        "id": "bukchon",
+        "name": "북촌한옥마을",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/4a71a128d9e291414230342cc833b162345f0d0b51f1e4f7391050b0e67e7fa3.045017329aadeed3ab3a1232b39b08f1.jpg"
+      },
+      {
+        "index": 7,
+        "id": "forest",
+        "name": "서울숲",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/fdec83e74f9b09a1acd96d72a1e97937d35c35a89fb6e8a005bb01b690c6743b.261ab51ab6b34eb207e9b3b0a972daae.jpg"
+      },
+      {
+        "index": 5,
+        "id": "market",
+        "name": "광장시장",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/9e713e7c8c3374e1ad524997ab79631d1d3d6578aa837bf29c1d541852b23fdc.9172efe3168f9661b75ab15cf597ff07.jpg"
+      },
+      {
+        "index": 4,
+        "id": "museum",
+        "name": "국립중앙박물관",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/495338fadb00c1d67ca452bd453a6a7ef0d5e44ea74f29e48200eb69c12bbad0.482710d9128e961c54d1ab56eaebe494.jpg"
+      },
+      {
+        "index": 3,
+        "id": "namsan",
+        "name": "N서울타워",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/5aace04b57037599a770b41620f1b872389d2b334aa1fb376e39d02e0769664c.1dc9c5ddd52a9c9261d2bee10808919b.jpg"
+      },
+      {
+        "index": 6,
+        "id": "stream",
+        "name": "청계천",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/743ba536ca3a4248f622ca6b61a783b0e47c5ff45ecd54ce887997967d5b5226.ee82e55910522f2fbfdc777f3b97336f.jpg"
+      }
+    ]
+  },
+  "a": {
+    "mode": "a",
+    "mapTiles": 12,
+    "externalImages": [],
+    "errors": [],
+    "photos": [
+      {
+        "index": 0,
+        "id": "api:kakao:7934963",
+        "name": "남대문시장",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/ef8714833383a9538426df75fd25dd637f5bb63f3db365fec5ab8e15954a0e92.275dad5f29ee8a2f7bf875d2055fcfad.jpg"
+      },
+      {
+        "index": 11,
+        "id": "api:kakao:1995791949",
+        "name": "콤포타블 남산",
+        "card": false,
+        "detail": false,
+        "cardSource": null
+      },
+      {
+        "index": 1,
+        "id": "api:kakao:27383851",
+        "name": "광장시장",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/9e713e7c8c3374e1ad524997ab79631d1d3d6578aa837bf29c1d541852b23fdc.9172efe3168f9661b75ab15cf597ff07.jpg"
+      },
+      {
+        "index": 10,
+        "id": "api:kakao:38432219",
+        "name": "러시아케이크",
+        "card": false,
+        "detail": false,
+        "cardSource": null
+      },
+      {
+        "index": 6,
+        "id": "api:tourapi:tourapi%3A969831",
+        "name": "KCDF 갤러리숍 공예정원",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/fa5a2cb47231c25373759bd565ae67dcdc523d6537b0ace5adf18efef8ce9a9d.675eb51ac35cdec2def2c0ee3e9767d0.jpg"
+      },
+      {
+        "index": 12,
+        "id": "api:kakao:1860681564",
+        "name": "테라로사 포스코센터점",
+        "card": false,
+        "detail": false,
+        "cardSource": null
+      },
+      {
+        "index": 8,
+        "id": "api:tourapi:tourapi%3A775883",
+        "name": "한강시민공원 뚝섬수영장(실외)",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/964694adf234fb8dbe89d4bada273ace539c607ef6e6a50b53ce6be16b4a237e.4704a5149f3acf925333a9b0c9675d9a.bmp"
+      },
+      {
+        "index": 9,
+        "id": "api:tourapi:tourapi%3A2757822",
+        "name": "응봉체육공원",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/3688d5d8dc8865c8daa489b4a03ffd3f9bc6131344d42a789ad2429d7b72be7a.64efc325edc66d93f07e0a9749e75ac5.jpg"
+      },
+      {
+        "index": 2,
+        "id": "api:kakao:10174942",
+        "name": "경동시장",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/da3026d13e12363d0433e3bb78a8ad24e81c708a0e9dbc969e9546fcda52d1fd.9f4678f26aaaca56184c5cb9531f3178.jpg"
+      },
+      {
+        "index": 13,
+        "id": "api:kakao:17952661",
+        "name": "국립현대미술관 서울",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/951e5c50a4e7071c3613b6c35b08d01685bc7d2d4487adf8f8a420b816201d96.515f6ec08b80ed97b9461d7e7c114007.jpg"
+      },
+      {
+        "index": 3,
+        "id": "api:tourapi:tourapi%3A2784696",
+        "name": "동작구름카페",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/026c3701491eb0af522f4634db5f40d9b0b683e09c5b1cc2a01535245028559c.b3651c426113d62aba1a1284a9a251b9.png"
+      },
+      {
+        "index": 4,
+        "id": "api:tourapi:tourapi%3A2763751",
+        "name": "동작노을카페",
+        "card": false,
+        "detail": false,
+        "cardSource": null
+      },
+      {
+        "index": 7,
+        "id": "api:tourapi:tourapi%3A1604580",
+        "name": "국립중앙박물관 전통염료식물원",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/63e7975d1e795fc84ea733d4e5c31a26a770e110117f345753bc451450fd89f2.0afd0be67c453079b222c2ecc79f35b2.jpg"
+      },
+      {
+        "index": 14,
+        "id": "api:kakao:1879508840",
+        "name": "퐁피두센터 한화",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/c986ddf00b4aa3b77333c488ca1f768d988f43962db262766569f9c210dd72ee.ce8a20c70e12af04c9be84072450cd71.jpg"
+      },
+      {
+        "index": 5,
+        "id": "api:tourapi:tourapi%3A3106658",
+        "name": "[K드라마 촬영지] 공근혜갤러리",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/b84a1a44fdcad1dbe4b950f4e01854ad0b260357f7284090db73c8f1d31a9c12.07fc9f325f0f181401f4feee5be844ed.jpg"
+      },
+      {
+        "index": 15,
+        "id": "api:kakao:10507051",
+        "name": "서울시립미술관 서소문본관",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/0177cc453c8c23fe6294964885db9241a76ec928e27e92b023355a45d30f03aa.f8f1bc8c61ab238480f1eff7dc546d8f.jpg"
+      }
+    ]
+  },
+  "b": {
+    "mode": "b",
+    "mapTiles": 12,
+    "externalImages": [],
+    "errors": [],
+    "photos": [
+      {
+        "index": 0,
+        "id": "api:tourapi:tourapi%3A3080721",
+        "name": "김세중미술관",
+        "card": false,
+        "detail": false,
+        "cardSource": null
+      },
+      {
+        "index": 7,
+        "id": "api:kakao:8830150",
+        "name": "국립중앙박물관",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/495338fadb00c1d67ca452bd453a6a7ef0d5e44ea74f29e48200eb69c12bbad0.482710d9128e961c54d1ab56eaebe494.jpg"
+      },
+      {
+        "index": 2,
+        "id": "api:tourapi:tourapi%3A1604580",
+        "name": "국립중앙박물관 전통염료식물원",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/63e7975d1e795fc84ea733d4e5c31a26a770e110117f345753bc451450fd89f2.0afd0be67c453079b222c2ecc79f35b2.jpg"
+      },
+      {
+        "index": 3,
+        "id": "api:kakao:10427225",
+        "name": "리움미술관",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/dd084337acb8f7098362cf39a1607a54a769c7d701866af1dbcb76df47a5fd6d.f039b8815ceffe2c26896643c59ab2c1.jpg"
+      },
+      {
+        "index": 10,
+        "id": "api:kakao:10507051",
+        "name": "서울시립미술관 서소문본관",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/0177cc453c8c23fe6294964885db9241a76ec928e27e92b023355a45d30f03aa.f8f1bc8c61ab238480f1eff7dc546d8f.jpg"
+      },
+      {
+        "index": 14,
+        "id": "api:tourapi:tourapi%3A775883",
+        "name": "한강시민공원 뚝섬수영장(실외)",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/964694adf234fb8dbe89d4bada273ace539c607ef6e6a50b53ce6be16b4a237e.4704a5149f3acf925333a9b0c9675d9a.bmp"
+      },
+      {
+        "index": 4,
+        "id": "api:kakao:7836503",
+        "name": "국립현대미술관 덕수궁",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/e3a0535f05c98c439f6a0a7b921627522a8d29ee5e9472ced520a0a1420899db.ae09249923c21829054cb16f2b587d8f.jpg"
+      },
+      {
+        "index": 6,
+        "id": "api:kakao:7934135",
+        "name": "서울역사박물관",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/dff3d8a14ddd47f28249b856348870837e25a9519508af725f0932ba8f2e8a03.1091d66e4915e4524ecf45831dd34f75.jpg"
+      },
+      {
+        "index": 1,
+        "id": "api:tourapi:tourapi%3A129760",
+        "name": "환기미술관",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/e1692fe539b29e5c799dcf87f95c4f7b527747dde91ef6670af0697aaab5bbe5.570597b6e8eb20a392f4cb3602a86d72.jpg"
+      },
+      {
+        "index": 9,
+        "id": "api:kakao:1879508840",
+        "name": "퐁피두센터 한화",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/c986ddf00b4aa3b77333c488ca1f768d988f43962db262766569f9c210dd72ee.ce8a20c70e12af04c9be84072450cd71.jpg"
+      },
+      {
+        "index": 11,
+        "id": "api:tourapi:tourapi%3A1037020",
+        "name": "[북악하늘길 2산책로] 하늘교~성북천발원지",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/4b79f9ae7f0716d612280c088af5a31b28f5aee6f28f249a7e0897a8e684a9ed.c3711b0d146368ac3882470a86ea6e13.jpg"
+      },
+      {
+        "index": 12,
+        "id": "api:tourapi:tourapi%3A3106658",
+        "name": "[K드라마 촬영지] 공근혜갤러리",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/b84a1a44fdcad1dbe4b950f4e01854ad0b260357f7284090db73c8f1d31a9c12.07fc9f325f0f181401f4feee5be844ed.jpg"
+      },
+      {
+        "index": 5,
+        "id": "api:kakao:17952661",
+        "name": "국립현대미술관 서울",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/951e5c50a4e7071c3613b6c35b08d01685bc7d2d4487adf8f8a420b816201d96.515f6ec08b80ed97b9461d7e7c114007.jpg"
+      },
+      {
+        "index": 8,
+        "id": "api:kakao:15104327",
+        "name": "대한민국역사박물관",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/9bd3af16cc6165a36bff1c5a81a87989f2c9066821dc6113f452e3b6251b187f.4634a8024b8562f0a9aab2d1acf47589.jpg"
+      },
+      {
+        "index": 13,
+        "id": "api:tourapi:tourapi%3A969831",
+        "name": "KCDF 갤러리숍 공예정원",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/fa5a2cb47231c25373759bd565ae67dcdc523d6537b0ace5adf18efef8ce9a9d.675eb51ac35cdec2def2c0ee3e9767d0.jpg"
+      },
+      {
+        "index": 15,
+        "id": "api:tourapi:tourapi%3A2757822",
+        "name": "응봉체육공원",
+        "card": true,
+        "detail": true,
+        "cardSource": "/assets/presentation/final/fixtures/assets/3688d5d8dc8865c8daa489b4a03ffd3f9bc6131344d42a789ad2429d7b72be7a.64efc325edc66d93f07e0a9749e75ac5.jpg"
+      }
+    ]
+  }
+}

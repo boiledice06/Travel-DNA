@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Image, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { presentationPhotoUrl } from '../../services/presentation/demo';
+import { reviewedSeoulPhoto } from '../../services/photos/seoul';
 import { theme as t } from '../../theme';
 import type { Place } from '../../types';
 
@@ -139,9 +140,14 @@ export function PlaceMedia({
 }) {
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [failedUrl, setFailedUrl] = useState('');
-  const photo = place.photo;
-  const photoUrl = photo ? presentationPhotoUrl(photo.url) : undefined;
-  const showPhoto = photoUrl && photoUrl !== failedUrl;
+  const reviewed = reviewedSeoulPhoto(place);
+  const photo = reviewed?.photo ?? place.photo;
+  const sourceKey = photo?.url;
+  const photoUrl = !reviewed && sourceKey ? presentationPhotoUrl(sourceKey) : undefined;
+  const source =
+    sourceKey !== failedUrl
+      ? (reviewed?.asset ?? (photoUrl ? { uri: photoUrl } : undefined))
+      : undefined;
   const scale = Math.min(size.width / 160, size.height / (label ? 108 : 88));
   const type = typeOf(place);
   const artHeight = label ? 97 : 88;
@@ -159,13 +165,13 @@ export function PlaceMedia({
         )
       }
     >
-      {showPhoto ? (
+      {source ? (
         <Image
-          source={{ uri: photoUrl }}
+          source={source}
           resizeMode="contain"
           style={s.photo}
           accessibilityLabel={`${place.name} 실제 사진`}
-          onError={() => setFailedUrl(photoUrl)}
+          onError={() => setFailedUrl(sourceKey ?? '')}
         />
       ) : (
         <View

@@ -26,7 +26,7 @@ export interface Experience {
   updatedAt: string;
 }
 export interface PlacePhoto {
-  provider: 'tourapi' | 'gallery' | 'commons';
+  provider: 'tourapi' | 'gallery' | 'commons' | 'archive';
   url: string;
   source_page: string;
   publisher: string;

@@ -235,3 +235,5 @@ UX 개선 중간 검증: `verification/UX_REDESIGN_REPORT.md` (실험 `exp-20261
 
 - [발표 패키지](presentation/final/README.md) · [대본](presentation/final/DEMO_SCRIPT.md) · [복구 안내](presentation/final/RUNBOOK.md)
 - [실험 설명](experiments/exp-20261125-golden-path/README.md) · [프로젝트 상태](PROJECT_STATE.md)
+
+[서울 실제 장소 사진과 브라우저 검증](presentation/photo-coverage/README.md)에서 기본 데모와 발표 A/B의 사진 출처 및 전체 카드 화면을 확인할 수 있습니다.
