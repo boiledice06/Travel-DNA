@@ -1,4 +1,5 @@
-import type { RecommendationResponse } from '../../types/index.ts';
+import { decodePlacePhotos } from './photos.ts';
+import type { Place, RecommendationResponse } from '../../types/index.ts';
 
 export type ChatPhase = 'likert' | 'asking' | 'constraints' | 'draft' | 'confirmed';
 export interface ChatTurn {
@@ -129,6 +130,7 @@ export class BackendClient {
     path: string,
     body?: unknown,
     timeoutMs = this.timeoutMs,
+    options: { signal?: AbortSignal; idempotencyKey?: string } = {},
   ): Promise<unknown> {
     let url: URL;
     try {
@@ -145,15 +147,33 @@ export class BackendClient {
       throw new Error('서버 URL이 올바르지 않습니다.');
     }
     const controller = new AbortController();
+    const abort = () => controller.abort();
+    if (options.signal?.aborted) abort();
+    options.signal?.addEventListener('abort', abort, { once: true });
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
       const response = await fetch(`${url.toString().replace(/\/$/, '')}${path}`, {
         method: body === undefined ? 'GET' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(options.idempotencyKey && { 'Idempotency-Key': options.idempotencyKey }),
+        },
         ...(body !== undefined && { body: JSON.stringify(body) }),
         signal: controller.signal,
       });
       if (!response.ok) {
+        const failure: unknown = await response.json().catch(() => null);
+        const code = object(failure) && object(failure.detail) ? failure.detail.code : undefined;
+        if (code === 'model_auth' || code === 'model_not_found' || code === 'model_request')
+          throw new Error('여행 AI 서버 설정을 확인해야 해요.');
+        if (code === 'model_rate_limit' || response.status === 429)
+          throw new Error('여행 AI 요청 한도에 도달했어요. 잠시 뒤 다시 시도해 주세요.');
+        if (code === 'model_output')
+          throw new Error('여행 AI의 답변 형식을 읽지 못했어요. 같은 단계에서 다시 시도해 주세요.');
+        if (code === 'model_timeout')
+          throw new Error('여행 AI 응답 시간이 초과됐어요. 잠시 뒤 다시 시도해 주세요.');
+        if (response.status === 409)
+          throw new Error('이전 요청이 진행 중이에요. 잠시 뒤 다시 시도해 주세요.');
         if (response.status === 404)
           throw new Error('서버 세션을 찾을 수 없어요. 여행 분석을 다시 시작해 주세요.');
         if (response.status === 401 || response.status === 403)
@@ -175,6 +195,7 @@ export class BackendClient {
       throw error;
     } finally {
       clearTimeout(timer);
+      options.signal?.removeEventListener('abort', abort);
     }
   }
   async createProfile(input: TripProfileInput): Promise<{ id: string }> {
@@ -229,8 +250,12 @@ export class BackendClient {
   async likert(session_id: string, answers: { id: string; value: number }[]) {
     return parseTurn(await this.request('/api/dna-chat/likert', { session_id, answers }));
   }
-  async message(session_id: string, message: string) {
-    return parseTurn(await this.request('/api/dna-chat/message', { session_id, message }));
+  async message(session_id: string, message: string, idempotencyKey?: string) {
+    return parseTurn(
+      await this.request('/api/dna-chat/message', { session_id, message }, this.timeoutMs, {
+        idempotencyKey,
+      }),
+    );
   }
   async constraints(session_id: string, must_have: string, must_avoid: string) {
     return parseTurn(
@@ -242,6 +267,23 @@ export class BackendClient {
     if (!object(raw) || raw.session_id !== session_id || raw.phase !== 'confirmed')
       throw new Error('취향 확정 응답이 올바르지 않습니다.');
     return raw;
+  }
+  async placePhotos(places: Place[], signal: AbortSignal) {
+    const result = await this.request(
+      '/api/place-photos',
+      {
+        places: places.map(({ id, name, district, latitude, longitude }) => ({
+          id,
+          name,
+          address: district,
+          latitude,
+          longitude,
+        })),
+      },
+      7500,
+      { signal },
+    );
+    return decodePlacePhotos(result, places);
   }
   async find(profile_id: string, dna_session_id: string) {
     return adaptShortlist(

@@ -1,15 +1,17 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button, Empty, Icon, Screen } from '../../components/common/UI';
+import { PlaceMedia } from '../../components/place/PlaceMedia';
 import { ui } from '../../components/common/ui.styles';
 import { useTravel } from '../../hooks/useTravel';
 import { createItinerary } from '../../services/itinerary';
 import { theme as t } from '../../theme';
 
 export default function MyTrips() {
-  const { serverTrip } = useTravel();
+  const { serverTrip, allPlaces } = useTravel();
   const router = useRouter();
   const days = serverTrip ? createItinerary(serverTrip.result.places) : [];
+  const media = new Map(allPlaces.map((place) => [place.id, place]));
   return (
     <Screen>
       <View style={s.heading}>
@@ -34,27 +36,35 @@ export default function MyTrips() {
                 </Text>
                 <Text style={ui.small}>{places.length}곳</Text>
               </View>
-              {places.map((place, index) => (
-                <Pressable
-                  key={place.id}
-                  accessibilityRole="button"
-                  accessibilityLabel={`${index + 1}번째 방문, ${place.name} 상세 보기`}
-                  style={s.stop}
-                  onPress={() => router.push({ pathname: '/place/[id]', params: { id: place.id } })}
-                >
-                  <View style={s.track}>
-                    <Text style={s.order}>{index + 1}</Text>
-                    {index < places.length - 1 && <View style={s.line} />}
-                  </View>
-                  <View style={s.stopCopy}>
-                    <Text style={s.name}>{place.name}</Text>
-                    <Text style={ui.small} numberOfLines={1}>
-                      {place.district || place.category}
-                    </Text>
-                  </View>
-                  <Icon name="chevron-forward" size={17} color={t.colors.muted} />
-                </Pressable>
-              ))}
+              {places.map((place, index) => {
+                const enriched = media.get(place.id) ?? place;
+                return (
+                  <Pressable
+                    key={place.id}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${index + 1}번째 방문, ${place.name} 상세 보기`}
+                    style={s.stop}
+                    onPress={() =>
+                      router.push({ pathname: '/place/[id]', params: { id: place.id } })
+                    }
+                  >
+                    <View style={s.track}>
+                      <Text style={s.order}>{index + 1}</Text>
+                      {index < places.length - 1 && <View style={s.line} />}
+                    </View>
+                    <View style={s.stopCopy}>
+                      <Text style={s.name}>{place.name}</Text>
+                      <Text style={ui.small} numberOfLines={1}>
+                        {place.district || place.category}
+                      </Text>
+                    </View>
+                    {enriched.photo && (
+                      <PlaceMedia place={enriched} style={s.stopPhoto} label={false} />
+                    )}
+                    <Icon name="chevron-forward" size={17} color={t.colors.muted} />
+                  </Pressable>
+                );
+              })}
               {!places.length && <Text style={ui.small}>이 날에는 배정된 장소가 없어요.</Text>}
             </View>
           ))}
@@ -96,6 +106,7 @@ const s = StyleSheet.create({
     fontSize: 12,
   },
   line: { flex: 1, width: 1, backgroundColor: t.colors.line, marginBottom: -8 },
+  stopPhoto: { width: 54, height: 44, borderRadius: 4 },
   stopCopy: { flex: 1, paddingVertical: 8, gap: 2 },
   name: { fontSize: 15, color: t.colors.text, fontWeight: '700', lineHeight: 21 },
 });

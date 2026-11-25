@@ -14,11 +14,14 @@ import {
   type TravelConditions,
   type RecommendationResponse,
   type Recommendation,
+  type PlacePhoto,
 } from '../types';
 import { places } from '../data/mock/places';
 import { hasDemoRecords, startProfile } from '../features/onboarding/profile';
 import { calculateDNA } from '../features/travel-dna/calculate';
 import { extractKeywords } from '../features/travel-dna/keywords';
+import { BackendClient } from '../services/backend/client';
+import { withPlacePhotos } from '../services/backend/photos';
 import { RecommendationClient } from '../services/recommendation/api';
 import { rankPlaces } from '../services/recommendation';
 import { readData, writeData } from '../services/storage';
@@ -93,6 +96,10 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
   const demoRecommendations = useMemo(() => rankPlaces(dna, places), [dna]);
   const [remoteResult, setRemoteResult] = useState<RecommendationResponse | null>(null);
   const [serverTrip, setServerTrip] = useState<ServerTrip | null>(null);
+  const [enrichment, setEnrichment] = useState<{
+    trip: ServerTrip;
+    photos: Record<string, PlacePhoto>;
+  }>();
   useEffect(() => {
     if (!ready) return;
     let active = true;
@@ -116,6 +123,62 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
       active = false;
     };
   }, [ready]);
+  useEffect(() => {
+    if (!serverTrip?.result.places.length) return;
+    const trip = serverTrip;
+    const generation = requestId.current;
+    const controller = new AbortController();
+    const client = new BackendClient(trip.serverUrl);
+    const pending = trip.result.places.filter((place) => !place.photo && place.region === 'seoul');
+    const run = async () => {
+      let photos: Record<string, PlacePhoto> = {};
+      for (let index = 0; index < pending.length && !controller.signal.aborted; index += 4) {
+        const batch = pending.slice(index, index + 4);
+        const received = await client.placePhotos(batch, controller.signal).catch(() => ({}));
+        if (controller.signal.aborted || generation !== requestId.current) return;
+        if (!Object.keys(received).length) continue;
+        photos = { ...photos, ...received };
+        setEnrichment({ trip, photos });
+        const resolved = withPlacePhotos(batch, received);
+        const byId = new Map(
+          resolved.filter((place) => place.photo).map((place) => [place.id, place]),
+        );
+        setData((previous) => {
+          const savedPlaces = previous.savedPlaces.map((entry) => {
+            const place = byId.get(entry.place.id);
+            return place &&
+              place.name === entry.place.name &&
+              place.latitude === entry.place.latitude &&
+              place.longitude === entry.place.longitude
+              ? { ...entry, place: { ...entry.place, photo: place.photo } }
+              : entry;
+          });
+          return savedPlaces.some((entry, index) => entry !== previous.savedPlaces[index])
+            ? { ...previous, savedPlaces }
+            : previous;
+        });
+      }
+      if (
+        Object.keys(photos).length &&
+        !controller.signal.aborted &&
+        generation === requestId.current
+      ) {
+        await writeServerTrip({
+          ...trip,
+          result: { ...trip.result, places: withPlacePhotos(trip.result.places, photos) },
+        }).catch(() => undefined);
+      }
+    };
+    void run();
+    return () => controller.abort();
+  }, [serverTrip]);
+
+  const remotePlaces = useMemo(() => {
+    const source = remoteResult?.places;
+    if (!source || enrichment?.trip !== serverTrip || remoteResult !== serverTrip?.result)
+      return source;
+    return withPlacePhotos(source, enrichment.photos);
+  }, [enrichment, remoteResult, serverTrip]);
   const [recommendationStatus, setRecommendationStatus] = useState<
     'idle' | 'loading' | 'error' | 'empty'
   >('idle');
@@ -124,9 +187,9 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
   const allPlaces = useMemo(() => {
     const map = new Map(places.map((p) => [p.id, p]));
     for (const item of data.savedPlaces) map.set(item.place.id, item.place);
-    for (const p of remoteResult?.places ?? []) map.set(p.id, p);
+    for (const p of remotePlaces ?? []) map.set(p.id, p);
     return [...map.values()];
-  }, [data.savedPlaces, remoteResult]);
+  }, [data.savedPlaces, remotePlaces]);
   const recommendations = useMemo(() => {
     const map = new Map<string, Recommendation>(demoRecommendations.map((r) => [r.placeId, r]));
     for (const r of remoteResult?.recommendations ?? []) map.set(r.placeId, r);
@@ -202,7 +265,8 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
         dna,
         recommendations,
         allPlaces,
-        activePlaces: remoteResult?.origin === 'api' ? remoteResult.places : places,
+        activePlaces:
+          remoteResult?.origin === 'api' ? (remotePlaces ?? remoteResult.places) : places,
         recommendationOrigin: remoteResult?.origin ?? 'demo',
         recommendationStatus,
         recommendationError,

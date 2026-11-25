@@ -19,6 +19,7 @@ from .likert import (
     validate_likert_answers,
 )
 from .llm import ChatModel, LlmMessage, get_chat_model
+from .llm.upstream import ModelFailure
 from .schemas import TravelDNA
 from .store import load_session_dict, save_session_dict
 
@@ -353,7 +354,10 @@ def send_dna_chat_message(
     session.provider = getattr(model, "provider", None)
     session.model = getattr(model, "model", None)
 
-    parsed = _parse_turn(resp.text)
+    try:
+        parsed = _parse_turn(resp.text)
+    except (ValueError, TypeError):
+        raise ModelFailure("model_output") from None
     # Empty followup queue alone does not skip specifics — wait for LLM or turn cap.
     go_constraints = force_constraints or hard_force or parsed["phase"] == "constraints"
 

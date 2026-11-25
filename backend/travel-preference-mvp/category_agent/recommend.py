@@ -11,6 +11,7 @@ import re
 from typing import List, Optional
 
 from .llm import ChatModel, LlmMessage, get_chat_model
+from .llm.upstream import ModelFailure
 from .schemas import (
     DEFAULT_TOTAL_SLOTS,
     PILLAR_LABELS_KO,
@@ -117,7 +118,10 @@ def _plan_main(req: IndustryPlanRequest, model: ChatModel) -> tuple[dict[PillarN
         temperature=0.4,
         response_json=True,
     )
-    names = _parse_name_list(resp.text, "industries", expect=len(slots))
+    try:
+        names = _parse_name_list(resp.text, "industries", expect=len(slots))
+    except (ValueError, TypeError):
+        raise ModelFailure("model_output") from None
     # keep at most total_slots names
     return allocation, names[: req.total_slots]
 
@@ -142,7 +146,10 @@ def _plan_micro(req: IndustryPlanRequest, model: ChatModel) -> list[str]:
         temperature=0.4,
         response_json=True,
     )
-    return _parse_name_list(resp.text, "micro_industries")
+    try:
+        return _parse_name_list(resp.text, "micro_industries")
+    except (ValueError, TypeError):
+        raise ModelFailure("model_output") from None
 
 
 def plan_industries(

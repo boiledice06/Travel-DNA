@@ -62,7 +62,7 @@ export default function DNAScreen({ onboarding = false }: { onboarding?: boolean
         <Text accessibilityRole="header" style={[ui.title, s.lightTitle]}>
           나의 여행 취향
         </Text>
-        <Helix light />
+        <Helix light feature />
         <Text style={s.lightCopy}>
           {data.demo ? '데모 여행 기록' : `${data.nickname}님의 여행 기록`} ·{' '}
           {data.experiences.length}개

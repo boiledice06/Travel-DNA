@@ -1,14 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-  type ColorValue,
-  type ImageStyle,
-  type StyleProp,
-} from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Pressable, ScrollView, Text, View, type ColorValue } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
@@ -167,48 +158,6 @@ export function Screen({ children }: React.PropsWithChildren) {
 }
 export function FadeIn({ children }: React.PropsWithChildren) {
   return <Reveal>{children}</Reveal>;
-}
-export function Photo({
-  uri,
-  style,
-  category,
-}: {
-  uri: string;
-  style?: StyleProp<ImageStyle>;
-  category?: string;
-}) {
-  const [failedUri, setFailedUri] = useState('');
-  if (failedUri === uri || !uri)
-    return (
-      <View style={[ui.photoFallback, style]}>
-        <View pointerEvents="none" style={ui.photoContour} />
-        <View pointerEvents="none" style={[ui.photoContour, ui.photoContourInner]} />
-        <Icon
-          name={
-            category && /음식|맛집|카페/.test(category)
-              ? 'cafe-outline'
-              : category && /자연|공원|산책/.test(category)
-                ? 'leaf-outline'
-                : category && /문화|박물|미술|건축/.test(category)
-                  ? 'business-outline'
-                  : 'location-outline'
-          }
-          size={32}
-          color={theme.colors.accent}
-        />
-        <Text style={ui.photoNote} numberOfLines={1}>
-          사진 없음
-        </Text>
-      </View>
-    );
-  return (
-    <Image
-      source={{ uri }}
-      style={style}
-      onError={() => setFailedUri(uri)}
-      accessibilityLabel={category ? `${category} 사진` : '장소 사진'}
-    />
-  );
 }
 export function Empty({ title, message }: { title: string; message: string }) {
   return (

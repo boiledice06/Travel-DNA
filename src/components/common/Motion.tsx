@@ -41,38 +41,61 @@ function Rung({
   index,
   phase,
   light,
+  feature,
 }: {
   index: number;
   phase: SharedValue<number>;
   light: boolean;
+  feature: boolean;
 }) {
   const color = light ? theme.colors.mint : theme.colors.accent;
   const other = light ? '#D5E8DC' : theme.colors.primary;
+  const amplitude = feature ? 43 : 26;
   const wave = () => {
     'worklet';
     return phase.value + index * 0.43;
   };
   const front = useAnimatedStyle(() => ({
     opacity: 0.65 + Math.cos(wave()) * 0.32,
-    transform: [{ translateY: Math.sin(wave()) * 26 }, { scale: 0.8 + Math.cos(wave()) * 0.25 }],
+    transform: [
+      { translateY: Math.sin(wave()) * amplitude },
+      { scale: 0.8 + Math.cos(wave()) * 0.25 },
+    ],
   }));
   const back = useAnimatedStyle(() => ({
     opacity: 0.65 - Math.cos(wave()) * 0.32,
-    transform: [{ translateY: -Math.sin(wave()) * 26 }, { scale: 0.8 - Math.cos(wave()) * 0.25 }],
+    transform: [
+      { translateY: -Math.sin(wave()) * amplitude },
+      { scale: 0.8 - Math.cos(wave()) * 0.25 },
+    ],
   }));
   const link = useAnimatedStyle(() => ({
     transform: [{ scaleY: Math.max(0.027, Math.abs(Math.sin(wave()))) }],
   }));
   return (
     <View style={styles.rung}>
-      <Animated.View style={[styles.link, { backgroundColor: color }, link]} />
-      <Animated.View style={[styles.dot, { backgroundColor: other }, back]} />
-      <Animated.View style={[styles.dot, { backgroundColor: color }, front]} />
+      <Animated.View
+        style={[styles.link, { height: amplitude * 2, backgroundColor: color }, link]}
+      />
+      <Animated.View
+        style={[styles.dot, feature && styles.featureDot, { backgroundColor: other }, back]}
+      />
+      <Animated.View
+        style={[styles.dot, feature && styles.featureDot, { backgroundColor: color }, front]}
+      />
     </View>
   );
 }
 
-export function Helix({ active = false, light = false }: { active?: boolean; light?: boolean }) {
+export function Helix({
+  active = false,
+  light = false,
+  feature = false,
+}: {
+  active?: boolean;
+  light?: boolean;
+  feature?: boolean;
+}) {
   const phase = useSharedValue(0.3);
   const reduce = useReducedMotion();
   useEffect(() => {
@@ -90,10 +113,10 @@ export function Helix({ active = false, light = false }: { active?: boolean; lig
     <View
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={styles.helix}
+      style={[styles.helix, feature && styles.feature]}
     >
       {Array.from({ length: 18 }, (_, index) => (
-        <Rung key={index} index={index} phase={phase} light={light} />
+        <Rung key={index} index={index} phase={phase} light={light} feature={feature} />
       ))}
     </View>
   );
@@ -101,6 +124,8 @@ export function Helix({ active = false, light = false }: { active?: boolean; lig
 
 const styles = StyleSheet.create({
   helix: { height: 78, flexDirection: 'row', width: '100%', alignItems: 'center' },
+  feature: { height: 122 },
+  featureDot: { width: 11, height: 11, borderRadius: 6 },
   rung: { flex: 1, height: 64, alignItems: 'center', justifyContent: 'center' },
   link: { position: 'absolute', width: 1, height: 52, opacity: 0.28 },
   dot: { position: 'absolute', width: 8, height: 8, borderRadius: 4 },

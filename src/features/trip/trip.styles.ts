@@ -25,6 +25,15 @@ export const tripStyles = StyleSheet.create({
   },
   content: { gap: 23, paddingTop: 24, paddingBottom: 28 },
   stage: { gap: 18 },
+  conversation: { flexGrow: 1, paddingBottom: 16 },
+  chatStage: { flexGrow: 1, justifyContent: 'space-between' },
+  chatMessages: { gap: 12, paddingTop: 20 },
+  dnaFeature: {
+    borderRadius: t.radius.lg,
+    backgroundColor: t.colors.ink,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
   title: { gap: 7 },
   scope: {
     borderTopWidth: 1,

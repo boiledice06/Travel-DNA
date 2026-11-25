@@ -1,7 +1,8 @@
 import { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Place, Recommendation } from '../../types';
-import { IconButton, Photo } from '../common/UI';
+import { IconButton } from '../common/UI';
+import { PlaceMedia } from './PlaceMedia';
 import { ui } from '../common/ui.styles';
 import { theme as t } from '../../theme';
 
@@ -33,11 +34,7 @@ export const PlaceCard = memo(function PlaceCard({
         onPress={onOpen}
         style={({ pressed }) => [compact && s.compactMain, { opacity: pressed ? 0.78 : 1 }]}
       >
-        <Photo
-          uri={place.image}
-          category={place.category}
-          style={compact ? s.thumbnail : s.cover}
-        />
+        <PlaceMedia place={place} style={compact ? s.thumbnail : s.cover} />
         <View style={compact ? s.compactCopy : s.copy}>
           <Text numberOfLines={1} style={s.category}>
             {orderLabel ? `${orderLabel}  ·  ` : ''}
@@ -55,7 +52,7 @@ export const PlaceCard = memo(function PlaceCard({
             <Text style={s.source}>예상 일치도 {recommendation.score} / 100</Text>
           ) : (
             <Text style={s.source} numberOfLines={1}>
-              {place.image && place.source === 'api' ? '사진 · 한국관광공사' : source}
+              {place.photo ? `사진 자료 · ${place.photo.publisher}` : source}
             </Text>
           )}
           {!compact && place.source !== 'api' && !!recommendation?.reason && (
@@ -96,8 +93,8 @@ const s = StyleSheet.create({
     paddingVertical: 6,
     gap: 2,
   },
-  cover: { width: '100%', aspectRatio: 2.25 },
-  thumbnail: { width: '31%', minHeight: 92 },
+  cover: { width: '100%', aspectRatio: 1.68 },
+  thumbnail: { width: '35%', minHeight: 92 },
   title: {
     color: t.colors.text,
     fontSize: 23,

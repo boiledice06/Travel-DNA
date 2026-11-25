@@ -1,7 +1,8 @@
 import { Linking, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, Icon, IconButton, Photo, Screen } from '../../components/common/UI';
+import { Button, Icon, IconButton, Screen } from '../../components/common/UI';
+import { PlaceMedia } from '../../components/place/PlaceMedia';
 import { Reveal } from '../../components/common/Motion';
 import { theme } from '../../theme';
 import { ui } from '../../components/common/ui.styles';
@@ -32,27 +33,15 @@ export default function PlaceDetail() {
       </Screen>
     );
   const saved = data.savedIds.includes(place.id);
+  const photo = place.photo;
   return (
     <View style={s.root}>
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom }}>
         <View>
-          <Photo
-            uri={place.image}
-            category={place.category}
-            style={place.image ? s.image : s.noImage}
-          />
+          <PlaceMedia place={place} style={place.photo ? s.image : s.noImage} />
           <View style={[s.back, { top: insets.top + 12 }]}>
             <IconButton icon="arrow-back" label="이전 화면으로" onPress={back} />
           </View>
-          {place.image ? (
-            <View style={s.imageCaption}>
-              <Text style={ui.small}>
-                {place.source === 'api'
-                  ? '사진 출처: 한국관광공사 TourAPI'
-                  : '여행 분위기 참고 이미지 · 실제 장소 사진 아님'}
-              </Text>
-            </View>
-          ) : null}
         </View>
         <Reveal style={s.body}>
           <Text style={ui.eyebrow}>
@@ -70,8 +59,37 @@ export default function PlaceDetail() {
               onPress={() => toggleSave(place.id)}
             />
           </View>
+          {photo && (
+            <View style={s.photoCredit}>
+              <Text style={ui.label}>사진 자료</Text>
+              <Text style={ui.small}>
+                {photo.publisher} · {photo.author || '저작자 표기 없음'}
+                {photo.attribution && photo.attribution !== photo.author
+                  ? ` · ${photo.attribution}`
+                  : ''}
+              </Text>
+              <Text style={ui.small}>
+                <Text
+                  accessibilityRole="link"
+                  style={s.photoLink}
+                  onPress={() => Linking.openURL(photo.source_page)}
+                >
+                  원본 출처
+                </Text>
+                {' · '}
+                <Text
+                  accessibilityRole="link"
+                  style={s.photoLink}
+                  onPress={() => Linking.openURL(photo.license_url)}
+                >
+                  {photo.license}
+                </Text>
+                {photo.can_modify ? '' : ' · 변경 금지'}
+              </Text>
+            </View>
+          )}
           {place.description ? <Text style={ui.body}>{place.description}</Text> : null}
-          {place.source === 'api' && !!place.image && (
+          {(place.photo?.provider === 'tourapi' || place.photo?.provider === 'gallery') && (
             <Text style={ui.small}>
               사진별 이용 조건을 확인해 주세요. 피사체의 권리를 침해하는 이용과 기업 CI·BI 이용은
               금지됩니다.{' '}

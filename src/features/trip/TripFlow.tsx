@@ -174,6 +174,7 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
   const [phase, setPhase] = useState<Phase>('profile');
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [message, setMessage] = useState('');
+  const messageAttempt = useRef<{ text: string; session: string; key: string } | null>(null);
   const [pendingMessage, setPendingMessage] = useState('');
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; text: string }[]>([]);
   const [mustHave, setMustHave] = useState('');
@@ -257,7 +258,18 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
       if (!session || !text) return;
       setPendingMessage(text);
       try {
-        const next = await client.message(session.session_id, text);
+        if (
+          messageAttempt.current?.text !== text ||
+          messageAttempt.current.session !== session.session_id
+        ) {
+          messageAttempt.current = {
+            text,
+            session: session.session_id,
+            key: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          };
+        }
+        const next = await client.message(session.session_id, text, messageAttempt.current.key);
+        messageAttempt.current = null;
         setHistory((h) => [
           ...h,
           { role: 'user', text },
@@ -314,6 +326,7 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
     setAnswers({});
     setHistory([]);
     setMessage('');
+    messageAttempt.current = null;
     setConfirmed(null);
     setPhase('profile');
     setError('');
@@ -389,9 +402,9 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
               if (chat) scroll.current?.scrollToEnd({ animated: false });
             }}
             keyboardShouldPersistTaps="handled"
-            contentContainerStyle={[ts.column, ts.content]}
+            contentContainerStyle={[ts.column, ts.content, chat && ts.conversation]}
           >
-            <Reveal key={phase} style={ts.stage}>
+            <Reveal key={phase} style={[ts.stage, chat && ts.chatStage]}>
               <Text accessibilityRole="header" style={ui.title}>
                 {heading[phase]}
               </Text>
@@ -497,7 +510,7 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
                 </>
               )}
               {chat && (
-                <>
+                <View style={ts.chatMessages}>
                   {displayedHistory.map((entry, index) => {
                     const user = entry.role === 'user';
                     return (
@@ -525,7 +538,7 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
                       </Text>
                     </Reveal>
                   )}
-                </>
+                </View>
               )}
               {phase === 'constraints' && (
                 <>
@@ -575,11 +588,17 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
               )}
               {phase === 'confirmed' && (
                 <>
-                  <Helix />
+                  <Reveal delay={90} style={ts.dnaFeature}>
+                    <Helix light feature />
+                  </Reveal>
                   <Text style={ui.body}>
                     설문과 대화에서 확정한 취향을 바탕으로 서울의 장소를 찾아요.
                   </Text>
-                  {confirmed && <PreferenceSummary {...confirmed} />}
+                  {confirmed && (
+                    <Reveal delay={150}>
+                      <PreferenceSummary {...confirmed} />
+                    </Reveal>
+                  )}
                 </>
               )}
             </Reveal>
