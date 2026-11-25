@@ -393,287 +393,292 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
               </View>
             </View>
           </View>
-          <ScrollView
-            ref={scroll}
-            onContentSizeChange={() => {
-              if (chat) scroll.current?.scrollToEnd({ animated: !reduce });
-            }}
-            onLayout={() => {
-              if (chat) scroll.current?.scrollToEnd({ animated: false });
-            }}
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={[ts.column, ts.content, chat && ts.conversation]}
-          >
-            <Reveal key={phase} style={[ts.stage, chat && ts.chatStage]}>
-              <Text accessibilityRole="header" style={ui.title}>
-                {heading[phase]}
-              </Text>
-              {phase === 'profile' && (
-                <>
-                  <View style={ts.scope}>
-                    <Icon name="calendar-outline" />
-                    <View style={ts.scopeCopy}>
-                      <Text style={ui.subtitle}>서울 · 2박 3일</Text>
-                      <Text style={ui.small}>이번 여행은 서울의 3일 일정으로 만들어요.</Text>
-                    </View>
-                  </View>
-                  {groups.map(([key, label, values]) => (
-                    <View key={key} style={ts.group}>
-                      <Text style={ui.label}>{label}</Text>
-                      <View style={ui.wrap}>
-                        {values.map(([value, name]) => (
-                          <Chip
-                            key={value}
-                            label={name}
-                            selected={profile[key] === value}
-                            disabled={loading}
-                            onPress={() => setProfile((current) => ({ ...current, [key]: value }))}
-                          />
-                        ))}
+          <View style={[ts.flowLayout, chat && ts.chatLayout]}>
+            <ScrollView
+              ref={scroll}
+              style={chat && ts.chatScroll}
+              onContentSizeChange={() => {
+                if (chat) scroll.current?.scrollToEnd({ animated: !reduce });
+              }}
+              onLayout={() => {
+                if (chat) scroll.current?.scrollToEnd({ animated: false });
+              }}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={[ts.column, ts.content, chat && ts.conversation]}
+            >
+              <Reveal key={phase} style={ts.stage}>
+                <Text accessibilityRole="header" style={ui.title}>
+                  {heading[phase]}
+                </Text>
+                {phase === 'profile' && (
+                  <>
+                    <View style={ts.scope}>
+                      <Icon name="calendar-outline" />
+                      <View style={ts.scopeCopy}>
+                        <Text style={ui.subtitle}>서울 · 2박 3일</Text>
+                        <Text style={ui.small}>이번 여행은 서울의 3일 일정으로 만들어요.</Text>
                       </View>
-                      {key === 'budget_level' && (
-                        <TextInput
-                          accessibilityLabel="전체 여행 예산 메모"
-                          placeholderTextColor={theme.colors.muted}
-                          placeholder="예산 메모 (선택)"
-                          value={profile.budget_note ?? ''}
-                          onChangeText={(budget_note) =>
-                            setProfile((current) => ({ ...current, budget_note }))
-                          }
-                          style={ui.input}
-                        />
-                      )}
                     </View>
-                  ))}
-                  <View style={ts.conditionField}>
-                    <Text style={ui.label}>여행 목적</Text>
-                    <TextInput
-                      accessibilityLabel="여행 목적"
-                      placeholderTextColor={theme.colors.muted}
-                      placeholder="예: 전시를 보고 동네를 걷고 싶어요"
-                      maxLength={90}
-                      value={purpose}
-                      onChangeText={setPurpose}
-                      style={ui.input}
-                    />
-                  </View>
-                  <Text style={ui.small}>
-                    입력한 조건은 추천 서버로 전달됩니다. 예산 충족 여부는 방문 전 확인해 주세요.
-                  </Text>
-                  {previousTrip && (
-                    <Button
-                      title="이전 확정 취향으로 다시 추천"
-                      secondary
-                      onPress={retryPrevious}
-                      disabled={loading}
-                    />
-                  )}
-                </>
-              )}
-              {phase === 'likert' && session && (
-                <>
-                  <Text style={ui.body}>{turn?.assistant_message}</Text>
-                  <SurveyProgress
-                    count={Object.keys(answers).length}
-                    total={session.likert_items.length}
-                  />
-                  {session.likert_items.map((item, index) => {
-                    const scale = [...item.scale].sort((a, b) => a.value - b.value);
-                    return (
-                      <View key={item.id} style={ts.question}>
-                        <View style={ts.questionHead}>
-                          <Text style={ts.ordinal}>{String(index + 1).padStart(2, '0')}</Text>
-                          <Text lineBreakStrategyIOS="hangul-word" style={ts.questionTitle}>
-                            {item.statement_ko}
-                          </Text>
-                        </View>
-                        <View style={ts.numbers} accessibilityRole="radiogroup">
-                          {scale.map(({ value, label_ko }) => (
-                            <Rating
+                    {groups.map(([key, label, values]) => (
+                      <View key={key} style={ts.group}>
+                        <Text style={ui.label}>{label}</Text>
+                        <View style={ui.wrap}>
+                          {values.map(([value, name]) => (
+                            <Chip
                               key={value}
-                              value={value}
-                              label={`${index + 1}번 문항 ${value}점 ${label_ko}`}
-                              selected={answers[item.id] === value}
+                              label={name}
+                              selected={profile[key] === value}
+                              disabled={loading}
                               onPress={() =>
-                                setAnswers((current) => ({ ...current, [item.id]: value }))
+                                setProfile((current) => ({ ...current, [key]: value }))
                               }
                             />
                           ))}
                         </View>
-                        <View style={ui.between}>
-                          <Text style={ui.small}>{scale[0].label_ko}</Text>
-                          <Text style={ui.small}>{scale[scale.length - 1].label_ko}</Text>
-                        </View>
+                        {key === 'budget_level' && (
+                          <TextInput
+                            accessibilityLabel="전체 여행 예산 메모"
+                            placeholderTextColor={theme.colors.muted}
+                            placeholder="예산 메모 (선택)"
+                            value={profile.budget_note ?? ''}
+                            onChangeText={(budget_note) =>
+                              setProfile((current) => ({ ...current, budget_note }))
+                            }
+                            style={ui.input}
+                          />
+                        )}
                       </View>
-                    );
-                  })}
-                </>
-              )}
-              {chat && (
-                <View style={ts.chatMessages}>
-                  {displayedHistory.map((entry, index) => {
-                    const user = entry.role === 'user';
-                    return (
-                      <Reveal
-                        key={`${index}-${entry.role}-${entry.text}`}
-                        style={[ts.bubble, user && ts.userBubble]}
-                      >
-                        <Text style={[ts.messageLabel, user && ts.userText]}>
-                          {user ? '나' : 'Travel DNA'}
-                        </Text>
-                        <Text
-                          lineBreakStrategyIOS="hangul-word"
-                          style={[ui.body, ts.chatText, user && ts.userText]}
+                    ))}
+                    <View style={ts.conditionField}>
+                      <Text style={ui.label}>여행 목적</Text>
+                      <TextInput
+                        accessibilityLabel="여행 목적"
+                        placeholderTextColor={theme.colors.muted}
+                        placeholder="예: 전시를 보고 동네를 걷고 싶어요"
+                        maxLength={90}
+                        value={purpose}
+                        onChangeText={setPurpose}
+                        style={ui.input}
+                      />
+                    </View>
+                    <Text style={ui.small}>
+                      입력한 조건은 추천 서버로 전달됩니다. 예산 충족 여부는 방문 전 확인해 주세요.
+                    </Text>
+                    {previousTrip && (
+                      <Button
+                        title="이전 확정 취향으로 다시 추천"
+                        secondary
+                        onPress={retryPrevious}
+                        disabled={loading}
+                      />
+                    )}
+                  </>
+                )}
+                {phase === 'likert' && session && (
+                  <>
+                    <Text style={ui.body}>{turn?.assistant_message}</Text>
+                    <SurveyProgress
+                      count={Object.keys(answers).length}
+                      total={session.likert_items.length}
+                    />
+                    {session.likert_items.map((item, index) => {
+                      const scale = [...item.scale].sort((a, b) => a.value - b.value);
+                      return (
+                        <View key={item.id} style={ts.question}>
+                          <View style={ts.questionHead}>
+                            <Text style={ts.ordinal}>{String(index + 1).padStart(2, '0')}</Text>
+                            <Text lineBreakStrategyIOS="hangul-word" style={ts.questionTitle}>
+                              {item.statement_ko}
+                            </Text>
+                          </View>
+                          <View style={ts.numbers} accessibilityRole="radiogroup">
+                            {scale.map(({ value, label_ko }) => (
+                              <Rating
+                                key={value}
+                                value={value}
+                                label={`${index + 1}번 문항 ${value}점 ${label_ko}`}
+                                selected={answers[item.id] === value}
+                                onPress={() =>
+                                  setAnswers((current) => ({ ...current, [item.id]: value }))
+                                }
+                              />
+                            ))}
+                          </View>
+                          <View style={ui.between}>
+                            <Text style={ui.small}>{scale[0].label_ko}</Text>
+                            <Text style={ui.small}>{scale[scale.length - 1].label_ko}</Text>
+                          </View>
+                        </View>
+                      );
+                    })}
+                  </>
+                )}
+                {chat && (
+                  <View style={ts.chatMessages}>
+                    {displayedHistory.map((entry, index) => {
+                      const user = entry.role === 'user';
+                      return (
+                        <Reveal
+                          key={`${index}-${entry.role}-${entry.text}`}
+                          style={[ts.bubble, user && ts.userBubble]}
                         >
-                          {entry.text}
+                          <Text style={[ts.messageLabel, user && ts.userText]}>
+                            {user ? '나' : 'Travel DNA'}
+                          </Text>
+                          <Text
+                            lineBreakStrategyIOS="hangul-word"
+                            style={[ui.body, ts.chatText, user && ts.userText]}
+                          >
+                            {entry.text}
+                          </Text>
+                        </Reveal>
+                      );
+                    })}
+                    {busy === 'chat' && (
+                      <Reveal style={[ts.bubble, ts.status]}>
+                        <ActivityIndicator size="small" color={theme.colors.accent} />
+                        <Text accessibilityLiveRegion="polite" style={ui.small}>
+                          Travel DNA가 답변을 준비하고 있어요
                         </Text>
                       </Reveal>
-                    );
-                  })}
-                  {busy === 'chat' && (
-                    <Reveal style={[ts.bubble, ts.status]}>
-                      <ActivityIndicator size="small" color={theme.colors.accent} />
-                      <Text accessibilityLiveRegion="polite" style={ui.small}>
-                        Travel DNA가 답변을 준비하고 있어요
-                      </Text>
-                    </Reveal>
-                  )}
-                </View>
-              )}
-              {phase === 'constraints' && (
-                <>
-                  <Text style={ui.body}>{turn?.assistant_message}</Text>
-                  <View style={ts.conditionField}>
-                    <Text style={ui.label}>꼭 원하는 것</Text>
-                    <TextInput
-                      accessibilityLabel="꼭 원하는 것"
-                      placeholderTextColor={theme.colors.muted}
-                      placeholder="예: 박물관이나 미술관 (선택)"
-                      value={mustHave}
-                      onChangeText={setMustHave}
-                      maxLength={400}
-                      multiline
-                      style={[ui.input, ts.conditionInput]}
-                    />
+                    )}
                   </View>
-                  <View style={ts.conditionField}>
-                    <Text style={ui.label}>피하고 싶은 것</Text>
-                    <TextInput
-                      accessibilityLabel="피하고 싶은 것"
-                      placeholderTextColor={theme.colors.muted}
-                      placeholder="예: 늦은 밤 술집 (선택)"
-                      value={mustAvoid}
-                      onChangeText={setMustAvoid}
-                      maxLength={500}
-                      multiline
-                      style={[ui.input, ts.conditionInput]}
-                    />
-                  </View>
-                </>
-              )}
-              {phase === 'draft' && (
-                <>
-                  <Text style={ui.body}>{turn?.assistant_message}</Text>
-                  {purpose.trim() ? (
-                    <Text style={ui.body}>여행 목적 · {purpose.trim()}</Text>
-                  ) : null}
-                  <PreferenceSummary mustHave={mustHave} mustAvoid={mustAvoid} />
-                  <Button
-                    title="조건 수정"
-                    secondary
-                    onPress={() => setPhase('constraints')}
-                    disabled={loading}
-                  />
-                </>
-              )}
-              {phase === 'confirmed' && (
-                <>
-                  <Reveal delay={90} style={ts.dnaFeature}>
-                    <Helix light feature />
-                  </Reveal>
-                  <Text style={ui.body}>
-                    설문과 대화에서 확정한 취향을 바탕으로 서울의 장소를 찾아요.
-                  </Text>
-                  {confirmed && (
-                    <Reveal delay={150}>
-                      <PreferenceSummary {...confirmed} />
-                    </Reveal>
-                  )}
-                </>
-              )}
-            </Reveal>
-          </ScrollView>
-          <View style={[ts.footer, { paddingBottom: insets.bottom }]}>
-            <View style={[ts.column, ts.footerInner]}>
-              {!!error && (
-                <Text accessibilityRole="alert" style={ts.error}>
-                  {error}
-                </Text>
-              )}
-              {chat ? (
-                <>
-                  {turn?.chips.length ? (
-                    <ScrollView
-                      horizontal
-                      keyboardShouldPersistTaps="handled"
-                      showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={ui.row}
-                    >
-                      {turn.chips.map((chip) => (
-                        <Chip
-                          key={chip}
-                          label={chip}
-                          selected={false}
-                          disabled={loading}
-                          onPress={() => send(chip)}
-                        />
-                      ))}
-                    </ScrollView>
-                  ) : null}
-                  <View style={ts.composer}>
-                    <TextInput
-                      accessibilityLabel="대화 답변"
-                      placeholderTextColor={theme.colors.muted}
-                      placeholder="어떤 여행을 좋아하나요?"
-                      value={message}
-                      onChangeText={setMessage}
-                      style={[ui.input, ts.messageInput]}
-                      editable={!loading}
-                      multiline
-                    />
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel="답변 보내기"
-                      accessibilityState={{ disabled: loading || !message.trim() }}
-                      disabled={loading || !message.trim()}
-                      onPress={() => send(message)}
-                      style={[ts.send, (loading || !message.trim()) && { opacity: 0.5 }]}
-                    >
-                      <Icon name="arrow-up" color={theme.colors.white} />
-                    </Pressable>
-                  </View>
-                </>
-              ) : (
-                <>
-                  {loading && (
-                    <View style={ts.status}>
-                      <ActivityIndicator size="small" color={theme.colors.accent} />
-                      <Text accessibilityLiveRegion="polite" style={ui.small}>
-                        서버 응답을 기다리고 있어요
-                      </Text>
+                )}
+                {phase === 'constraints' && (
+                  <>
+                    <Text style={ui.body}>{turn?.assistant_message}</Text>
+                    <View style={ts.conditionField}>
+                      <Text style={ui.label}>꼭 원하는 것</Text>
+                      <TextInput
+                        accessibilityLabel="꼭 원하는 것"
+                        placeholderTextColor={theme.colors.muted}
+                        placeholder="예: 박물관이나 미술관 (선택)"
+                        value={mustHave}
+                        onChangeText={setMustHave}
+                        maxLength={400}
+                        multiline
+                        style={[ui.input, ts.conditionInput]}
+                      />
                     </View>
-                  )}
-                  <Button
-                    title={submit[phase].title}
-                    onPress={submit[phase].action}
-                    disabled={
-                      loading ||
-                      (phase === 'likert' &&
-                        Boolean(session?.likert_items.some((item) => !answers[item.id])))
-                    }
-                  />
-                </>
-              )}
+                    <View style={ts.conditionField}>
+                      <Text style={ui.label}>피하고 싶은 것</Text>
+                      <TextInput
+                        accessibilityLabel="피하고 싶은 것"
+                        placeholderTextColor={theme.colors.muted}
+                        placeholder="예: 늦은 밤 술집 (선택)"
+                        value={mustAvoid}
+                        onChangeText={setMustAvoid}
+                        maxLength={500}
+                        multiline
+                        style={[ui.input, ts.conditionInput]}
+                      />
+                    </View>
+                  </>
+                )}
+                {phase === 'draft' && (
+                  <>
+                    <Text style={ui.body}>{turn?.assistant_message}</Text>
+                    {purpose.trim() ? (
+                      <Text style={ui.body}>여행 목적 · {purpose.trim()}</Text>
+                    ) : null}
+                    <PreferenceSummary mustHave={mustHave} mustAvoid={mustAvoid} />
+                    <Button
+                      title="조건 수정"
+                      secondary
+                      onPress={() => setPhase('constraints')}
+                      disabled={loading}
+                    />
+                  </>
+                )}
+                {phase === 'confirmed' && (
+                  <>
+                    <Reveal delay={90} style={ts.dnaFeature}>
+                      <Helix light feature />
+                    </Reveal>
+                    <Text style={ui.body}>
+                      설문과 대화에서 확정한 취향을 바탕으로 서울의 장소를 찾아요.
+                    </Text>
+                    {confirmed && (
+                      <Reveal delay={150}>
+                        <PreferenceSummary {...confirmed} />
+                      </Reveal>
+                    )}
+                  </>
+                )}
+              </Reveal>
+            </ScrollView>
+            <View style={[ts.footer, { paddingBottom: insets.bottom }]}>
+              <View style={[ts.column, ts.footerInner]}>
+                {!!error && (
+                  <Text accessibilityRole="alert" style={ts.error}>
+                    {error}
+                  </Text>
+                )}
+                {chat ? (
+                  <>
+                    {turn?.chips.length ? (
+                      <ScrollView
+                        horizontal
+                        keyboardShouldPersistTaps="handled"
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={ui.row}
+                      >
+                        {turn.chips.map((chip) => (
+                          <Chip
+                            key={chip}
+                            label={chip}
+                            selected={false}
+                            disabled={loading}
+                            onPress={() => send(chip)}
+                          />
+                        ))}
+                      </ScrollView>
+                    ) : null}
+                    <View style={ts.composer}>
+                      <TextInput
+                        accessibilityLabel="대화 답변"
+                        placeholderTextColor={theme.colors.muted}
+                        placeholder="어떤 여행을 좋아하나요?"
+                        value={message}
+                        onChangeText={setMessage}
+                        style={[ui.input, ts.messageInput]}
+                        editable={!loading}
+                        multiline
+                      />
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel="답변 보내기"
+                        accessibilityState={{ disabled: loading || !message.trim() }}
+                        disabled={loading || !message.trim()}
+                        onPress={() => send(message)}
+                        style={[ts.send, (loading || !message.trim()) && { opacity: 0.5 }]}
+                      >
+                        <Icon name="arrow-up" color={theme.colors.white} />
+                      </Pressable>
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    {loading && (
+                      <View style={ts.status}>
+                        <ActivityIndicator size="small" color={theme.colors.accent} />
+                        <Text accessibilityLiveRegion="polite" style={ui.small}>
+                          서버 응답을 기다리고 있어요
+                        </Text>
+                      </View>
+                    )}
+                    <Button
+                      title={submit[phase].title}
+                      onPress={submit[phase].action}
+                      disabled={
+                        loading ||
+                        (phase === 'likert' &&
+                          Boolean(session?.likert_items.some((item) => !answers[item.id])))
+                      }
+                    />
+                  </>
+                )}
+              </View>
             </View>
           </View>
         </KeyboardAvoidingView>
