@@ -7,7 +7,7 @@ const config: ExpoConfig = {
   orientation: 'portrait',
   userInterfaceStyle: 'light',
   ios: { bundleIdentifier: 'com.traveldna.mvp', supportsTablet: true },
-  android: { package: 'com.traveldna.mvp' },
+  android: { package: 'com.traveldna.mvp', softwareKeyboardLayoutMode: 'resize' },
   web: { bundler: 'metro' },
   plugins: [
     'expo-router',

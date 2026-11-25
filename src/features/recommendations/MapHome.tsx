@@ -1,5 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import {
+  Keyboard,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import { useReducedMotion } from 'react-native-reanimated';
+import { Reveal } from '../../components/common/Motion';
+import { sheetHeights, type SheetState } from '../../components/map/sheetSnap';
+import { theme } from '../../theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
@@ -34,7 +47,6 @@ export default function MapHome() {
     data,
     recommendations,
     toggleSave,
-    dna,
     activePlaces,
     recommendationOrigin,
     recommendationStatus,
@@ -45,25 +57,42 @@ export default function MapHome() {
   } = useTravel();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const reduce = useReducedMotion();
+  const viewport = useWindowDimensions();
+  const [mapHeight, setMapHeight] = useState(0);
+  const [revealKey, setRevealKey] = useState(0);
   const [filter, setFilter] = useState<Attribute | null>(null);
   const [savedOnly, setSavedOnly] = useState(false);
   const [day, setDay] = useState<number | null>(null);
   const [query, setQuery] = useState('');
   const [optionsOpen, setOptionsOpen] = useState(false);
-  const optionsAnim = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    Animated.timing(optionsAnim, {
-      toValue: optionsOpen ? 1 : 0,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  }, [optionsOpen, optionsAnim]);
   const [selected, setSelected] = useState<string | null>(null);
   const [target, setTarget] = useState<MapProps['target']>(null);
-  const [sheetState, setSheetState] = useState<'collapsed' | 'compact' | 'expanded'>('compact');
+  const [sheetState, setSheetState] = useState<SheetState>('compact');
+  const seenTrip = useRef(serverTrip);
+  useEffect(() => {
+    if (!serverTrip || seenTrip.current === serverTrip) return;
+    seenTrip.current = serverTrip;
+    setFilter(null);
+    setSavedOnly(false);
+    setDay(0);
+    setTarget(null);
+    setSelected(null);
+    setSheetState('compact');
+    setRevealKey((key) => key + 1);
+  }, [serverTrip]);
   const [conditionsModal, setConditionsModal] = useState(false);
   const [tripVisible, setTripVisible] = useState(false);
+  const availableHeight = mapHeight || viewport.height - insets.bottom - 58;
+  const sheetInset =
+    sheetHeights(availableHeight)[sheetState === 'expanded' ? 'compact' : sheetState];
   const serverConfigured = !!process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL?.trim();
+  const openPlan = () => {
+    Keyboard.dismiss();
+    setOptionsOpen(false);
+    if (serverConfigured) setTripVisible(true);
+    else setConditionsModal(true);
+  };
   const [budget, setBudget] = useState('');
   const [availableTime, setAvailableTime] = useState('');
   const [companions, setCompanions] = useState('');
@@ -97,10 +126,23 @@ export default function MapHome() {
     () => filterItinerary(itinerary, filter, savedOnly, data.savedIds),
     [itinerary, filter, savedOnly, data.savedIds],
   );
-  const orderLabels = Object.fromEntries(
-    itinerary.flatMap((route, d) => route.map((p, i) => [p.id, `Day ${d + 1} · ${i + 1}`])),
+  const orderLabels = useMemo(
+    () =>
+      Object.fromEntries(
+        itinerary.flatMap((route, d) => route.map((p, i) => [p.id, `Day ${d + 1} · ${i + 1}`])),
+      ),
+    [itinerary],
   );
-  const visible = day === null ? filteredItinerary.flat() : filteredItinerary[day];
+  const routes = useMemo(
+    () => (day === null ? filteredItinerary : [filteredItinerary[day]]),
+    [day, filteredItinerary],
+  );
+  const visible = useMemo(() => routes.flat(), [routes]);
+  const changeDay = (next: number | null) => {
+    if (next === day) return;
+    setDay(next);
+    setTarget(null);
+  };
   const result = regionPlaces
     .filter((p) => `${p.name} ${p.category} ${p.district}`.includes(query.trim()))
     .slice(0, 5);
@@ -109,16 +151,20 @@ export default function MapHome() {
       const p = regionPlaces.find((p) => p.id === id);
       if (!p) return;
       setSelected(id);
-      setTarget({ latitude: p.latitude, longitude: p.longitude, token: Date.now() });
+      setTarget({
+        latitude: p.latitude,
+        longitude: p.longitude,
+        token: Date.now(),
+        focusPlace: true,
+      });
     },
     [regionPlaces],
   );
   useEffect(() => {
     if (!visible.some((p) => p.id === selected)) {
-      if (visible[0]) select(visible[0].id);
-      else setSelected(null);
+      setSelected(visible[0]?.id ?? null);
     }
-  }, [visible, selected, select]);
+  }, [visible, selected]);
   useEffect(() => {
     if (!notice) return;
     const timer = setTimeout(() => setNotice(''), 5000);
@@ -144,7 +190,7 @@ export default function MapHome() {
     }
   };
   return (
-    <View style={s.root}>
+    <View style={s.root} onLayout={(event) => setMapHeight(event.nativeEvent.layout.height)}>
       <MapBoundary>
         <MapCanvas
           region="seoul"
@@ -156,18 +202,21 @@ export default function MapHome() {
             select(id);
           }}
           target={target}
-          routes={day === null ? filteredItinerary : [filteredItinerary[day]]}
+          routes={routes}
+          topInset={insets.top + 77}
+          bottomInset={sheetInset + 24}
+          revealKey={revealKey}
           orderLabels={orderLabels}
         />
       </MapBoundary>
-      <View pointerEvents="box-none" style={[s.header, { paddingTop: insets.top + 12 }]}>
-        <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-          <View style={[s.search, { flex: 1 }]}>
+      <View pointerEvents="box-none" style={[s.header, { paddingTop: insets.top + 10 }]}>
+        <View style={s.toolbar}>
+          <View style={s.search}>
             <Icon name="search-outline" size={20} />
             <TextInput
               accessibilityLabel="여행지 검색"
-              placeholder={`${regions.seoul.name}, 어디로 떠나볼까요?`}
-              placeholderTextColor="#84929E"
+              placeholder="서울 장소 검색"
+              placeholderTextColor={theme.colors.muted}
               value={query}
               onChangeText={setQuery}
               style={s.input}
@@ -175,16 +224,19 @@ export default function MapHome() {
             />
             {query ? (
               <Pressable
+                accessibilityRole="button"
                 accessibilityLabel="검색 지우기"
                 onPress={() => setQuery('')}
-                style={{ padding: 8 }}
+                style={s.searchClear}
               >
                 <Icon name="close" size={18} />
               </Pressable>
-            ) : (
-              <Text style={[ui.small, { color: '#174A7E', fontWeight: '700' }]}>서울</Text>
-            )}
+            ) : null}
           </View>
+          <Pressable accessibilityRole="button" onPress={openPlan} style={s.plan}>
+            <Icon name="calendar-outline" size={16} color={theme.colors.white} />
+            <Text style={s.planLabel}>여행 설계</Text>
+          </Pressable>
           <IconButton
             icon={optionsOpen ? 'close' : 'options-outline'}
             label={optionsOpen ? '지도 옵션 닫기' : '지도 옵션 열기'}
@@ -192,69 +244,49 @@ export default function MapHome() {
             onPress={() => setOptionsOpen(!optionsOpen)}
           />
         </View>
-        <Animated.View
-          pointerEvents={optionsOpen ? 'auto' : 'none'}
-          accessibilityElementsHidden={!optionsOpen}
-          importantForAccessibility={optionsOpen ? 'auto' : 'no-hide-descendants'}
-          style={{
-            opacity: optionsAnim,
-            maxHeight: optionsAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [
-                0,
-                recommendationStatus === 'error' || recommendationStatus === 'empty' ? 165 : 110,
-              ],
-            }),
-            transform: [
-              { translateY: optionsAnim.interpolate({ inputRange: [0, 1], outputRange: [-8, 0] }) },
-            ],
-            overflow: 'hidden',
-          }}
-        >
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              setOptionsOpen(false);
-              serverConfigured ? setTripVisible(true) : setConditionsModal(true);
-            }}
-            style={s.optionAction}
-          >
-            <Icon name="options-outline" size={18} />
-            <Text style={ui.small}>
-              여행 조건 수정 · 추천 요청{' '}
-              {recommendationStatus === 'loading' ? '(불러오는 중)' : '›'}
-            </Text>
-          </Pressable>
-          {(recommendationStatus === 'error' || recommendationStatus === 'empty') && (
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => {
-                setOptionsOpen(false);
-                serverConfigured ? setTripVisible(true) : request();
-              }}
-              style={s.optionAction}
+        {optionsOpen && (
+          <Reveal style={s.options}>
+            {(recommendationStatus === 'error' || recommendationStatus === 'empty') && (
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => {
+                  setOptionsOpen(false);
+                  serverConfigured ? setTripVisible(true) : request();
+                }}
+                style={s.optionAction}
+              >
+                <Text style={ui.small}>
+                  {recommendationError ?? '추천 결과가 없습니다.'} · 다시 시도
+                </Text>
+              </Pressable>
+            )}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={s.filters}
             >
-              <Text style={ui.small}>
-                {recommendationError ?? '추천 결과가 없습니다.'} · 다시 시도
-              </Text>
-            </Pressable>
-          )}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={s.filters}
-          >
-            <Chip label="✦ 나의 추천" selected={!filter} onPress={() => setFilter(null)} />
-            {filters.map((k) => (
               <Chip
-                key={k}
-                label={attributeLabels[k]}
-                selected={filter === k}
-                onPress={() => setFilter(filter === k ? null : k)}
+                label="취향 필터 전체"
+                selected={!filter}
+                onPress={() => {
+                  setFilter(null);
+                  setTarget(null);
+                }}
               />
-            ))}
-          </ScrollView>
-        </Animated.View>
+              {filters.map((k) => (
+                <Chip
+                  key={k}
+                  label={attributeLabels[k]}
+                  selected={filter === k}
+                  onPress={() => {
+                    setFilter(filter === k ? null : k);
+                    setTarget(null);
+                  }}
+                />
+              ))}
+            </ScrollView>
+          </Reveal>
+        )}
         {query.trim() ? (
           <View style={s.resultBox}>
             {result.length ? (
@@ -267,6 +299,7 @@ export default function MapHome() {
                     setFilter(null);
                     setSavedOnly(false);
                     setQuery('');
+                    Keyboard.dismiss();
                     setDay(null);
                     select(p.id);
                     setSheetState('compact');
@@ -274,7 +307,7 @@ export default function MapHome() {
                 >
                   <Icon name="location-outline" size={18} />
                   <View style={{ flex: 1 }}>
-                    <Text style={{ color: '#16263A', fontWeight: '600' }}>{p.name}</Text>
+                    <Text style={s.resultTitle}>{p.name}</Text>
                     <Text style={ui.small}>{p.district}</Text>
                   </View>
                   <Icon name="arrow-up-outline" size={16} />
@@ -286,15 +319,8 @@ export default function MapHome() {
           </View>
         ) : null}
       </View>
-      {sheetState !== 'expanded' && (
-        <View
-          style={[
-            s.floats,
-            {
-              bottom: sheetState === 'collapsed' ? 90 : 355,
-            },
-          ]}
-        >
+      {sheetState !== 'expanded' && !optionsOpen && !query.trim() && (
+        <View style={[s.floats, { top: insets.top + 76 }]}>
           <IconButton
             icon={locating ? 'hourglass-outline' : 'locate-outline'}
             label="현재 위치로 이동"
@@ -304,7 +330,10 @@ export default function MapHome() {
             icon={savedOnly ? 'bookmark' : 'bookmark-outline'}
             label="지도에서 저장 장소 필터"
             active={savedOnly}
-            onPress={() => setSavedOnly((v) => !v)}
+            onPress={() => {
+              setSavedOnly((v) => !v);
+              setTarget(null);
+            }}
           />
           <IconButton
             icon="expand-outline"
@@ -319,24 +348,26 @@ export default function MapHome() {
       <RecommendationSheet
         places={visible}
         day={day}
-        onDayChange={setDay}
+        onDayChange={changeDay}
+        availableHeight={availableHeight}
+        revealKey={revealKey}
         orderLabels={orderLabels}
         recommendations={recommendations}
         selectedId={selected}
         savedIds={data.savedIds}
-        title={savedOnly ? '저장한 발견' : data.nickname + '님을 위한 발견'}
-        subtitle={
-          visible.length +
-          '곳 · 직선 연결 (실제 이동 경로 아님) · ' +
-          (savedOnly
-            ? '저장된 장소 · 출처는 카드와 상세 참고'
-            : recommendationOrigin === 'api'
-              ? '서버 추천 · 출처는 상세 참고'
-              : '데모 장소 · 규칙 기반 예상 일치도')
+        title={
+          savedOnly
+            ? '저장한 장소'
+            : day === null
+              ? '서울에서 만날 장소'
+              : `서울 여행 · Day ${day + 1}`
         }
+        subtitle={`${visible.length}곳 · ${recommendationOrigin === 'api' ? '서버 추천' : '데모 추천'} · 직선 연결은 실제 이동 경로가 아니에요.`}
         state={sheetState}
         onStateChange={setSheetState}
-        onSelect={select}
+        onSelect={(id) => {
+          if (selected !== id) select(id);
+        }}
         onSave={toggleSave}
         onOpen={open}
       />
@@ -349,17 +380,12 @@ export default function MapHome() {
         visible={tripVisible}
         previousTrip={serverTrip}
         onClose={() => setTripVisible(false)}
-        onResult={(trip) => {
-          setFilter(null);
-          setSavedOnly(false);
-          setDay(null);
-          applyServerResult(trip);
-        }}
+        onResult={applyServerResult}
       />
       <Modal
         transparent
         visible={conditionsModal}
-        animationType="slide"
+        animationType={reduce ? 'none' : 'fade'}
         onRequestClose={() => setConditionsModal(false)}
       >
         <View style={s.scrim}>
@@ -383,7 +409,7 @@ export default function MapHome() {
                 placeholder={label + ' (선택)'}
                 value={value}
                 onChangeText={change}
-                style={s.search}
+                style={[ui.input, s.modalInput]}
               />
             ))}
             <Text style={ui.small}>

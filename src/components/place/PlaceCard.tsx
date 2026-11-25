@@ -1,18 +1,20 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Place, Recommendation } from '../../types';
 import { IconButton, Photo } from '../common/UI';
 import { ui } from '../common/ui.styles';
-import { theme } from '../../theme';
+import { theme as t } from '../../theme';
+
 interface Props {
   place: Place;
-  recommendation: Recommendation;
+  recommendation?: Recommendation;
   saved: boolean;
   onSave: () => void;
   onOpen: () => void;
   compact?: boolean;
   orderLabel?: string;
 }
+
 export const PlaceCard = memo(function PlaceCard({
   place,
   recommendation,
@@ -22,24 +24,26 @@ export const PlaceCard = memo(function PlaceCard({
   compact,
   orderLabel,
 }: Props) {
+  const source = place.source === 'api' ? place.sourceName : '데모';
   return (
-    <View style={[styles.card, compact && { borderWidth: 0, padding: 0 }]}>
+    <View style={[s.card, compact && s.compact]}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`${place.name} 상세 보기`}
         onPress={onOpen}
-        style={({ pressed }) => [styles.main, { opacity: pressed ? 0.7 : 1 }]}
+        style={({ pressed }) => [compact && s.compactMain, { opacity: pressed ? 0.78 : 1 }]}
       >
-        <Photo uri={place.image} category={place.category} style={styles.photo} />
-        <View style={{ flex: 1, gap: 6 }}>
-          <Text style={styles.category}>
-            {orderLabel ? `${orderLabel} · ` : ''}
-            {place.category} · {place.region === 'seoul' ? '서울' : '부산'}
+        <Photo
+          uri={place.image}
+          category={place.category}
+          style={compact ? s.thumbnail : s.cover}
+        />
+        <View style={compact ? s.compactCopy : s.copy}>
+          <Text numberOfLines={1} style={s.category}>
+            {orderLabel ? `${orderLabel}  ·  ` : ''}
+            {place.category}
           </Text>
-          <Text
-            style={[ui.subtitle, !compact && { fontSize: 18, lineHeight: 24 }]}
-            numberOfLines={2}
-          >
+          <Text style={compact ? s.compactTitle : s.title} numberOfLines={2}>
             {place.name}
           </Text>
           {!!place.district && (
@@ -47,46 +51,69 @@ export const PlaceCard = memo(function PlaceCard({
               {place.district}
             </Text>
           )}
-          {!!place.image && place.source === 'api' && (
-            <Text style={ui.small}>사진: 한국관광공사</Text>
+          {recommendation?.score != null ? (
+            <Text style={s.source}>예상 일치도 {recommendation.score} / 100</Text>
+          ) : (
+            <Text style={s.source} numberOfLines={1}>
+              {place.image && place.source === 'api' ? '사진 · 한국관광공사' : source}
+            </Text>
           )}
-          {!compact && (
-            <Text style={ui.small} numberOfLines={3}>
+          {!compact && place.source !== 'api' && !!recommendation?.reason && (
+            <Text style={ui.small} numberOfLines={2}>
               {recommendation.reason}
             </Text>
           )}
-          {recommendation.score !== null ? (
-            <Text style={styles.score}>
-              예상 일치도 {recommendation.score}
-              <Text style={{ fontSize: 11, fontWeight: '400' }}> / 100</Text>
-            </Text>
-          ) : (
-            <Text style={ui.small}>서버 추천 · {place.sourceName}</Text>
-          )}
         </View>
       </Pressable>
-      <IconButton
-        icon={saved ? 'bookmark' : 'bookmark-outline'}
-        label={`${place.name} ${saved ? '저장 취소' : '저장'}`}
-        active={saved}
-        onPress={onSave}
-      />
+      <View style={compact ? s.saveCompact : s.saveCover}>
+        <IconButton
+          icon={saved ? 'bookmark' : 'bookmark-outline'}
+          label={`${place.name} ${saved ? '저장 취소' : '저장'}`}
+          active={saved}
+          onPress={onSave}
+        />
+      </View>
     </View>
   );
 });
-const styles = StyleSheet.create({
+
+const s = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
+    borderRadius: t.radius.md,
     borderWidth: 1,
-    borderColor: theme.colors.line,
-    borderRadius: 22,
-    padding: 14,
-    backgroundColor: '#fff',
+    borderColor: t.colors.line,
+    backgroundColor: t.colors.surface,
+    overflow: 'hidden',
   },
-  main: { flex: 1, flexDirection: 'row', gap: 14, alignItems: 'center' },
-  photo: { width: 82, height: 110, borderRadius: 16 },
-  category: { fontSize: 10, color: theme.colors.muted, letterSpacing: 0.4 },
-  score: { fontSize: 16, color: theme.colors.primary, fontWeight: '700' },
+  compact: { backgroundColor: t.colors.background },
+  compactMain: { minHeight: 92, flexDirection: 'row', alignItems: 'stretch' },
+  copy: { padding: 16, gap: 5 },
+  compactCopy: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingStart: 10,
+    paddingEnd: 53,
+    paddingVertical: 6,
+    gap: 2,
+  },
+  cover: { width: '100%', aspectRatio: 2.25 },
+  thumbnail: { width: '31%', minHeight: 92 },
+  title: {
+    color: t.colors.text,
+    fontSize: 23,
+    lineHeight: 29,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+  },
+  compactTitle: {
+    color: t.colors.text,
+    fontSize: 17,
+    lineHeight: 21,
+    fontWeight: '800',
+    letterSpacing: -0.4,
+  },
+  category: { fontSize: 11, color: t.colors.accent, fontWeight: '700' },
+  source: { fontSize: 11, color: t.colors.muted, fontWeight: '500', flexShrink: 1 },
+  saveCover: { position: 'absolute', top: 10, right: 10 },
+  saveCompact: { position: 'absolute', top: 7, right: 6 },
 });

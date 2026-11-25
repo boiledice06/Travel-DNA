@@ -2,9 +2,9 @@ import { StyleSheet } from 'react-native';
 import { theme } from '../../theme';
 export const s = StyleSheet.create({
   root: { flex: 1, backgroundColor: theme.colors.background },
-  image: { width: '100%', height: 330 },
+  image: { width: '100%', aspectRatio: 1.35 },
   noImage: {
-    height: 150,
+    height: 200,
     paddingTop: 40,
     alignItems: 'center',
     justifyContent: 'center',
@@ -23,10 +23,7 @@ export const s = StyleSheet.create({
   },
   body: {
     backgroundColor: theme.colors.background,
-    padding: 24,
-    marginTop: -10,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    padding: theme.spacing.xl,
     gap: 20,
     maxWidth: 760,
     width: '100%',
@@ -34,6 +31,11 @@ export const s = StyleSheet.create({
     paddingBottom: 40,
   },
   score: { fontSize: 40, fontWeight: '700', color: theme.colors.primary, letterSpacing: -2 },
-  reason: { padding: 20, borderRadius: 22, backgroundColor: '#EAF4F6', gap: 10 },
+  reason: {
+    padding: 20,
+    borderRadius: theme.radius.md,
+    backgroundColor: theme.colors.pale,
+    gap: 10,
+  },
   feature: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
 });
