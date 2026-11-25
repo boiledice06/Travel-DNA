@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, relative, resolve } from 'node:path';
@@ -7,6 +7,7 @@ import { createReplay, loadMedia } from './replay.mjs';
 import { build, fixtureDir, getEpoch, origin, root } from './runtime.mjs';
 
 const local = new URL(origin);
+const protocol = 'travel-dna-presentation-v2';
 const scenarios = new Map();
 for (const [id, suffix, label] of [
   ['a', '-a', 'A. 활기찬 체험형'],
@@ -76,6 +77,18 @@ async function buildPresentation() {
 }
 if (!process.argv.includes('--serve-only')) await buildPresentation();
 const index = await readFile(join(build, 'index.html'), 'utf8');
+const head = /<head(?:\s[^>]*)?>/i;
+const entryScripts = [
+  ...index.matchAll(/<script\b[^>]*\bsrc=["'](\/_expo\/static\/js\/web\/[\w.-]+\.js)["']/gi),
+];
+const startupSources = await Promise.all(
+  entryScripts.map(([, href]) => readFile(join(build, href.slice(1)))),
+);
+if (!head.test(index) || !startupSources.some((bytes) => bytes.includes(protocol)))
+  throw Error('발표 런타임과 호환되지 않는 Expo 빌드입니다. npm run demo로 다시 빌드하세요.');
+const fingerprint = createHash('sha256');
+for (const bytes of startupSources) fingerprint.update(bytes);
+const bundle = fingerprint.digest('hex').slice(0, 12);
 
 async function jsonBody(req) {
   if (!String(req.headers['content-type'] ?? '').startsWith('application/json'))
@@ -124,6 +137,14 @@ const server = createServer(async (req, res) => {
     await refreshEpoch();
     const url = new URL(req.url, origin);
     const pathname = decodeURIComponent(url.pathname);
+    if (
+      pathname === '/' &&
+      !['a', 'b'].includes(url.searchParams.get('scenario')) &&
+      req.method === 'GET'
+    ) {
+      res.setHeader('Location', '/demo');
+      return reply(res, 302, '', contentTypes['.html']);
+    }
     if (pathname === '/demo' && req.method === 'GET')
       return reply(res, 200, launcher, contentTypes['.html']);
     const aRequest = pathname.startsWith('/demo-api/a/api/');
@@ -132,6 +153,8 @@ const server = createServer(async (req, res) => {
     if (apiPath === '/api/demo/health' && req.method === 'GET')
       return reply(res, media.unavailable.length ? 503 : 200, {
         mode: 'recorded-presentation',
+        protocol,
+        bundle,
         epoch,
         fixtureReady: true,
         assetsReady: media.unavailable.length === 0,
@@ -167,7 +190,6 @@ const server = createServer(async (req, res) => {
       (await stat(file).catch(() => null))?.isFile() &&
       file !== join(build, 'index.html')
     ) {
-      res.setHeader('Cache-Control', 'public, max-age=3600');
       return reply(
         res,
         200,
@@ -180,22 +202,37 @@ const server = createServer(async (req, res) => {
     const photos = Object.fromEntries(
       [...scenarios.values()].map(({ id, media }) => [id, media.mapping]),
     );
-    const data = JSON.stringify({ epoch, photos }).replaceAll('<', '\\u003c');
+    const data = JSON.stringify({ protocol, epoch, bundle, photos }).replaceAll('<', '\\u003c');
     const bootstrap = `(() => {
       const key = 'travel-dna/demo-scenario';
       const selected = new URLSearchParams(location.search).get('scenario');
-      let scenario = selected === 'a' ? 'a' : 'b';
+      let scenario = selected;
       try {
         if (selected === 'a' || selected === 'b') sessionStorage.setItem(key, selected);
-        else if (sessionStorage.getItem(key) === 'a') scenario = 'a';
+        else if (selected === null) scenario = sessionStorage.getItem(key);
       } catch {}
       const data = ${data};
-      window.__TRAVEL_DNA_DEMO__ = { epoch: data.epoch, scenario, photos: data.photos[scenario] };
+      if (scenario === 'a' || scenario === 'b') {
+        window.__TRAVEL_DNA_DEMO__ = {
+          protocol: data.protocol, epoch: data.epoch, bundle: data.bundle,
+          scenario, photos: data.photos[scenario]
+        };
+      }
     })();`;
     return reply(
       res,
       200,
-      index.replace('<head>', '<head><script>' + bootstrap + '</script>'),
+      index.replace(
+        head,
+        (tag) =>
+          tag +
+          '<meta name="travel-dna-presentation" content="' +
+          protocol +
+          '">' +
+          '<script id="travel-dna-bootstrap">' +
+          bootstrap +
+          '</script>',
+      ),
       contentTypes['.html'],
     );
   } catch {
@@ -208,7 +245,7 @@ server.on('error', (error) => {
 });
 server.listen(Number(local.port), local.hostname, () => {
   console.log('Travel DNA 발표 모드 · 실제 추천 기록 재생');
-  console.log(origin + '/demo');
+  console.log(origin + ' · 번들 ' + bundle);
   for (const { label, media } of scenarios.values())
     console.log(`${label} · 사진 ${media.files.size}개 확인 · 누락 ${media.unavailable.length}개`);
 });

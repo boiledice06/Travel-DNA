@@ -4,7 +4,7 @@ import { Stack, usePathname, Redirect } from 'expo-router';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useReducedMotion } from 'react-native-reanimated';
-import { presentationMode } from '../src/services/presentation/demo';
+import { presentationMode, presentationStartupFailed } from '../src/services/presentation/demo';
 import { theme } from '../src/theme';
 import { StatusBar } from 'expo-status-bar';
 import { TravelProvider, useTravel } from '../src/hooks/useTravel';
@@ -58,6 +58,18 @@ function Navigation() {
   );
 }
 export default function RootLayout() {
+  if (presentationStartupFailed)
+    return (
+      <View style={[ui.screen, { justifyContent: 'center', padding: 28, gap: 16 }]}>
+        <Text accessibilityRole="header" style={ui.title}>
+          발표 모드를 시작할 수 없어요
+        </Text>
+        <Text accessibilityRole="alert" style={ui.body}>
+          발표 시나리오 설정을 불러오지 못했어요. 시나리오를 다시 선택해 주세요.
+        </Text>
+        <Button title="발표 시나리오 선택" onPress={() => window.location.assign('/demo')} />
+      </View>
+    );
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>

@@ -62,6 +62,7 @@ async function ready(epoch) {
   assert.equal(data.epoch, epoch);
   assert.equal(data.photos, record.summary.verifiedPhotos);
   assert(data.fixtureReady && data.assetsReady);
+  return data;
 }
 await ready(await getEpoch());
 const browser = await chromium.launch({ channel: process.env.TRAVEL_BROWSER ?? 'msedge' });
@@ -73,7 +74,7 @@ const pause = (ms) => activePage.waitForTimeout(ms);
 
 async function run(index, result) {
   const epoch = await reset();
-  await ready(epoch);
+  const startup = await ready(epoch);
   const raw = join(workspace, 'video-raw');
   context = await browser.newContext({
     viewport: { width: 390, height: 844 },
@@ -184,12 +185,16 @@ async function run(index, result) {
   };
 
   const choose = async (id) => {
-    await page.goto(origin + '/demo', { waitUntil: 'domcontentloaded' });
+    await page.goto(origin, { waitUntil: 'domcontentloaded' });
+    assert.equal(new URL(page.url()).pathname, '/demo');
     await page.getByRole('link', { name: labels[id], exact: true }).click();
     await page.waitForFunction((id) => window.__TRAVEL_DNA_DEMO__?.scenario === id, id);
   };
   step = 'start';
   await choose(scenario);
+  const bootstrap = await page.evaluate(() => ({ ...window.__TRAVEL_DNA_DEMO__ }));
+  assert.equal(bootstrap.protocol, startup.protocol);
+  assert.equal(bootstrap.bundle, startup.bundle);
   await b('서울 여행 시작하기').waitFor();
   await show('발표 모드 · 실제 추천 기록 재생');
   assert.equal(await page.evaluate(() => window.__TRAVEL_DNA_DEMO__.epoch), epoch);
@@ -270,6 +275,7 @@ async function run(index, result) {
   assert.equal(result.photos, record.summary.verifiedPhotos);
 
   await tab('전체').click();
+  await show('15곳 · 서버 추천 · 직선 연결은 실제 이동 경로가 아니에요.');
   await mapFrame('all');
   await screen('08-map-all', 9000);
   for (const day of [1, 2, 3]) {
@@ -370,7 +376,6 @@ async function run(index, result) {
     await tab('찜한 장소').click();
     await show('마음에 드는 곳을 담아보세요');
     await choose(scenario);
-    await page.goto(origin, { waitUntil: 'domcontentloaded' });
     await tab('찜한 장소').click();
     await card.waitFor();
     result.scenarioIsolation = true;
