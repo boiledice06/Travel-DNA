@@ -13,11 +13,9 @@
 
 `Research/Travel-DNA/experiments/exp-20261117-live-api-preflight-v1/`에 실험 README, HTTP 결과, 스크립트, 상세 보고 파일 4개를 업로드했다. Drive 메타데이터에서 네 파일의 이름·부모·크기가 로컬과 일치했고 README 및 상세 보고는 텍스트를 재조회해 일치함을 확인했다. 커넥터가 체크섬을 반환하지 않아 JSON·Python 파일의 바이트 단위 일치는 검증하지 못했다. 따라서 전체 동기화의 완전한 무결성 검증은 미완료다. 로컬 파일을 보존한다.
 
-
 ## 2026-11-18 Expo Web 검증 — exp-20261118-expo-web-e2e-v1
 
 실제 서버 추천 15곳의 3일 지도 렌더링 및 날짜 전환을 확인했다. 모바일 긴 마커 라벨과 지도 버튼이 겹치며, AI 대화 캡처와 시작부터 연속 흐름은 미확보다. 따라서 전체 E2E는 미완료. 증거와 재현: `verification/E2E_VERIFICATION_REPORT.md`, `verification/e2e-screenshots/`; 실험 설명: `experiments/exp-20261118-expo-web-e2e-v1/README.md`.
-
 
 ## 2026-11-18 UX 개선 중간 검증
 
@@ -33,3 +31,11 @@
 
 - `exp-20261118-final-polish-v1`: 기존 일정의 날짜·순서를 유지하도록 필터 수정, 실제 저장 추천과 단위 테스트로 확인. 상세 사진 출처·이용 안내와 URL 없는 사진 fallback을 확인했다.
 - 시트 포인터 드래그는 재현되지 않았고 자동화 한계와 앱 결함을 구분하지 못했다. 모의 질문 표시는 확인했으나 실제 Gemini 질문 화면과 이미지 요청 실패 fallback은 미검증이다. 증거 및 재현: `verification/FINAL_POLISH_REPORT.md`, `experiments/exp-20261118-final-polish-v1/`.
+
+## 2026-11-25 발표용 UI V2
+
+- 실험 ID `exp-20261125-presentation-ui-v2`. 기준 `a3d604d`, 구현 `9ff7109`, 브랜치 `codex/presentation-ui-v2`.
+- 인트로, 여행 조건, 설문·대화, DNA, 추천 지도와 실시간 드래그 패널, 장소·찜·일정 화면을 개편했다.
+- 실제 여행 서버와 공급자 호출에서 200 성공 경로와 HTTP 502 실패가 모두 관찰됐다. 화면별 결과, 뷰포트 및 실제·fixture 구분은 [검증 보고서](presentation/ui-v2/VERIFICATION.md)를 참고한다.
+- Android 번들은 생성됐다. ADB에 연결된 실행 대상이 없어 네이티브 지도, OS 키보드, 네이티브 제스처 검증은 남아 있다.
+- 실험 방법과 증거는 [실험 README](experiments/exp-20261125-presentation-ui-v2/README.md), 보관 위치와 무결성 확인은 [아카이브 기록](experiments/exp-20261125-presentation-ui-v2/ARCHIVE.md)에 기록한다.

@@ -1,0 +1,126 @@
+{
+  "stage": "pass2",
+  "mode": "fixture",
+  "dimension": "375x812",
+  "requests": [
+    [
+      "POST",
+      "/api/trip-profile",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/start",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/likert",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/message",
+      502
+    ],
+    [
+      "POST",
+      "/api/dna-chat/message",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/message",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/constraints",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/finalize",
+      200
+    ],
+    [
+      "POST",
+      "/api/seoul-find",
+      200
+    ]
+  ],
+  "errors": [],
+  "checks": [
+    {
+      "name": "01-intro",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "02-onboarding-dna",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "03-map",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "04-trip-setup",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "05-likert",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "06-chat",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "06b-chat-retry",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "07-constraints",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "08-draft",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "09-confirmed-dna",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "10-recommendation-loading",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "11-day1",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "12-day2",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "pointer-drag",
+      "travel": 85.5,
+      "snap": "expanded"
+    },
+    {
+      "name": "13-sheet-expanded",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "expanded-scroll",
+      "scrollTravel": 187
+    },
+    {
+      "name": "99-blocker",
+      "horizontalPageOverflow": false
+    }
+  ],
+  "imageFailures": [],
+  "error": "Error: Carousel moved the sheet"
+}

@@ -1,0 +1,189 @@
+{
+  "browser": "158.0.4370.33",
+  "stage": "after",
+  "mode": "fixture",
+  "dimension": "375x812",
+  "requests": [
+    [
+      "POST",
+      "/api/trip-profile",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/start",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/likert",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/message",
+      502
+    ],
+    [
+      "POST",
+      "/api/dna-chat/message",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/message",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/constraints",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/finalize",
+      200
+    ],
+    [
+      "POST",
+      "/api/seoul-find",
+      200
+    ],
+    [
+      "GET",
+      "/api/dna-chat/:id",
+      200
+    ]
+  ],
+  "errors": [],
+  "checks": [
+    {
+      "name": "01-intro",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "02-onboarding-dna",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "03-map",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "04-trip-setup",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "05-likert",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "composer-resize",
+      "held": true
+    },
+    {
+      "name": "06-chat",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "06b-chat-retry",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "07-constraints",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "08-draft",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "09-confirmed-dna",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "10-recommendation-loading",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "11-day1",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "12-day2",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "pointer-drag",
+      "travel": 85.5,
+      "snap": "expanded"
+    },
+    {
+      "name": "13-sheet-expanded",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "expanded-scroll",
+      "scrollTravel": 184
+    },
+    {
+      "name": "horizontal-carousel",
+      "card": "장소 2 / 3",
+      "pin": "덕수궁 지도 마커"
+    },
+    {
+      "name": "touch-drag",
+      "travel": 138,
+      "snap": "compact"
+    },
+    {
+      "name": "day3-camera",
+      "shown": 3,
+      "selectedPin": {
+        "x": 124.71875,
+        "y": 330.828125
+      }
+    },
+    {
+      "name": "14-day3",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "15-place-detail",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "day-after-detail",
+      "selected": "true"
+    },
+    {
+      "name": "16-saved",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "bookmark-reload",
+      "shown": true
+    },
+    {
+      "name": "17-my-trips",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "18-profile",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "local-record-create-edit-reload-delete",
+      "passed": true
+    }
+  ],
+  "imageFailures": [],
+  "shortlist": {
+    "count": 9,
+    "providers": {
+      "UI 검증 fixture": 9
+    },
+    "photoCandidates": 0
+  },
+  "completed": true
+}
