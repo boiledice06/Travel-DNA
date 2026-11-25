@@ -1,0 +1,2209 @@
+{
+  "version": 1,
+  "recordedOn": "2026-11-25",
+  "timezone": "Asia/Seoul",
+  "provenance": "Synthetic presentation inputs sent to the existing live FastAPI/Gemini/Kakao/TourAPI and photo enrichment. This recording contains one confirmed trip. Runtime identifiers were replaced consistently. No response was simulated.",
+  "scenario": {
+    "profile": {
+      "party_size": "2",
+      "companion_type": "friends",
+      "duration": "2n3d",
+      "transport": "walk_subway",
+      "budget_level": "mid",
+      "time_window": "morning"
+    },
+    "purpose": "조용한 박물관과 미술 전시를 관람하고 여유롭게 산책하고 싶어요.",
+    "mustHave": "박물관, 미술관",
+    "mustAvoid": "술집",
+    "answers": [
+      4,
+      2,
+      2,
+      3,
+      3
+    ]
+  },
+  "calls": [
+    {
+      "method": "POST",
+      "path": "/api/trip-profile",
+      "request": {
+        "party_size": "2",
+        "companion_type": "friends",
+        "duration": "2n3d",
+        "transport": "walk_subway",
+        "budget_level": "mid",
+        "time_window": "morning"
+      },
+      "response": {
+        "id": "golden-profile",
+        "city": "서울",
+        "party_size": "2",
+        "companion_type": "friends",
+        "age_band": "skip",
+        "gender": "skip",
+        "duration": "2n3d",
+        "lodging": "none",
+        "lodging_area": null,
+        "transport": "walk_subway",
+        "mobility_preference": "balanced",
+        "budget_level": "mid",
+        "budget_note": null,
+        "time_window": "morning",
+        "created_at": "2026-11-25T09:45:50.873097+00:00"
+      },
+      "status": 200,
+      "elapsedMs": 138
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/start",
+      "request": {},
+      "response": {
+        "session_id": "golden-session",
+        "phase": "likert",
+        "turn": 0,
+        "assistant_message": "먼저 아래 5문항에 답해 주세요.",
+        "chips": [],
+        "likert_items": [
+          {
+            "id": "ax_authenticity",
+            "statement_ko": "유명 랜드마크보다 골목·로컬 느낌이 더 좋다.",
+            "maps_to": "axes.authenticity",
+            "scale": [
+              {
+                "value": 5,
+                "label_ko": "매우 그렇다"
+              },
+              {
+                "value": 4,
+                "label_ko": "그렇다"
+              },
+              {
+                "value": 3,
+                "label_ko": "보통이다"
+              },
+              {
+                "value": 2,
+                "label_ko": "그렇지 않다"
+              },
+              {
+                "value": 1,
+                "label_ko": "매우 그렇지 않다"
+              }
+            ]
+          },
+          {
+            "id": "ax_energy",
+            "statement_ko": "차분하고 정적인 것보다 활동적인 경험이 더 좋다.",
+            "maps_to": "axes.energy",
+            "scale": [
+              {
+                "value": 5,
+                "label_ko": "매우 그렇다"
+              },
+              {
+                "value": 4,
+                "label_ko": "그렇다"
+              },
+              {
+                "value": 3,
+                "label_ko": "보통이다"
+              },
+              {
+                "value": 2,
+                "label_ko": "그렇지 않다"
+              },
+              {
+                "value": 1,
+                "label_ko": "매우 그렇지 않다"
+              }
+            ]
+          },
+          {
+            "id": "ax_density",
+            "statement_ko": "사람 많고 활기찬 핫플·번화가가 더 좋다.",
+            "maps_to": "axes.density",
+            "scale": [
+              {
+                "value": 5,
+                "label_ko": "매우 그렇다"
+              },
+              {
+                "value": 4,
+                "label_ko": "그렇다"
+              },
+              {
+                "value": 3,
+                "label_ko": "보통이다"
+              },
+              {
+                "value": 2,
+                "label_ko": "그렇지 않다"
+              },
+              {
+                "value": 1,
+                "label_ko": "매우 그렇지 않다"
+              }
+            ]
+          },
+          {
+            "id": "ax_novelty",
+            "statement_ko": "익숙한 활동보다 새롭고 낯선 경험이 더 좋다.",
+            "maps_to": "axes.novelty",
+            "scale": [
+              {
+                "value": 5,
+                "label_ko": "매우 그렇다"
+              },
+              {
+                "value": 4,
+                "label_ko": "그렇다"
+              },
+              {
+                "value": 3,
+                "label_ko": "보통이다"
+              },
+              {
+                "value": 2,
+                "label_ko": "그렇지 않다"
+              },
+              {
+                "value": 1,
+                "label_ko": "매우 그렇지 않다"
+              }
+            ]
+          },
+          {
+            "id": "ax_setting",
+            "statement_ko": "실내·도심보다 야외·자연 쪽 일정이 더 편하다.",
+            "maps_to": "axes.setting",
+            "scale": [
+              {
+                "value": 5,
+                "label_ko": "매우 그렇다"
+              },
+              {
+                "value": 4,
+                "label_ko": "그렇다"
+              },
+              {
+                "value": 3,
+                "label_ko": "보통이다"
+              },
+              {
+                "value": 2,
+                "label_ko": "그렇지 않다"
+              },
+              {
+                "value": 1,
+                "label_ko": "매우 그렇지 않다"
+              }
+            ]
+          }
+        ],
+        "scale_labels": {
+          "1": "매우 그렇지 않다",
+          "2": "그렇지 않다",
+          "3": "보통이다",
+          "4": "그렇다",
+          "5": "매우 그렇다"
+        }
+      },
+      "status": 200,
+      "elapsedMs": 9
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/likert",
+      "request": {
+        "session_id": "golden-session",
+        "answers": [
+          {
+            "id": "ax_authenticity",
+            "value": 4
+          },
+          {
+            "id": "ax_energy",
+            "value": 2
+          },
+          {
+            "id": "ax_density",
+            "value": 2
+          },
+          {
+            "id": "ax_novelty",
+            "value": 3
+          },
+          {
+            "id": "ax_setting",
+            "value": 3
+          }
+        ]
+      },
+      "response": {
+        "session_id": "golden-session",
+        "phase": "asking",
+        "turn": 0,
+        "assistant_message": "설문 반영했어요. 구체적으로 좋아하는 장소·분위기·키워드가 있으면 알려 주세요.",
+        "chips": [
+          "골목 카페",
+          "독립서점",
+          "야외 산책"
+        ],
+        "seed_dna": {
+          "pillars": {
+            "do_play": 0.25,
+            "see_learn": 0.25,
+            "stay_vibe": 0.25,
+            "eat_local": 0.25
+          },
+          "axes": {
+            "authenticity": 0.5,
+            "energy": -0.5,
+            "density": -0.5,
+            "novelty": 0,
+            "setting": 0
+          },
+          "micro_keywords": []
+        },
+        "draft_dna": {
+          "pillars": {
+            "do_play": 0.25,
+            "see_learn": 0.25,
+            "stay_vibe": 0.25,
+            "eat_local": 0.25
+          },
+          "axes": {
+            "authenticity": 0.5,
+            "energy": -0.5,
+            "density": -0.5,
+            "novelty": 0,
+            "setting": 0
+          },
+          "micro_keywords": []
+        },
+        "followups": []
+      },
+      "status": 200,
+      "elapsedMs": 36
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/message",
+      "request": {
+        "session_id": "golden-session",
+        "message": "조용한 회화 전시에 관심이 있어요."
+      },
+      "response": {
+        "session_id": "golden-session",
+        "phase": "constraints",
+        "turn": 1,
+        "assistant_message": "이제 필수적으로 필요한 것(꼭 원하는 것)과 피해야 하는 것을 적어 주세요. 없으면 ‘없음’이라고 적어 주셔도 됩니다.",
+        "chips": [
+          "없음"
+        ],
+        "draft_dna": {
+          "pillars": {
+            "do_play": 0.2,
+            "see_learn": 0.6,
+            "stay_vibe": 0.2,
+            "eat_local": 0
+          },
+          "axes": {
+            "authenticity": 0.7,
+            "energy": -0.8,
+            "density": -0.7,
+            "novelty": 0.2,
+            "setting": 0
+          },
+          "micro_keywords": [
+            "회화전시",
+            "조용한",
+            "실내예술"
+          ]
+        },
+        "must_have": null,
+        "must_avoid": null
+      },
+      "status": 200,
+      "elapsedMs": 4570
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/constraints",
+      "request": {
+        "session_id": "golden-session",
+        "must_have": "여행 목적: 조용한 박물관과 미술 전시를 관람하고 여유롭게 산책하고 싶어요.\n박물관, 미술관",
+        "must_avoid": "술집"
+      },
+      "response": {
+        "session_id": "golden-session",
+        "phase": "draft",
+        "turn": 1,
+        "assistant_message": "취향 DNA 초안과 원하는 것/피하고 싶은 것을 정리했어요. 이대로 확정할까요?",
+        "chips": [
+          "확정",
+          "수정할래요"
+        ],
+        "draft_dna": {
+          "pillars": {
+            "do_play": 0.2,
+            "see_learn": 0.6,
+            "stay_vibe": 0.2,
+            "eat_local": 0
+          },
+          "axes": {
+            "authenticity": 0.7,
+            "energy": -0.8,
+            "density": -0.7,
+            "novelty": 0.2,
+            "setting": 0
+          },
+          "micro_keywords": [
+            "회화전시",
+            "조용한",
+            "실내예술"
+          ]
+        },
+        "must_have": "여행 목적: 조용한 박물관과 미술 전시를 관람하고 여유롭게 산책하고 싶어요.\n박물관, 미술관",
+        "must_avoid": "술집"
+      },
+      "status": 200,
+      "elapsedMs": 36
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/finalize",
+      "request": {
+        "session_id": "golden-session",
+        "confirm": true
+      },
+      "response": {
+        "session_id": "golden-session",
+        "phase": "confirmed",
+        "travel_dna": {
+          "pillars": {
+            "do_play": 0.2,
+            "see_learn": 0.6,
+            "stay_vibe": 0.2,
+            "eat_local": 0
+          },
+          "axes": {
+            "authenticity": 0.7,
+            "energy": -0.8,
+            "density": -0.7,
+            "novelty": 0.2,
+            "setting": 0
+          },
+          "micro_keywords": [
+            "회화전시",
+            "조용한",
+            "실내예술"
+          ]
+        },
+        "must_have": "여행 목적: 조용한 박물관과 미술 전시를 관람하고 여유롭게 산책하고 싶어요.\n박물관, 미술관",
+        "must_avoid": "술집",
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite"
+      },
+      "status": 200,
+      "elapsedMs": 28
+    },
+    {
+      "method": "POST",
+      "path": "/api/seoul-find",
+      "request": {
+        "profile_id": "golden-profile",
+        "dna_session_id": "golden-session"
+      },
+      "response": {
+        "profile": {
+          "id": "golden-profile",
+          "city": "서울",
+          "party_size": "2",
+          "companion_type": "friends",
+          "age_band": "skip",
+          "gender": "skip",
+          "duration": "2n3d",
+          "lodging": "none",
+          "lodging_area": null,
+          "transport": "walk_subway",
+          "mobility_preference": "balanced",
+          "budget_level": "mid",
+          "budget_note": null,
+          "time_window": "morning",
+          "created_at": "2026-11-25T09:45:50.873097+00:00"
+        },
+        "travel_dna": {
+          "pillars": {
+            "do_play": 0.2,
+            "see_learn": 0.6,
+            "stay_vibe": 0.2,
+            "eat_local": 0
+          },
+          "axes": {
+            "authenticity": 0.7,
+            "energy": -0.8,
+            "density": -0.7,
+            "novelty": 0.2,
+            "setting": 0
+          },
+          "micro_keywords": [
+            "회화전시",
+            "조용한",
+            "실내예술"
+          ]
+        },
+        "constraints": {
+          "city": "서울",
+          "party_size": "2",
+          "companion_type": "friends",
+          "duration": "2n3d",
+          "transport": "walk_subway",
+          "mobility_preference": "balanced",
+          "budget_level": "mid",
+          "time_window": "morning",
+          "lodging": "none",
+          "lodging_area": null,
+          "must_have": "여행 목적: 조용한 박물관과 미술 전시를 관람하고 여유롭게 산책하고 싶어요.\n박물관, 미술관",
+          "must_avoid": "술집"
+        },
+        "industries": [
+          "북카페",
+          "미술관",
+          "식물원",
+          "티하우스",
+          "박물관",
+          "산책로",
+          "갤러리",
+          "공원",
+          "도서관",
+          "기념관",
+          "역사유적지",
+          "식물 공방"
+        ],
+        "micro_industries": [
+          "미술관",
+          "갤러리",
+          "전시관",
+          "화실",
+          "아트센터",
+          "문화공간"
+        ],
+        "slot_allocation": {
+          "do_play": 3,
+          "see_learn": 7,
+          "stay_vibe": 2,
+          "eat_local": 0
+        },
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "city": "서울",
+        "places": {
+          "shortlist": [
+            {
+              "name": "김세중미술관",
+              "address": "서울특별시 용산구 효창원로70길 35 (효창동)",
+              "rating": null,
+              "place_id": "tourapi:3080721",
+              "source_keyword": "미술관",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": null,
+              "lat": 37.5420707165,
+              "lng": 126.9638980442,
+              "score": 0.57,
+              "user_ratings_total": null,
+              "category": "문화시설",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:3080721"
+              }
+            },
+            {
+              "name": "환기미술관",
+              "address": "서울특별시 종로구 자하문로40길 63 (부암동)",
+              "rating": null,
+              "place_id": "tourapi:129760",
+              "source_keyword": "미술관",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3488552_image2_1.jpg",
+              "lat": 37.5940980426,
+              "lng": 126.9661269237,
+              "score": 0.57,
+              "user_ratings_total": null,
+              "category": "문화시설",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:129760"
+              }
+            },
+            {
+              "name": "국립중앙박물관 전통염료식물원",
+              "address": "서울특별시 용산구 서빙고로 137 (용산동6가)",
+              "rating": null,
+              "place_id": "tourapi:1604580",
+              "source_keyword": "식물원",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+              "lat": 37.5211706397,
+              "lng": 126.9791278024,
+              "score": 0.57,
+              "user_ratings_total": null,
+              "category": "관광지",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:1604580"
+              }
+            },
+            {
+              "name": "리움미술관",
+              "address": "서울 용산구 이태원로55길 60-16",
+              "rating": null,
+              "place_id": "10427225",
+              "source_keyword": "미술관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/10427225",
+              "image_url": null,
+              "lat": 37.53833657002706,
+              "lng": 126.99911744955163,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "10427225"
+              }
+            },
+            {
+              "name": "국립현대미술관 덕수궁",
+              "address": "서울 중구 세종대로 99",
+              "rating": null,
+              "place_id": "7836503",
+              "source_keyword": "미술관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/7836503",
+              "image_url": null,
+              "lat": 37.5659384342432,
+              "lng": 126.973740099183,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "7836503"
+              }
+            },
+            {
+              "name": "국립현대미술관 서울",
+              "address": "서울 종로구 삼청로 30",
+              "rating": null,
+              "place_id": "17952661",
+              "source_keyword": "미술관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/17952661",
+              "image_url": null,
+              "lat": 37.578627489574416,
+              "lng": 126.9800979573524,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "17952661"
+              }
+            },
+            {
+              "name": "서울역사박물관",
+              "address": "서울 종로구 새문안로 55",
+              "rating": null,
+              "place_id": "7934135",
+              "source_keyword": "박물관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/7934135",
+              "image_url": null,
+              "lat": 37.5705003227005,
+              "lng": 126.970546366796,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 박물관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "7934135"
+              }
+            },
+            {
+              "name": "국립중앙박물관",
+              "address": "서울 용산구 서빙고로 137",
+              "rating": null,
+              "place_id": "8830150",
+              "source_keyword": "박물관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/8830150",
+              "image_url": null,
+              "lat": 37.52392249364415,
+              "lng": 126.98018716127058,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 박물관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "8830150"
+              }
+            },
+            {
+              "name": "대한민국역사박물관",
+              "address": "서울 종로구 세종대로 198",
+              "rating": null,
+              "place_id": "15104327",
+              "source_keyword": "박물관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/15104327",
+              "image_url": null,
+              "lat": 37.573986969296435,
+              "lng": 126.97785780450153,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 박물관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "15104327"
+              }
+            },
+            {
+              "name": "퐁피두센터 한화",
+              "address": "서울 영등포구 63로 50",
+              "rating": null,
+              "place_id": "1879508840",
+              "source_keyword": "갤러리",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/1879508840",
+              "image_url": null,
+              "lat": 37.5196615374817,
+              "lng": 126.939899725029,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "1879508840"
+              }
+            },
+            {
+              "name": "서울시립미술관 서소문본관",
+              "address": "서울 중구 덕수궁길 61",
+              "rating": null,
+              "place_id": "10507051",
+              "source_keyword": "갤러리",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/10507051",
+              "image_url": null,
+              "lat": 37.56410579887691,
+              "lng": 126.9736988634857,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "10507051"
+              }
+            },
+            {
+              "name": "[북악하늘길 2산책로] 하늘교~성북천발원지",
+              "address": "서울특별시 성북구 대사관로 1 (성북동)",
+              "rating": null,
+              "place_id": "tourapi:1037020",
+              "source_keyword": "산책로",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/15/1868115_image2_1.jpg",
+              "lat": 37.5965036428,
+              "lng": 126.9841946526,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "레포츠",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:1037020"
+              }
+            },
+            {
+              "name": "[K드라마 촬영지] 공근혜갤러리",
+              "address": "서울특별시 종로구 삼청로7길 38",
+              "rating": null,
+              "place_id": "tourapi:3106658",
+              "source_keyword": "갤러리",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg",
+              "lat": 37.5840827831,
+              "lng": 126.9796815273,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "문화시설",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:3106658"
+              }
+            },
+            {
+              "name": "KCDF 갤러리숍 공예정원",
+              "address": "서울특별시 종로구 인사동11길 8 공예종합유통지원센터 KCDF갤러리 1층",
+              "rating": null,
+              "place_id": "tourapi:969831",
+              "source_keyword": "갤러리",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": null,
+              "lat": 37.5740618063,
+              "lng": 126.9841425159,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "쇼핑",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:969831"
+              }
+            },
+            {
+              "name": "한강시민공원 뚝섬수영장(실외)",
+              "address": "서울특별시 광진구 자양동 112",
+              "rating": null,
+              "place_id": "tourapi:775883",
+              "source_keyword": "공원",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp",
+              "lat": 37.5296517901,
+              "lng": 127.0671167729,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "레포츠",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:775883"
+              }
+            },
+            {
+              "name": "응봉체육공원",
+              "address": "서울특별시 성동구 응봉동",
+              "rating": null,
+              "place_id": "tourapi:2757822",
+              "source_keyword": "공원",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG",
+              "lat": 37.5519542217,
+              "lng": 127.0374160667,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "관광지",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:2757822"
+              }
+            }
+          ],
+          "raw_hit_count": 50,
+          "excluded_count": 3,
+          "sources_used": [
+            "places",
+            "tourapi"
+          ],
+          "tourapi_configured": true,
+          "visitseoul": {
+            "configured": false,
+            "env": "VISITSEOUL_API_KEY",
+            "status": "stub_optional"
+          },
+          "must_avoid": "술집",
+          "must_have": "여행 목적: 조용한 박물관과 미술 전시를 관람하고 여유롭게 산책하고 싶어요.\n박물관, 미술관"
+        },
+        "shortlist": [
+          {
+            "name": "김세중미술관",
+            "address": "서울특별시 용산구 효창원로70길 35 (효창동)",
+            "rating": null,
+            "place_id": "tourapi:3080721",
+            "source_keyword": "미술관",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": null,
+            "lat": 37.5420707165,
+            "lng": 126.9638980442,
+            "score": 0.57,
+            "user_ratings_total": null,
+            "category": "문화시설",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:3080721"
+            }
+          },
+          {
+            "name": "환기미술관",
+            "address": "서울특별시 종로구 자하문로40길 63 (부암동)",
+            "rating": null,
+            "place_id": "tourapi:129760",
+            "source_keyword": "미술관",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3488552_image2_1.jpg",
+            "lat": 37.5940980426,
+            "lng": 126.9661269237,
+            "score": 0.57,
+            "user_ratings_total": null,
+            "category": "문화시설",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:129760"
+            }
+          },
+          {
+            "name": "국립중앙박물관 전통염료식물원",
+            "address": "서울특별시 용산구 서빙고로 137 (용산동6가)",
+            "rating": null,
+            "place_id": "tourapi:1604580",
+            "source_keyword": "식물원",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+            "lat": 37.5211706397,
+            "lng": 126.9791278024,
+            "score": 0.57,
+            "user_ratings_total": null,
+            "category": "관광지",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:1604580"
+            }
+          },
+          {
+            "name": "리움미술관",
+            "address": "서울 용산구 이태원로55길 60-16",
+            "rating": null,
+            "place_id": "10427225",
+            "source_keyword": "미술관",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/10427225",
+            "image_url": null,
+            "lat": 37.53833657002706,
+            "lng": 126.99911744955163,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 미술관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "10427225"
+            }
+          },
+          {
+            "name": "국립현대미술관 덕수궁",
+            "address": "서울 중구 세종대로 99",
+            "rating": null,
+            "place_id": "7836503",
+            "source_keyword": "미술관",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/7836503",
+            "image_url": null,
+            "lat": 37.5659384342432,
+            "lng": 126.973740099183,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 미술관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "7836503"
+            }
+          },
+          {
+            "name": "국립현대미술관 서울",
+            "address": "서울 종로구 삼청로 30",
+            "rating": null,
+            "place_id": "17952661",
+            "source_keyword": "미술관",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/17952661",
+            "image_url": null,
+            "lat": 37.578627489574416,
+            "lng": 126.9800979573524,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 미술관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "17952661"
+            }
+          },
+          {
+            "name": "서울역사박물관",
+            "address": "서울 종로구 새문안로 55",
+            "rating": null,
+            "place_id": "7934135",
+            "source_keyword": "박물관",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/7934135",
+            "image_url": null,
+            "lat": 37.5705003227005,
+            "lng": 126.970546366796,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 박물관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "7934135"
+            }
+          },
+          {
+            "name": "국립중앙박물관",
+            "address": "서울 용산구 서빙고로 137",
+            "rating": null,
+            "place_id": "8830150",
+            "source_keyword": "박물관",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/8830150",
+            "image_url": null,
+            "lat": 37.52392249364415,
+            "lng": 126.98018716127058,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 박물관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "8830150"
+            }
+          },
+          {
+            "name": "대한민국역사박물관",
+            "address": "서울 종로구 세종대로 198",
+            "rating": null,
+            "place_id": "15104327",
+            "source_keyword": "박물관",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/15104327",
+            "image_url": null,
+            "lat": 37.573986969296435,
+            "lng": 126.97785780450153,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 박물관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "15104327"
+            }
+          },
+          {
+            "name": "퐁피두센터 한화",
+            "address": "서울 영등포구 63로 50",
+            "rating": null,
+            "place_id": "1879508840",
+            "source_keyword": "갤러리",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/1879508840",
+            "image_url": null,
+            "lat": 37.5196615374817,
+            "lng": 126.939899725029,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 미술관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "1879508840"
+            }
+          },
+          {
+            "name": "서울시립미술관 서소문본관",
+            "address": "서울 중구 덕수궁길 61",
+            "rating": null,
+            "place_id": "10507051",
+            "source_keyword": "갤러리",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/10507051",
+            "image_url": null,
+            "lat": 37.56410579887691,
+            "lng": 126.9736988634857,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 미술관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "10507051"
+            }
+          },
+          {
+            "name": "[북악하늘길 2산책로] 하늘교~성북천발원지",
+            "address": "서울특별시 성북구 대사관로 1 (성북동)",
+            "rating": null,
+            "place_id": "tourapi:1037020",
+            "source_keyword": "산책로",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/15/1868115_image2_1.jpg",
+            "lat": 37.5965036428,
+            "lng": 126.9841946526,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "레포츠",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:1037020"
+            }
+          },
+          {
+            "name": "[K드라마 촬영지] 공근혜갤러리",
+            "address": "서울특별시 종로구 삼청로7길 38",
+            "rating": null,
+            "place_id": "tourapi:3106658",
+            "source_keyword": "갤러리",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg",
+            "lat": 37.5840827831,
+            "lng": 126.9796815273,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "문화시설",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:3106658"
+            }
+          },
+          {
+            "name": "KCDF 갤러리숍 공예정원",
+            "address": "서울특별시 종로구 인사동11길 8 공예종합유통지원센터 KCDF갤러리 1층",
+            "rating": null,
+            "place_id": "tourapi:969831",
+            "source_keyword": "갤러리",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": null,
+            "lat": 37.5740618063,
+            "lng": 126.9841425159,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "쇼핑",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:969831"
+            }
+          },
+          {
+            "name": "한강시민공원 뚝섬수영장(실외)",
+            "address": "서울특별시 광진구 자양동 112",
+            "rating": null,
+            "place_id": "tourapi:775883",
+            "source_keyword": "공원",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp",
+            "lat": 37.5296517901,
+            "lng": 127.0671167729,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "레포츠",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:775883"
+            }
+          },
+          {
+            "name": "응봉체육공원",
+            "address": "서울특별시 성동구 응봉동",
+            "rating": null,
+            "place_id": "tourapi:2757822",
+            "source_keyword": "공원",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG",
+            "lat": 37.5519542217,
+            "lng": 127.0374160667,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "관광지",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:2757822"
+            }
+          }
+        ],
+        "find": {
+          "city": "서울",
+          "industries": [
+            "북카페",
+            "미술관",
+            "식물원",
+            "티하우스",
+            "박물관",
+            "산책로",
+            "갤러리",
+            "공원",
+            "도서관",
+            "기념관",
+            "역사유적지",
+            "식물 공방"
+          ],
+          "micro_industries": [
+            "미술관",
+            "갤러리",
+            "전시관",
+            "화실",
+            "아트센터",
+            "문화공간"
+          ],
+          "keywords_searched": [
+            "북카페",
+            "미술관",
+            "식물원",
+            "티하우스",
+            "박물관",
+            "산책로",
+            "갤러리",
+            "공원",
+            "도서관",
+            "기념관",
+            "역사유적지",
+            "식물 공방",
+            "전시관",
+            "화실"
+          ],
+          "shortlist": [
+            {
+              "name": "김세중미술관",
+              "address": "서울특별시 용산구 효창원로70길 35 (효창동)",
+              "rating": null,
+              "place_id": "tourapi:3080721",
+              "source_keyword": "미술관",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": null,
+              "lat": 37.5420707165,
+              "lng": 126.9638980442,
+              "score": 0.57,
+              "user_ratings_total": null,
+              "category": "문화시설",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:3080721"
+              }
+            },
+            {
+              "name": "환기미술관",
+              "address": "서울특별시 종로구 자하문로40길 63 (부암동)",
+              "rating": null,
+              "place_id": "tourapi:129760",
+              "source_keyword": "미술관",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3488552_image2_1.jpg",
+              "lat": 37.5940980426,
+              "lng": 126.9661269237,
+              "score": 0.57,
+              "user_ratings_total": null,
+              "category": "문화시설",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:129760"
+              }
+            },
+            {
+              "name": "국립중앙박물관 전통염료식물원",
+              "address": "서울특별시 용산구 서빙고로 137 (용산동6가)",
+              "rating": null,
+              "place_id": "tourapi:1604580",
+              "source_keyword": "식물원",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+              "lat": 37.5211706397,
+              "lng": 126.9791278024,
+              "score": 0.57,
+              "user_ratings_total": null,
+              "category": "관광지",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:1604580"
+              }
+            },
+            {
+              "name": "리움미술관",
+              "address": "서울 용산구 이태원로55길 60-16",
+              "rating": null,
+              "place_id": "10427225",
+              "source_keyword": "미술관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/10427225",
+              "image_url": null,
+              "lat": 37.53833657002706,
+              "lng": 126.99911744955163,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "10427225"
+              }
+            },
+            {
+              "name": "국립현대미술관 덕수궁",
+              "address": "서울 중구 세종대로 99",
+              "rating": null,
+              "place_id": "7836503",
+              "source_keyword": "미술관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/7836503",
+              "image_url": null,
+              "lat": 37.5659384342432,
+              "lng": 126.973740099183,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "7836503"
+              }
+            },
+            {
+              "name": "국립현대미술관 서울",
+              "address": "서울 종로구 삼청로 30",
+              "rating": null,
+              "place_id": "17952661",
+              "source_keyword": "미술관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/17952661",
+              "image_url": null,
+              "lat": 37.578627489574416,
+              "lng": 126.9800979573524,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "17952661"
+              }
+            },
+            {
+              "name": "서울역사박물관",
+              "address": "서울 종로구 새문안로 55",
+              "rating": null,
+              "place_id": "7934135",
+              "source_keyword": "박물관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/7934135",
+              "image_url": null,
+              "lat": 37.5705003227005,
+              "lng": 126.970546366796,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 박물관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "7934135"
+              }
+            },
+            {
+              "name": "국립중앙박물관",
+              "address": "서울 용산구 서빙고로 137",
+              "rating": null,
+              "place_id": "8830150",
+              "source_keyword": "박물관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/8830150",
+              "image_url": null,
+              "lat": 37.52392249364415,
+              "lng": 126.98018716127058,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 박물관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "8830150"
+              }
+            },
+            {
+              "name": "대한민국역사박물관",
+              "address": "서울 종로구 세종대로 198",
+              "rating": null,
+              "place_id": "15104327",
+              "source_keyword": "박물관",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/15104327",
+              "image_url": null,
+              "lat": 37.573986969296435,
+              "lng": 126.97785780450153,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 박물관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "15104327"
+              }
+            },
+            {
+              "name": "퐁피두센터 한화",
+              "address": "서울 영등포구 63로 50",
+              "rating": null,
+              "place_id": "1879508840",
+              "source_keyword": "갤러리",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/1879508840",
+              "image_url": null,
+              "lat": 37.5196615374817,
+              "lng": 126.939899725029,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "1879508840"
+              }
+            },
+            {
+              "name": "서울시립미술관 서소문본관",
+              "address": "서울 중구 덕수궁길 61",
+              "rating": null,
+              "place_id": "10507051",
+              "source_keyword": "갤러리",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/10507051",
+              "image_url": null,
+              "lat": 37.56410579887691,
+              "lng": 126.9736988634857,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "10507051"
+              }
+            },
+            {
+              "name": "[북악하늘길 2산책로] 하늘교~성북천발원지",
+              "address": "서울특별시 성북구 대사관로 1 (성북동)",
+              "rating": null,
+              "place_id": "tourapi:1037020",
+              "source_keyword": "산책로",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/15/1868115_image2_1.jpg",
+              "lat": 37.5965036428,
+              "lng": 126.9841946526,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "레포츠",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:1037020"
+              }
+            },
+            {
+              "name": "[K드라마 촬영지] 공근혜갤러리",
+              "address": "서울특별시 종로구 삼청로7길 38",
+              "rating": null,
+              "place_id": "tourapi:3106658",
+              "source_keyword": "갤러리",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg",
+              "lat": 37.5840827831,
+              "lng": 126.9796815273,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "문화시설",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:3106658"
+              }
+            },
+            {
+              "name": "KCDF 갤러리숍 공예정원",
+              "address": "서울특별시 종로구 인사동11길 8 공예종합유통지원센터 KCDF갤러리 1층",
+              "rating": null,
+              "place_id": "tourapi:969831",
+              "source_keyword": "갤러리",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": null,
+              "lat": 37.5740618063,
+              "lng": 126.9841425159,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "쇼핑",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:969831"
+              }
+            },
+            {
+              "name": "한강시민공원 뚝섬수영장(실외)",
+              "address": "서울특별시 광진구 자양동 112",
+              "rating": null,
+              "place_id": "tourapi:775883",
+              "source_keyword": "공원",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp",
+              "lat": 37.5296517901,
+              "lng": 127.0671167729,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "레포츠",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:775883"
+              }
+            },
+            {
+              "name": "응봉체육공원",
+              "address": "서울특별시 성동구 응봉동",
+              "rating": null,
+              "place_id": "tourapi:2757822",
+              "source_keyword": "공원",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG",
+              "lat": 37.5519542217,
+              "lng": 127.0374160667,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "관광지",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:2757822"
+              }
+            }
+          ],
+          "excluded_count": 3,
+          "filters_applied": [
+            "city=서울",
+            "must_avoid_free_text_exclude",
+            "must_have_soft_boost",
+            "budget_soft=mid",
+            "party=2/friends",
+            "mobility=balanced"
+          ],
+          "sources_used": [
+            "places",
+            "tourapi"
+          ],
+          "places_configured": true,
+          "tourapi_configured": true,
+          "visitseoul": {
+            "configured": false,
+            "env": "VISITSEOUL_API_KEY",
+            "status": "stub_optional"
+          },
+          "raw_hit_count": 50,
+          "source_hit_counts": {
+            "kakao": 41,
+            "tourapi": 9
+          },
+          "merged_hit_count": 48
+        },
+        "filters_applied": [
+          "city=서울",
+          "must_avoid_free_text_exclude",
+          "must_have_soft_boost",
+          "budget_soft=mid",
+          "party=2/friends",
+          "mobility=balanced"
+        ]
+      },
+      "status": 200,
+      "elapsedMs": 15722
+    },
+    {
+      "method": "GET",
+      "path": "/api/dna-chat/golden-session",
+      "request": null,
+      "response": {
+        "session_id": "golden-session",
+        "phase": "confirmed",
+        "turn": 1,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "설문 반영했어요. 구체적으로 좋아하는 장소·분위기·키워드가 있으면 알려 주세요.",
+            "chips": [
+              "골목 카페",
+              "독립서점",
+              "야외 산책"
+            ]
+          },
+          {
+            "role": "user",
+            "content": "조용한 회화 전시에 관심이 있어요.",
+            "chips": []
+          },
+          {
+            "role": "assistant",
+            "content": "이제 필수적으로 필요한 것(꼭 원하는 것)과 피해야 하는 것을 적어 주세요. 없으면 ‘없음’이라고 적어 주셔도 됩니다.",
+            "chips": [
+              "없음"
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": "취향 DNA 초안과 원하는 것/피하고 싶은 것을 정리했어요. 이대로 확정할까요?",
+            "chips": [
+              "확정",
+              "수정할래요"
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": "Travel DNA를 확정했어요.",
+            "chips": []
+          }
+        ],
+        "likert_answers": {
+          "ax_authenticity": 4,
+          "ax_energy": 2,
+          "ax_density": 2,
+          "ax_novelty": 3,
+          "ax_setting": 3
+        },
+        "seed_dna": {
+          "pillars": {
+            "do_play": 0.25,
+            "see_learn": 0.25,
+            "stay_vibe": 0.25,
+            "eat_local": 0.25
+          },
+          "axes": {
+            "authenticity": 0.5,
+            "energy": -0.5,
+            "density": -0.5,
+            "novelty": 0,
+            "setting": 0
+          },
+          "micro_keywords": []
+        },
+        "followups": [],
+        "draft_dna": {
+          "pillars": {
+            "do_play": 0.2,
+            "see_learn": 0.6,
+            "stay_vibe": 0.2,
+            "eat_local": 0
+          },
+          "axes": {
+            "authenticity": 0.7,
+            "energy": -0.8,
+            "density": -0.7,
+            "novelty": 0.2,
+            "setting": 0
+          },
+          "micro_keywords": [
+            "회화전시",
+            "조용한",
+            "실내예술"
+          ]
+        },
+        "confirmed_dna": {
+          "pillars": {
+            "do_play": 0.2,
+            "see_learn": 0.6,
+            "stay_vibe": 0.2,
+            "eat_local": 0
+          },
+          "axes": {
+            "authenticity": 0.7,
+            "energy": -0.8,
+            "density": -0.7,
+            "novelty": 0.2,
+            "setting": 0
+          },
+          "micro_keywords": [
+            "회화전시",
+            "조용한",
+            "실내예술"
+          ]
+        },
+        "must_have": "여행 목적: 조용한 박물관과 미술 전시를 관람하고 여유롭게 산책하고 싶어요.\n박물관, 미술관",
+        "must_avoid": "술집",
+        "constraints_submitted": true,
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite"
+      },
+      "status": 200,
+      "elapsedMs": 11
+    },
+    {
+      "method": "POST",
+      "path": "/api/place-photos",
+      "request": {
+        "places": [
+          {
+            "id": "api:tourapi:tourapi%3A3080721",
+            "name": "김세중미술관",
+            "address": "서울특별시 용산구 효창원로70길 35 (효창동)",
+            "latitude": 37.5420707165,
+            "longitude": 126.9638980442
+          },
+          {
+            "id": "api:tourapi:tourapi%3A129760",
+            "name": "환기미술관",
+            "address": "서울특별시 종로구 자하문로40길 63 (부암동)",
+            "latitude": 37.5940980426,
+            "longitude": 126.9661269237
+          },
+          {
+            "id": "api:tourapi:tourapi%3A1604580",
+            "name": "국립중앙박물관 전통염료식물원",
+            "address": "서울특별시 용산구 서빙고로 137 (용산동6가)",
+            "latitude": 37.5211706397,
+            "longitude": 126.9791278024
+          },
+          {
+            "id": "api:kakao:10427225",
+            "name": "리움미술관",
+            "address": "서울 용산구 이태원로55길 60-16",
+            "latitude": 37.53833657002706,
+            "longitude": 126.99911744955163
+          }
+        ]
+      },
+      "response": [
+        {
+          "id": "api:tourapi:tourapi%3A3080721",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "provider_error"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A129760",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/52/3488552_image2_1.jpg",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-3",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": false,
+            "match": [
+              "TourAPI contentId 129760",
+              "exact place title; distance 0 m",
+              "road address exact",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "환기미술관",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A1604580",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-1",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": true,
+            "match": [
+              "TourAPI contentId 1604580",
+              "exact place title; distance 0 m",
+              "road address exact",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "국립중앙박물관 전통염료식물원",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        },
+        {
+          "id": "api:kakao:10427225",
+          "photo": {
+            "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Leeum%2C_Samsung_Museum_of_Art.jpg/960px-Leeum%2C_Samsung_Museum_of_Art.jpg",
+            "source_page": "https://commons.wikimedia.org/wiki/File:Leeum,_Samsung_Museum_of_Art.jpg",
+            "provider": "commons",
+            "publisher": "Wikimedia Commons",
+            "author": "takato marui",
+            "license": "CC BY-SA 2.0",
+            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "can_modify": true,
+            "match": [
+              "Wikidata Q487498: exact Korean or English label/alias",
+              "P625 distance 52 m",
+              "P18 linked file, identity corroborated by Commons title/description"
+            ],
+            "description": "Nov 23, 2006 at 20:23 KST (Seoul/용산구)",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "matched"
+          }
+        }
+      ],
+      "status": 200,
+      "elapsedMs": 1968
+    },
+    {
+      "method": "POST",
+      "path": "/api/place-photos",
+      "request": {
+        "places": [
+          {
+            "id": "api:kakao:7836503",
+            "name": "국립현대미술관 덕수궁",
+            "address": "서울 중구 세종대로 99",
+            "latitude": 37.5659384342432,
+            "longitude": 126.973740099183
+          },
+          {
+            "id": "api:kakao:17952661",
+            "name": "국립현대미술관 서울",
+            "address": "서울 종로구 삼청로 30",
+            "latitude": 37.578627489574416,
+            "longitude": 126.9800979573524
+          },
+          {
+            "id": "api:kakao:7934135",
+            "name": "서울역사박물관",
+            "address": "서울 종로구 새문안로 55",
+            "latitude": 37.5705003227005,
+            "longitude": 126.970546366796
+          },
+          {
+            "id": "api:kakao:8830150",
+            "name": "국립중앙박물관",
+            "address": "서울 용산구 서빙고로 137",
+            "latitude": 37.52392249364415,
+            "longitude": 126.98018716127058
+          }
+        ]
+      },
+      "response": [
+        {
+          "id": "api:kakao:7836503",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:kakao:17952661",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:kakao:7934135",
+          "photo": {
+            "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Seoul_Museum_of_History.JPG/960px-Seoul_Museum_of_History.JPG",
+            "source_page": "https://commons.wikimedia.org/wiki/File:Seoul_Museum_of_History.JPG",
+            "provider": "commons",
+            "publisher": "Wikimedia Commons",
+            "author": "Jjw",
+            "license": "CC BY-SA 3.0",
+            "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+            "can_modify": true,
+            "match": [
+              "Wikidata Q484862: exact Korean or English label/alias",
+              "P625 distance 10 m",
+              "P18 linked file, identity corroborated by Commons title/description"
+            ],
+            "description": "Seoul Museum of History",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "matched"
+          }
+        },
+        {
+          "id": "api:kakao:8830150",
+          "photo": {
+            "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Front_view_of_national_museum_of_korea.jpg/960px-Front_view_of_national_museum_of_korea.jpg",
+            "source_page": "https://commons.wikimedia.org/wiki/File:Front_view_of_national_museum_of_korea.jpg",
+            "provider": "commons",
+            "publisher": "Wikimedia Commons",
+            "author": "Jinah78",
+            "license": "CC BY-SA 3.0",
+            "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+            "can_modify": true,
+            "match": [
+              "Wikidata Q494407: exact Korean or English label/alias",
+              "P625 distance 9 m",
+              "P18 linked file, identity corroborated by Commons title/description"
+            ],
+            "description": "front view of National museum of Korea",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "matched"
+          }
+        }
+      ],
+      "status": 200,
+      "elapsedMs": 2341
+    },
+    {
+      "method": "POST",
+      "path": "/api/place-photos",
+      "request": {
+        "places": [
+          {
+            "id": "api:kakao:15104327",
+            "name": "대한민국역사박물관",
+            "address": "서울 종로구 세종대로 198",
+            "latitude": 37.573986969296435,
+            "longitude": 126.97785780450153
+          },
+          {
+            "id": "api:kakao:1879508840",
+            "name": "퐁피두센터 한화",
+            "address": "서울 영등포구 63로 50",
+            "latitude": 37.5196615374817,
+            "longitude": 126.939899725029
+          },
+          {
+            "id": "api:kakao:10507051",
+            "name": "서울시립미술관 서소문본관",
+            "address": "서울 중구 덕수궁길 61",
+            "latitude": 37.56410579887691,
+            "longitude": 126.9736988634857
+          },
+          {
+            "id": "api:tourapi:tourapi%3A1037020",
+            "name": "[북악하늘길 2산책로] 하늘교~성북천발원지",
+            "address": "서울특별시 성북구 대사관로 1 (성북동)",
+            "latitude": 37.5965036428,
+            "longitude": 126.9841946526
+          }
+        ]
+      },
+      "response": [
+        {
+          "id": "api:kakao:15104327",
+          "photo": {
+            "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/National_Museum_of_Korean_Contemporary_History.jpg/960px-National_Museum_of_Korean_Contemporary_History.jpg",
+            "source_page": "https://commons.wikimedia.org/wiki/File:National_Museum_of_Korean_Contemporary_History.jpg",
+            "provider": "commons",
+            "publisher": "Wikimedia Commons",
+            "author": "National Museum of Korean Contemporary History",
+            "license": "CC BY-SA 4.0",
+            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "can_modify": true,
+            "match": [
+              "Wikidata Q12592360: exact Korean or English label/alias",
+              "P625 distance 28 m",
+              "P18 linked file, identity corroborated by Commons title/description"
+            ],
+            "description": "the building of National Museum of Korean Contemporary History",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "matched"
+          }
+        },
+        {
+          "id": "api:kakao:1879508840",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "provider_error"
+          }
+        },
+        {
+          "id": "api:kakao:10507051",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A1037020",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/15/1868115_image2_1.jpg",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-3",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": false,
+            "match": [
+              "TourAPI contentId 1037020",
+              "exact place title; distance 0 m",
+              "road address exact",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "[북악하늘길 2산책로] 하늘교~성북천발원지",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        }
+      ],
+      "status": 200,
+      "elapsedMs": 1892
+    },
+    {
+      "method": "POST",
+      "path": "/api/place-photos",
+      "request": {
+        "places": [
+          {
+            "id": "api:tourapi:tourapi%3A3106658",
+            "name": "[K드라마 촬영지] 공근혜갤러리",
+            "address": "서울특별시 종로구 삼청로7길 38",
+            "latitude": 37.5840827831,
+            "longitude": 126.9796815273
+          },
+          {
+            "id": "api:tourapi:tourapi%3A969831",
+            "name": "KCDF 갤러리숍 공예정원",
+            "address": "서울특별시 종로구 인사동11길 8 공예종합유통지원센터 KCDF갤러리 1층",
+            "latitude": 37.5740618063,
+            "longitude": 126.9841425159
+          },
+          {
+            "id": "api:tourapi:tourapi%3A775883",
+            "name": "한강시민공원 뚝섬수영장(실외)",
+            "address": "서울특별시 광진구 자양동 112",
+            "latitude": 37.5296517901,
+            "longitude": 127.0671167729
+          },
+          {
+            "id": "api:tourapi:tourapi%3A2757822",
+            "name": "응봉체육공원",
+            "address": "서울특별시 성동구 응봉동",
+            "latitude": 37.5519542217,
+            "longitude": 127.0374160667
+          }
+        ]
+      },
+      "response": [
+        {
+          "id": "api:tourapi:tourapi%3A3106658",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-1",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": true,
+            "match": [
+              "TourAPI contentId 3106658",
+              "exact place title; distance 0 m",
+              "road address exact",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "[K드라마 촬영지] 공근혜갤러리",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A969831",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A775883",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-3",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": false,
+            "match": [
+              "TourAPI contentId 775883",
+              "exact place title; distance 0 m",
+              "provider object coordinates",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "한강시민공원 뚝섬수영장(실외)",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A2757822",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-3",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": false,
+            "match": [
+              "TourAPI contentId 2757822",
+              "exact place title; distance 0 m",
+              "provider object coordinates",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "응봉체육공원",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        }
+      ],
+      "status": 200,
+      "elapsedMs": 784
+    }
+  ],
+  "summary": {
+    "places": 16,
+    "verifiedPhotos": 10,
+    "photoPlaceIds": [
+      "api:tourapi:tourapi%3A129760",
+      "api:tourapi:tourapi%3A1604580",
+      "api:kakao:10427225",
+      "api:kakao:7934135",
+      "api:kakao:8830150",
+      "api:kakao:15104327",
+      "api:tourapi:tourapi%3A1037020",
+      "api:tourapi:tourapi%3A3106658",
+      "api:tourapi:tourapi%3A775883",
+      "api:tourapi:tourapi%3A2757822"
+    ],
+    "placeProviders": {
+      "tourapi": 8,
+      "kakao": 8
+    },
+    "messages": 1
+  }
+}

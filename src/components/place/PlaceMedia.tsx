@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Image, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { presentationPhotoUrl } from '../../services/presentation/demo';
 import { theme as t } from '../../theme';
 import type { Place } from '../../types';
 
@@ -139,7 +140,8 @@ export function PlaceMedia({
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [failedUrl, setFailedUrl] = useState('');
   const photo = place.photo;
-  const showPhoto = photo && photo.url !== failedUrl;
+  const photoUrl = photo ? presentationPhotoUrl(photo.url) : undefined;
+  const showPhoto = photoUrl && photoUrl !== failedUrl;
   const scale = Math.min(size.width / 160, size.height / (label ? 108 : 88));
   const type = typeOf(place);
   const artHeight = label ? 97 : 88;
@@ -159,11 +161,11 @@ export function PlaceMedia({
     >
       {showPhoto ? (
         <Image
-          source={{ uri: photo.url }}
+          source={{ uri: photoUrl }}
           resizeMode="contain"
           style={s.photo}
           accessibilityLabel={`${place.name} 실제 사진`}
-          onError={() => setFailedUrl(photo.url)}
+          onError={() => setFailedUrl(photoUrl)}
         />
       ) : (
         <View

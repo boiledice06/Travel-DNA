@@ -1,8 +1,9 @@
+import { travelStorageKey } from '../presentation/demo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { RecommendationResponse } from '../../types';
 import { validateSavedPlaces } from '../recommendation/api';
 
-const KEY = '@travel-dna/server-trip/v1';
+const KEY = travelStorageKey('@travel-dna/server-trip/v1');
 export interface ServerTrip {
   serverUrl: string;
   profileId: string;

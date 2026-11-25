@@ -14,12 +14,13 @@ import Animated, {
 import { Button, Icon } from '../../components/common/UI';
 import { Reveal } from '../../components/common/Motion';
 import { useTravel } from '../../hooks/useTravel';
+import { presentationMode } from '../../services/presentation/demo';
 import { theme } from '../../theme';
 import { s } from './onboarding.styles';
 
 export default function Welcome() {
   const router = useRouter();
-  const { start } = useTravel();
+  const { start, completeOnboarding } = useTravel();
   const reduce = useReducedMotion();
   const scale = useSharedValue(1);
   useEffect(() => {
@@ -62,16 +63,23 @@ export default function Welcome() {
                 title="서울 여행 시작하기"
                 icon="arrow-forward"
                 appearance="light"
-                onPress={() => router.push('/onboarding/start')}
-              />
-              <Button
-                title="데모로 먼저 둘러보기"
-                appearance="ghost"
                 onPress={() => {
-                  start('민서', true);
-                  router.push('/onboarding/dna');
+                  if (!presentationMode) return router.push('/onboarding/start');
+                  start('발표', false);
+                  completeOnboarding();
+                  router.replace('/(tabs)');
                 }}
               />
+              {!presentationMode && (
+                <Button
+                  title="데모로 먼저 둘러보기"
+                  appearance="ghost"
+                  onPress={() => {
+                    start('민서', true);
+                    router.push('/onboarding/dna');
+                  }}
+                />
+              )}
             </Reveal>
             <Text style={s.credit}>
               서울 야경 ·{' '}

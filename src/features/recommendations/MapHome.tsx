@@ -12,6 +12,7 @@ import {
 import { useReducedMotion } from 'react-native-reanimated';
 import { Reveal } from '../../components/common/Motion';
 import { sheetHeights, type SheetState } from '../../components/map/sheetSnap';
+import { recommendationServerUrl } from '../../services/presentation/demo';
 import { theme } from '../../theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -86,7 +87,7 @@ export default function MapHome() {
   const availableHeight = mapHeight || viewport.height - insets.bottom - 58;
   const sheetInset =
     sheetHeights(availableHeight)[sheetState === 'expanded' ? 'compact' : sheetState];
-  const serverConfigured = !!process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL?.trim();
+  const serverConfigured = !!recommendationServerUrl?.trim();
   const openPlan = () => {
     Keyboard.dismiss();
     setOptionsOpen(false);

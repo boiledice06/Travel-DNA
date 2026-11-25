@@ -4,6 +4,7 @@ import { Stack, usePathname, Redirect } from 'expo-router';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useReducedMotion } from 'react-native-reanimated';
+import { presentationMode } from '../src/services/presentation/demo';
 import { theme } from '../src/theme';
 import { StatusBar } from 'expo-status-bar';
 import { TravelProvider, useTravel } from '../src/hooks/useTravel';
@@ -43,6 +44,9 @@ function Navigation() {
           animationDuration: theme.motion.transition,
         }}
       />
+      {presentationMode && (
+        <Text style={ui.presentationBanner}>발표 모드 · 실제 추천 기록 재생</Text>
+      )}
       {saveError && (
         <SafeAreaView edges={['bottom']} style={{ backgroundColor: '#FFF0E8', padding: 12 }}>
           <Pressable accessibilityRole="button" onPress={retrySave}>

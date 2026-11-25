@@ -172,6 +172,14 @@ export class BackendClient {
           throw new Error('여행 AI의 답변 형식을 읽지 못했어요. 같은 단계에서 다시 시도해 주세요.');
         if (code === 'model_timeout')
           throw new Error('여행 AI 응답 시간이 초과됐어요. 잠시 뒤 다시 시도해 주세요.');
+        if (code === 'demo_scenario_mismatch')
+          throw new Error(
+            '발표 시나리오와 입력이 달라요. 진행 문서의 문장과 선택값을 확인해 주세요.',
+          );
+        if (code === 'demo_step_order')
+          throw new Error(
+            '발표 순서가 맞지 않아요. 현재 단계부터 진행하거나 발표를 초기화해 주세요.',
+          );
         if (response.status === 409)
           throw new Error('이전 요청이 진행 중이에요. 잠시 뒤 다시 시도해 주세요.');
         if (response.status === 404)

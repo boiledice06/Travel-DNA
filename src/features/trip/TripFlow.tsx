@@ -30,6 +30,7 @@ import {
   type TripProfileInput,
 } from '../../services/backend/client';
 import type { ServerTrip } from '../../services/storage/serverTrip';
+import { presentationMode, recommendationServerUrl } from '../../services/presentation/demo';
 import { theme } from '../../theme';
 import { tripStyles as ts } from './trip.styles';
 
@@ -184,7 +185,7 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
   const [error, setError] = useState('');
   const [webHeight, setWebHeight] = useState<number>();
   const loading = busy !== null;
-  const url = process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL ?? '';
+  const url = recommendationServerUrl ?? '';
   const client = new BackendClient(url, 30000);
 
   useEffect(() => {
@@ -353,7 +354,9 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
       {busy === 'recommendation' ? (
         <View style={ts.loading} accessibilityLiveRegion="polite">
           <Reveal style={ts.loadingInner}>
-            <Text style={[ui.eyebrow, ts.kicker]}>Travel DNA</Text>
+            <Text style={[ui.eyebrow, ts.kicker]}>
+              {presentationMode ? 'Travel DNA · 발표 모드' : 'Travel DNA'}
+            </Text>
             <Helix active light />
             <Text accessibilityRole="header" style={[ui.title, ts.lightTitle]}>
               서울에서 만날 장소를 찾고 있어요
@@ -370,7 +373,9 @@ export function TripFlow({ visible, onClose, onResult, previousTrip }: Props) {
         >
           <View style={[ts.top, { paddingTop: insets.top }]}>
             <View style={[ts.column, ts.topInner]}>
-              <Text style={ui.eyebrow}>Travel DNA · 서울</Text>
+              <Text style={ui.eyebrow}>
+                {presentationMode ? '발표 모드 · 서울' : 'Travel DNA · 서울'}
+              </Text>
               <View style={ts.toolbarActions}>
                 {phase !== 'profile' && (
                   <Pressable

@@ -1,6 +1,14 @@
 import { StyleSheet } from 'react-native';
 import { theme as t } from '../../theme';
 export const ui = StyleSheet.create({
+  presentationBanner: {
+    backgroundColor: t.colors.ink,
+    color: t.colors.mint,
+    textAlign: 'center',
+    fontSize: 10,
+    fontWeight: '700',
+    lineHeight: 18,
+  },
   screen: { flex: 1, backgroundColor: t.colors.background },
   content: {
     padding: t.spacing.xl,

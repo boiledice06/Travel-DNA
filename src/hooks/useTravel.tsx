@@ -20,6 +20,7 @@ import { places } from '../data/mock/places';
 import { hasDemoRecords, startProfile } from '../features/onboarding/profile';
 import { calculateDNA } from '../features/travel-dna/calculate';
 import { extractKeywords } from '../features/travel-dna/keywords';
+import { recommendationServerUrl } from '../services/presentation/demo';
 import { BackendClient } from '../services/backend/client';
 import { withPlacePhotos } from '../services/backend/photos';
 import { RecommendationClient } from '../services/recommendation/api';
@@ -108,7 +109,7 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
         if (
           active &&
           trip &&
-          trip.serverUrl === process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL?.trim() &&
+          trip.serverUrl === recommendationServerUrl?.trim() &&
           requestId.current === 0
         ) {
           setServerTrip(trip);
@@ -203,7 +204,7 @@ export function TravelProvider({ children }: React.PropsWithChildren) {
       const id = ++requestId.current;
       setRecommendationStatus('loading');
       setRecommendationError(null);
-      const client = new RecommendationClient(process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL);
+      const client = new RecommendationClient(recommendationServerUrl);
       client
         .recommend({
           preferences: dna.preferences,
