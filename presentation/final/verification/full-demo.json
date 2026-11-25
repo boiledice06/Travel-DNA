@@ -1,0 +1,116 @@
+[
+  {
+    "index": 1,
+    "offline": false,
+    "success": true,
+    "maps": {
+      "all": {
+        "requested": 12,
+        "loaded": 12
+      },
+      "day1": {
+        "requested": 15,
+        "loaded": 15
+      },
+      "day2": {
+        "requested": 12,
+        "loaded": 12
+      },
+      "day3": {
+        "requested": 8,
+        "loaded": 8
+      }
+    },
+    "frames": {
+      "01-intro": 2158,
+      "02-trip-setup": 12702,
+      "17-trip-purpose": 20041,
+      "18-likert-answers": 25817,
+      "03-likert": 28159,
+      "04-ai-chat": 37460,
+      "05-constraints": 48920,
+      "06-confirmed-dna": 59161,
+      "07-recommendation-loading": 70979,
+      "08-map-all": 73548,
+      "09-day1": 83873,
+      "10-day2": 92528,
+      "11-day3": 101153,
+      "12-expanded-sheet": 109705,
+      "13-place-detail": 119628,
+      "14-saved": 132406,
+      "15-my-trip": 141831,
+      "19-my-trip-days-2-3": 150123,
+      "16-dna-profile": 155781
+    },
+    "photos": 10,
+    "pointerTravel": 81,
+    "shortlist": [
+      "김세중미술관",
+      "환기미술관",
+      "국립중앙박물관 전통염료식물원",
+      "리움미술관",
+      "국립현대미술관 덕수궁",
+      "국립현대미술관 서울",
+      "서울역사박물관",
+      "국립중앙박물관",
+      "대한민국역사박물관",
+      "퐁피두센터 한화",
+      "서울시립미술관 서소문본관",
+      "[북악하늘길 2산책로] 하늘교~성북천발원지",
+      "[K드라마 촬영지] 공근혜갤러리",
+      "KCDF 갤러리숍 공예정원",
+      "한강시민공원 뚝섬수영장(실외)",
+      "응봉체육공원"
+    ],
+    "itinerary": [
+      [
+        "김세중미술관",
+        "국립중앙박물관",
+        "국립중앙박물관 전통염료식물원",
+        "리움미술관",
+        "서울시립미술관 서소문본관"
+      ],
+      [
+        "한강시민공원 뚝섬수영장(실외)",
+        "국립현대미술관 덕수궁",
+        "서울역사박물관",
+        "환기미술관",
+        "퐁피두센터 한화"
+      ],
+      [
+        "[북악하늘길 2산책로] 하늘교~성북천발원지",
+        "[K드라마 촬영지] 공근혜갤러리",
+        "국립현대미술관 서울",
+        "대한민국역사박물관",
+        "KCDF 갤러리숍 공예정원"
+      ]
+    ],
+    "dna": {
+      "pillars": {
+        "do_play": 0.2,
+        "see_learn": 0.6,
+        "stay_vibe": 0.2,
+        "eat_local": 0
+      },
+      "axes": {
+        "authenticity": 0.7,
+        "energy": -0.8,
+        "density": -0.7,
+        "novelty": 0.2,
+        "setting": 0
+      },
+      "micro_keywords": [
+        "회화전시",
+        "조용한",
+        "실내예술"
+      ]
+    },
+    "reference": "[K드라마 촬영지] 공근혜갤러리",
+    "externalApiRequests": [],
+    "mapTileRequests": 51,
+    "tileFailures": [],
+    "consoleErrors": [],
+    "intentionalRejectionConsole": 0,
+    "elapsedMs": 164295
+  }
+]

@@ -47,3 +47,11 @@
 - 기존 실제 서울 추천 후보 16곳에서 검증 사진을 0곳에서 8곳으로 늘렸다. 카카오 후보 4곳에는 Wikimedia Commons 사진을 연결했다. 별도의 신규 실제 추천 결과와 성능 수치는 [검증 결과](presentation/image-enrichment/VERIFICATION.md)에 있다.
 - 포토코리아는 기존 인증 요청에서 403이 관찰됐다. 공급자 승인 후 실제 응답을 검증할 수 있다. 네이티브 기기 동작, 공급자 장기 가용성과 전체 사진 라이선스 적용 범위 검토는 남아 있다.
 - [사진별 판정](presentation/image-enrichment/PHOTO_SOURCES.md) · [실험 README](experiments/exp-20261125-image-enrichment/README.md) · [보관 기록](experiments/exp-20261125-image-enrichment/ARCHIVE.md)
+
+## 2026-11-25 Golden Path 발표
+
+- 실험 `exp-20261125-golden-path`, 기준 `9c0dc1a`, 구현 `ffe0b3f`. [실험 README](experiments/exp-20261125-golden-path/README.md)
+- 단일 실제 서울 2박 3일 세션의 후보 16곳과 검증 사진 10장을 고정했다. 기존 일정 로직의 방문 15곳, 확정 키워드, 저장 동작과 입력 불일치 처리를 Expo Web에서 5회 연속 확인했다. [반복 검증](presentation/final/VERIFICATION.md)
+- 외부 HTTPS 차단 실행에서 기록과 로컬 사진은 재생됐다. 인터넷이 없는 지도는 로컬 영상으로 대응한다. 예비 영상과 발표 스크린샷은 [발표 패키지](presentation/final/README.md)에 있다.
+- Android 번들 빌드는 통과했다. Android·iOS 물리 기기 실행과 장기적인 상류 API 가용성은 미검증이다. 다음 현장 확인 대상은 행사 네트워크에서의 타일 로딩과 실제 발표 장비의 영상 재생이다.
+- Drive 경로는 `Research/Travel-DNA/experiments/exp-20261125-golden-path/`이다. [아카이브 기록](experiments/exp-20261125-golden-path/ARCHIVE.md)

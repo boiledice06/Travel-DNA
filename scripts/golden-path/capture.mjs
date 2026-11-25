@@ -71,7 +71,7 @@ async function run(index, result) {
     deviceScaleFactor: 3,
     isMobile: true,
     hasTouch: true,
-    ...(film ? { recordVideo: { dir: raw, size: { width: 1170, height: 2532 } } } : {}),
+    ...(film ? { recordVideo: { dir: raw, size: { width: 390, height: 844 } } } : {}),
   });
   const page = (activePage = await context.newPage());
   page.setDefaultTimeout(11000);
@@ -419,7 +419,7 @@ async function run(index, result) {
         '-c:v',
         'libx264',
         '-crf',
-        '23',
+        '19',
         '-pix_fmt',
         'yuv420p',
         '-movflags',
