@@ -1,0 +1,2273 @@
+{
+  "version": 1,
+  "recordedOn": "2026-11-25",
+  "timezone": "Asia/Seoul",
+  "provenance": "Archived A/B experiment exp-20261125-ab-travel, scenario A. Captured live POST responses and saved session readback, with request inputs reconstructed from the capture and saved session. Runtime identifiers were replaced consistently.",
+  "scenario": {
+    "profile": {
+      "party_size": "2",
+      "companion_type": "friends",
+      "duration": "2n3d",
+      "transport": "walk_subway",
+      "budget_level": "mid",
+      "time_window": "morning"
+    },
+    "purpose": "지역 먹거리를 즐기고 시장을 둘러보며 활동적인 체험을 하고 싶어요.",
+    "mustHave": "전통시장, 지역 먹거리, 활동적인 체험",
+    "mustAvoid": "술집",
+    "answers": [
+      5,
+      5,
+      5,
+      5,
+      4
+    ]
+  },
+  "calls": [
+    {
+      "method": "POST",
+      "path": "/api/trip-profile",
+      "request": {
+        "party_size": "2",
+        "companion_type": "friends",
+        "duration": "2n3d",
+        "transport": "walk_subway",
+        "budget_level": "mid",
+        "time_window": "morning"
+      },
+      "response": {
+        "id": "golden-profile",
+        "city": "서울",
+        "party_size": "2",
+        "companion_type": "friends",
+        "age_band": "skip",
+        "gender": "skip",
+        "duration": "2n3d",
+        "lodging": "none",
+        "lodging_area": null,
+        "transport": "walk_subway",
+        "mobility_preference": "balanced",
+        "budget_level": "mid",
+        "budget_note": null,
+        "time_window": "morning",
+        "created_at": "2026-11-25T13:19:51.109835+00:00"
+      },
+      "status": 200,
+      "elapsedMs": 145
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/start",
+      "request": {},
+      "response": {
+        "session_id": "golden-session",
+        "phase": "likert",
+        "turn": 0,
+        "assistant_message": "먼저 아래 5문항에 답해 주세요.",
+        "chips": [],
+        "likert_items": [
+          {
+            "id": "ax_authenticity",
+            "statement_ko": "유명 랜드마크보다 골목·로컬 느낌이 더 좋다.",
+            "maps_to": "axes.authenticity",
+            "scale": [
+              {
+                "value": 5,
+                "label_ko": "매우 그렇다"
+              },
+              {
+                "value": 4,
+                "label_ko": "그렇다"
+              },
+              {
+                "value": 3,
+                "label_ko": "보통이다"
+              },
+              {
+                "value": 2,
+                "label_ko": "그렇지 않다"
+              },
+              {
+                "value": 1,
+                "label_ko": "매우 그렇지 않다"
+              }
+            ]
+          },
+          {
+            "id": "ax_energy",
+            "statement_ko": "차분하고 정적인 것보다 활동적인 경험이 더 좋다.",
+            "maps_to": "axes.energy",
+            "scale": [
+              {
+                "value": 5,
+                "label_ko": "매우 그렇다"
+              },
+              {
+                "value": 4,
+                "label_ko": "그렇다"
+              },
+              {
+                "value": 3,
+                "label_ko": "보통이다"
+              },
+              {
+                "value": 2,
+                "label_ko": "그렇지 않다"
+              },
+              {
+                "value": 1,
+                "label_ko": "매우 그렇지 않다"
+              }
+            ]
+          },
+          {
+            "id": "ax_density",
+            "statement_ko": "사람 많고 활기찬 핫플·번화가가 더 좋다.",
+            "maps_to": "axes.density",
+            "scale": [
+              {
+                "value": 5,
+                "label_ko": "매우 그렇다"
+              },
+              {
+                "value": 4,
+                "label_ko": "그렇다"
+              },
+              {
+                "value": 3,
+                "label_ko": "보통이다"
+              },
+              {
+                "value": 2,
+                "label_ko": "그렇지 않다"
+              },
+              {
+                "value": 1,
+                "label_ko": "매우 그렇지 않다"
+              }
+            ]
+          },
+          {
+            "id": "ax_novelty",
+            "statement_ko": "익숙한 활동보다 새롭고 낯선 경험이 더 좋다.",
+            "maps_to": "axes.novelty",
+            "scale": [
+              {
+                "value": 5,
+                "label_ko": "매우 그렇다"
+              },
+              {
+                "value": 4,
+                "label_ko": "그렇다"
+              },
+              {
+                "value": 3,
+                "label_ko": "보통이다"
+              },
+              {
+                "value": 2,
+                "label_ko": "그렇지 않다"
+              },
+              {
+                "value": 1,
+                "label_ko": "매우 그렇지 않다"
+              }
+            ]
+          },
+          {
+            "id": "ax_setting",
+            "statement_ko": "실내·도심보다 야외·자연 쪽 일정이 더 편하다.",
+            "maps_to": "axes.setting",
+            "scale": [
+              {
+                "value": 5,
+                "label_ko": "매우 그렇다"
+              },
+              {
+                "value": 4,
+                "label_ko": "그렇다"
+              },
+              {
+                "value": 3,
+                "label_ko": "보통이다"
+              },
+              {
+                "value": 2,
+                "label_ko": "그렇지 않다"
+              },
+              {
+                "value": 1,
+                "label_ko": "매우 그렇지 않다"
+              }
+            ]
+          }
+        ],
+        "scale_labels": {
+          "1": "매우 그렇지 않다",
+          "2": "그렇지 않다",
+          "3": "보통이다",
+          "4": "그렇다",
+          "5": "매우 그렇다"
+        }
+      },
+      "status": 200,
+      "elapsedMs": 12
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/likert",
+      "request": {
+        "session_id": "golden-session",
+        "answers": [
+          {
+            "id": "ax_authenticity",
+            "value": 5
+          },
+          {
+            "id": "ax_energy",
+            "value": 5
+          },
+          {
+            "id": "ax_density",
+            "value": 5
+          },
+          {
+            "id": "ax_novelty",
+            "value": 5
+          },
+          {
+            "id": "ax_setting",
+            "value": 4
+          }
+        ]
+      },
+      "response": {
+        "session_id": "golden-session",
+        "phase": "asking",
+        "turn": 0,
+        "assistant_message": "로컬·골목 취향이 강하네요. 어떤 느낌이 특히 좋나요?",
+        "chips": [
+          "로컬·골목",
+          "랜드마크"
+        ],
+        "seed_dna": {
+          "pillars": {
+            "do_play": 0.25,
+            "see_learn": 0.25,
+            "stay_vibe": 0.25,
+            "eat_local": 0.25
+          },
+          "axes": {
+            "authenticity": 1,
+            "energy": 1,
+            "density": 1,
+            "novelty": 1,
+            "setting": 0.5
+          },
+          "micro_keywords": []
+        },
+        "draft_dna": {
+          "pillars": {
+            "do_play": 0.25,
+            "see_learn": 0.25,
+            "stay_vibe": 0.25,
+            "eat_local": 0.25
+          },
+          "axes": {
+            "authenticity": 1,
+            "energy": 1,
+            "density": 1,
+            "novelty": 1,
+            "setting": 0.5
+          },
+          "micro_keywords": []
+        },
+        "followups": [
+          {
+            "axis_or_pillar": "axes.authenticity",
+            "reason": "extreme",
+            "suggested_chips": [
+              "로컬·골목",
+              "랜드마크"
+            ]
+          },
+          {
+            "axis_or_pillar": "axes.energy",
+            "reason": "extreme",
+            "suggested_chips": [
+              "활동적",
+              "정적·차분"
+            ]
+          },
+          {
+            "axis_or_pillar": "axes.density",
+            "reason": "extreme",
+            "suggested_chips": [
+              "핫플·번화가",
+              "골목·조용"
+            ]
+          },
+          {
+            "axis_or_pillar": "axes.novelty",
+            "reason": "extreme",
+            "suggested_chips": [
+              "새롭고 낯선",
+              "익숙한 명소"
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "elapsedMs": 28
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/message",
+      "request": {
+        "session_id": "golden-session",
+        "message": "지역 시장에서 먹거리를 맛보고 활기찬 체험을 하고 싶어요."
+      },
+      "response": {
+        "session_id": "golden-session",
+        "phase": "asking",
+        "turn": 1,
+        "assistant_message": "활기찬 시장과 번화한 핫플 중에서 에너지가 넘치는 곳과 한적한 골목 중 어떤 분위기가 더 끌리시나요?",
+        "chips": [
+          "핫플·번화가",
+          "골목·조용"
+        ],
+        "draft_dna": {
+          "pillars": {
+            "do_play": 0.23529411764705882,
+            "see_learn": 0.11764705882352941,
+            "stay_vibe": 0.1764705882352941,
+            "eat_local": 0.47058823529411764
+          },
+          "axes": {
+            "authenticity": 1,
+            "energy": 0.8,
+            "density": 0.8,
+            "novelty": 0.5,
+            "setting": 0.5
+          },
+          "micro_keywords": [
+            "지역 시장",
+            "길거리 음식",
+            "활기찬 체험"
+          ]
+        },
+        "must_have": null,
+        "must_avoid": null
+      },
+      "status": 200,
+      "elapsedMs": 3290
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/message",
+      "request": {
+        "session_id": "golden-session",
+        "message": "전통시장과 길거리 음식을 즐기고 직접 참여하는 활동을 좋아해요."
+      },
+      "response": {
+        "session_id": "golden-session",
+        "phase": "asking",
+        "turn": 2,
+        "assistant_message": "새롭게 뜨는 핫플레이스와 옛 정취가 가득한 전통 골목 중 어디가 더 끌리시나요?",
+        "chips": [
+          "핫플·번화가",
+          "골목·조용"
+        ],
+        "draft_dna": {
+          "pillars": {
+            "do_play": 0.2941176470588235,
+            "see_learn": 0.11764705882352941,
+            "stay_vibe": 0.11764705882352941,
+            "eat_local": 0.47058823529411764
+          },
+          "axes": {
+            "authenticity": 0.8,
+            "energy": 0.9,
+            "density": 0.7,
+            "novelty": 0.5,
+            "setting": -0.5
+          },
+          "micro_keywords": [
+            "전통시장",
+            "길거리음식",
+            "체험활동"
+          ]
+        },
+        "must_have": null,
+        "must_avoid": null
+      },
+      "status": 200,
+      "elapsedMs": 7848
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/message",
+      "request": {
+        "session_id": "golden-session",
+        "message": "사람들이 북적이는 시장에서 로컬 음식을 먹고 싶어요."
+      },
+      "response": {
+        "session_id": "golden-session",
+        "phase": "constraints",
+        "turn": 3,
+        "assistant_message": "이제 필수적으로 필요한 것(꼭 원하는 것)과 피해야 하는 것을 적어 주세요. 없으면 ‘없음’이라고 적어 주셔도 됩니다.",
+        "chips": [
+          "없음"
+        ],
+        "draft_dna": {
+          "pillars": {
+            "do_play": 0.2857142857142857,
+            "see_learn": 0.14285714285714285,
+            "stay_vibe": 0.14285714285714285,
+            "eat_local": 0.42857142857142855
+          },
+          "axes": {
+            "authenticity": 0.8,
+            "energy": 0.9,
+            "density": 0.8,
+            "novelty": 0.5,
+            "setting": -0.5
+          },
+          "micro_keywords": [
+            "전통시장",
+            "길거리 음식",
+            "로컬 체험",
+            "북적이는"
+          ]
+        },
+        "must_have": null,
+        "must_avoid": null
+      },
+      "status": 200,
+      "elapsedMs": 7464
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/constraints",
+      "request": {
+        "session_id": "golden-session",
+        "must_have": "여행 목적: 지역 먹거리를 즐기고 시장을 둘러보며 활동적인 체험을 하고 싶어요.\n전통시장, 지역 먹거리, 활동적인 체험",
+        "must_avoid": "술집"
+      },
+      "response": {
+        "session_id": "golden-session",
+        "phase": "draft",
+        "turn": 3,
+        "assistant_message": "취향 DNA 초안과 원하는 것/피하고 싶은 것을 정리했어요. 이대로 확정할까요?",
+        "chips": [
+          "확정",
+          "수정할래요"
+        ],
+        "draft_dna": {
+          "pillars": {
+            "do_play": 0.2857142857142857,
+            "see_learn": 0.14285714285714285,
+            "stay_vibe": 0.14285714285714285,
+            "eat_local": 0.42857142857142855
+          },
+          "axes": {
+            "authenticity": 0.8,
+            "energy": 0.9,
+            "density": 0.8,
+            "novelty": 0.5,
+            "setting": -0.5
+          },
+          "micro_keywords": [
+            "전통시장",
+            "길거리 음식",
+            "로컬 체험",
+            "북적이는"
+          ]
+        },
+        "must_have": "여행 목적: 지역 먹거리를 즐기고 시장을 둘러보며 활동적인 체험을 하고 싶어요.\n전통시장, 지역 먹거리, 활동적인 체험",
+        "must_avoid": "술집"
+      },
+      "status": 200,
+      "elapsedMs": 24
+    },
+    {
+      "method": "POST",
+      "path": "/api/dna-chat/finalize",
+      "request": {
+        "session_id": "golden-session",
+        "confirm": true
+      },
+      "response": {
+        "session_id": "golden-session",
+        "phase": "confirmed",
+        "travel_dna": {
+          "pillars": {
+            "do_play": 0.2857142857142857,
+            "see_learn": 0.14285714285714285,
+            "stay_vibe": 0.14285714285714285,
+            "eat_local": 0.42857142857142855
+          },
+          "axes": {
+            "authenticity": 0.8,
+            "energy": 0.9,
+            "density": 0.8,
+            "novelty": 0.5,
+            "setting": -0.5
+          },
+          "micro_keywords": [
+            "전통시장",
+            "길거리 음식",
+            "로컬 체험",
+            "북적이는"
+          ]
+        },
+        "must_have": "여행 목적: 지역 먹거리를 즐기고 시장을 둘러보며 활동적인 체험을 하고 싶어요.\n전통시장, 지역 먹거리, 활동적인 체험",
+        "must_avoid": "술집",
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite"
+      },
+      "status": 200,
+      "elapsedMs": 20
+    },
+    {
+      "method": "POST",
+      "path": "/api/seoul-find",
+      "request": {
+        "profile_id": "golden-profile",
+        "dna_session_id": "golden-session"
+      },
+      "response": {
+        "profile": {
+          "id": "golden-profile",
+          "city": "서울",
+          "party_size": "2",
+          "companion_type": "friends",
+          "age_band": "skip",
+          "gender": "skip",
+          "duration": "2n3d",
+          "lodging": "none",
+          "lodging_area": null,
+          "transport": "walk_subway",
+          "mobility_preference": "balanced",
+          "budget_level": "mid",
+          "budget_note": null,
+          "time_window": "morning",
+          "created_at": "2026-11-25T13:19:51.109835+00:00"
+        },
+        "travel_dna": {
+          "pillars": {
+            "do_play": 0.2857142857142857,
+            "see_learn": 0.14285714285714285,
+            "stay_vibe": 0.14285714285714285,
+            "eat_local": 0.42857142857142855
+          },
+          "axes": {
+            "authenticity": 0.8,
+            "energy": 0.9,
+            "density": 0.8,
+            "novelty": 0.5,
+            "setting": -0.5
+          },
+          "micro_keywords": [
+            "전통시장",
+            "길거리 음식",
+            "로컬 체험",
+            "북적이는"
+          ]
+        },
+        "constraints": {
+          "city": "서울",
+          "party_size": "2",
+          "companion_type": "friends",
+          "duration": "2n3d",
+          "transport": "walk_subway",
+          "mobility_preference": "balanced",
+          "budget_level": "mid",
+          "time_window": "morning",
+          "lodging": "none",
+          "lodging_area": null,
+          "must_have": "여행 목적: 지역 먹거리를 즐기고 시장을 둘러보며 활동적인 체험을 하고 싶어요.\n전통시장, 지역 먹거리, 활동적인 체험",
+          "must_avoid": "술집"
+        },
+        "industries": [
+          "카페",
+          "전통시장",
+          "갤러리",
+          "방탈출",
+          "소품샵",
+          "향토음식점",
+          "박물관",
+          "공원",
+          "베이커리",
+          "테마파크",
+          "이자카야",
+          "길거리음식"
+        ],
+        "micro_industries": [
+          "전통시장",
+          "길거리 음식",
+          "로컬 체험",
+          "야시장",
+          "푸드트럭",
+          "향토음식점",
+          "재래시장",
+          "골목 투어"
+        ],
+        "slot_allocation": {
+          "do_play": 3,
+          "see_learn": 2,
+          "stay_vibe": 2,
+          "eat_local": 5
+        },
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "city": "서울",
+        "places": {
+          "shortlist": [
+            {
+              "name": "남대문시장",
+              "address": "서울 중구 남대문시장4길 21",
+              "rating": null,
+              "place_id": "7934963",
+              "source_keyword": "전통시장",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/7934963",
+              "image_url": null,
+              "lat": 37.55918176072071,
+              "lng": 126.9776267740439,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "가정,생활 > 시장",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "7934963"
+              }
+            },
+            {
+              "name": "광장시장",
+              "address": "서울 종로구 창경궁로 88",
+              "rating": null,
+              "place_id": "27383851",
+              "source_keyword": "전통시장",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/27383851",
+              "image_url": null,
+              "lat": 37.57005529646949,
+              "lng": 126.99894728223626,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "가정,생활 > 시장",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "27383851"
+              }
+            },
+            {
+              "name": "경동시장",
+              "address": "서울 동대문구 제기동 849",
+              "rating": null,
+              "place_id": "10174942",
+              "source_keyword": "전통시장",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/10174942",
+              "image_url": null,
+              "lat": 37.579039740933176,
+              "lng": 127.03943411053307,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "가정,생활 > 시장",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "10174942"
+              }
+            },
+            {
+              "name": "동작구름카페",
+              "address": "서울특별시 서초구 동작대로 350 (반포동)",
+              "rating": null,
+              "place_id": "tourapi:2784696",
+              "source_keyword": "카페",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/99/2784699_image2_1.png",
+              "lat": 37.5058141254,
+              "lng": 126.9811002794,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "음식점",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:2784696"
+              }
+            },
+            {
+              "name": "동작노을카페",
+              "address": "서울특별시 동작구 동작대로 335 (동작동)",
+              "rating": null,
+              "place_id": "tourapi:2763751",
+              "source_keyword": "카페",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": null,
+              "lat": 37.5060890748,
+              "lng": 126.9800614768,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "음식점",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:2763751"
+              }
+            },
+            {
+              "name": "[K드라마 촬영지] 공근혜갤러리",
+              "address": "서울특별시 종로구 삼청로7길 38",
+              "rating": null,
+              "place_id": "tourapi:3106658",
+              "source_keyword": "갤러리",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg",
+              "lat": 37.5840827831,
+              "lng": 126.9796815273,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "문화시설",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:3106658"
+              }
+            },
+            {
+              "name": "KCDF 갤러리숍 공예정원",
+              "address": "서울특별시 종로구 인사동11길 8 공예종합유통지원센터 KCDF갤러리 1층",
+              "rating": null,
+              "place_id": "tourapi:969831",
+              "source_keyword": "갤러리",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": null,
+              "lat": 37.5740618063,
+              "lng": 126.9841425159,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "쇼핑",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:969831"
+              }
+            },
+            {
+              "name": "국립중앙박물관 전통염료식물원",
+              "address": "서울특별시 용산구 서빙고로 137 (용산동6가)",
+              "rating": null,
+              "place_id": "tourapi:1604580",
+              "source_keyword": "박물관",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+              "lat": 37.5211706397,
+              "lng": 126.9791278024,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "관광지",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:1604580"
+              }
+            },
+            {
+              "name": "한강시민공원 뚝섬수영장(실외)",
+              "address": "서울특별시 광진구 자양동 112",
+              "rating": null,
+              "place_id": "tourapi:775883",
+              "source_keyword": "공원",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp",
+              "lat": 37.5296517901,
+              "lng": 127.0671167729,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "레포츠",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:775883"
+              }
+            },
+            {
+              "name": "응봉체육공원",
+              "address": "서울특별시 성동구 응봉동",
+              "rating": null,
+              "place_id": "tourapi:2757822",
+              "source_keyword": "공원",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG",
+              "lat": 37.5519542217,
+              "lng": 127.0374160667,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "관광지",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:2757822"
+              }
+            },
+            {
+              "name": "러시아케이크",
+              "address": "서울 중구 을지로42길 7",
+              "rating": null,
+              "place_id": "38432219",
+              "source_keyword": "카페",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/38432219",
+              "image_url": null,
+              "lat": 37.5658294844621,
+              "lng": 127.005885831317,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "음식점 > 카페 > 테마카페 > 디저트카페",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "38432219"
+              }
+            },
+            {
+              "name": "콤포타블 남산",
+              "address": "서울 용산구 두텁바위로60길 49",
+              "rating": null,
+              "place_id": "1995791949",
+              "source_keyword": "카페",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/1995791949",
+              "image_url": null,
+              "lat": 37.54900597798612,
+              "lng": 126.98365125198461,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "음식점 > 카페",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "1995791949"
+              }
+            },
+            {
+              "name": "테라로사 포스코센터점",
+              "address": "서울 강남구 테헤란로 440",
+              "rating": null,
+              "place_id": "1860681564",
+              "source_keyword": "카페",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/1860681564",
+              "image_url": null,
+              "lat": 37.5059647440212,
+              "lng": 127.055879763068,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "음식점 > 카페 > 커피전문점 > 테라로사",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "1860681564"
+              }
+            },
+            {
+              "name": "국립현대미술관 서울",
+              "address": "서울 종로구 삼청로 30",
+              "rating": null,
+              "place_id": "17952661",
+              "source_keyword": "갤러리",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/17952661",
+              "image_url": null,
+              "lat": 37.578627489574416,
+              "lng": 126.9800979573524,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "17952661"
+              }
+            },
+            {
+              "name": "퐁피두센터 한화",
+              "address": "서울 영등포구 63로 50",
+              "rating": null,
+              "place_id": "1879508840",
+              "source_keyword": "갤러리",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/1879508840",
+              "image_url": null,
+              "lat": 37.5196615374817,
+              "lng": 126.939899725029,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "1879508840"
+              }
+            },
+            {
+              "name": "서울시립미술관 서소문본관",
+              "address": "서울 중구 덕수궁길 61",
+              "rating": null,
+              "place_id": "10507051",
+              "source_keyword": "갤러리",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/10507051",
+              "image_url": null,
+              "lat": 37.56410579887691,
+              "lng": 126.9736988634857,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "10507051"
+              }
+            }
+          ],
+          "raw_hit_count": 46,
+          "excluded_count": 4,
+          "sources_used": [
+            "places",
+            "tourapi"
+          ],
+          "tourapi_configured": true,
+          "visitseoul": {
+            "configured": false,
+            "env": "VISITSEOUL_API_KEY",
+            "status": "stub_optional"
+          },
+          "must_avoid": "술집",
+          "must_have": "여행 목적: 지역 먹거리를 즐기고 시장을 둘러보며 활동적인 체험을 하고 싶어요.\n전통시장, 지역 먹거리, 활동적인 체험"
+        },
+        "shortlist": [
+          {
+            "name": "남대문시장",
+            "address": "서울 중구 남대문시장4길 21",
+            "rating": null,
+            "place_id": "7934963",
+            "source_keyword": "전통시장",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/7934963",
+            "image_url": null,
+            "lat": 37.55918176072071,
+            "lng": 126.9776267740439,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "가정,생활 > 시장",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "7934963"
+            }
+          },
+          {
+            "name": "광장시장",
+            "address": "서울 종로구 창경궁로 88",
+            "rating": null,
+            "place_id": "27383851",
+            "source_keyword": "전통시장",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/27383851",
+            "image_url": null,
+            "lat": 37.57005529646949,
+            "lng": 126.99894728223626,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "가정,생활 > 시장",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "27383851"
+            }
+          },
+          {
+            "name": "경동시장",
+            "address": "서울 동대문구 제기동 849",
+            "rating": null,
+            "place_id": "10174942",
+            "source_keyword": "전통시장",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/10174942",
+            "image_url": null,
+            "lat": 37.579039740933176,
+            "lng": 127.03943411053307,
+            "score": 0.55,
+            "user_ratings_total": null,
+            "category": "가정,생활 > 시장",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "10174942"
+            }
+          },
+          {
+            "name": "동작구름카페",
+            "address": "서울특별시 서초구 동작대로 350 (반포동)",
+            "rating": null,
+            "place_id": "tourapi:2784696",
+            "source_keyword": "카페",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/99/2784699_image2_1.png",
+            "lat": 37.5058141254,
+            "lng": 126.9811002794,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "음식점",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:2784696"
+            }
+          },
+          {
+            "name": "동작노을카페",
+            "address": "서울특별시 동작구 동작대로 335 (동작동)",
+            "rating": null,
+            "place_id": "tourapi:2763751",
+            "source_keyword": "카페",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": null,
+            "lat": 37.5060890748,
+            "lng": 126.9800614768,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "음식점",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:2763751"
+            }
+          },
+          {
+            "name": "[K드라마 촬영지] 공근혜갤러리",
+            "address": "서울특별시 종로구 삼청로7길 38",
+            "rating": null,
+            "place_id": "tourapi:3106658",
+            "source_keyword": "갤러리",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg",
+            "lat": 37.5840827831,
+            "lng": 126.9796815273,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "문화시설",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:3106658"
+            }
+          },
+          {
+            "name": "KCDF 갤러리숍 공예정원",
+            "address": "서울특별시 종로구 인사동11길 8 공예종합유통지원센터 KCDF갤러리 1층",
+            "rating": null,
+            "place_id": "tourapi:969831",
+            "source_keyword": "갤러리",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": null,
+            "lat": 37.5740618063,
+            "lng": 126.9841425159,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "쇼핑",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:969831"
+            }
+          },
+          {
+            "name": "국립중앙박물관 전통염료식물원",
+            "address": "서울특별시 용산구 서빙고로 137 (용산동6가)",
+            "rating": null,
+            "place_id": "tourapi:1604580",
+            "source_keyword": "박물관",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+            "lat": 37.5211706397,
+            "lng": 126.9791278024,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "관광지",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:1604580"
+            }
+          },
+          {
+            "name": "한강시민공원 뚝섬수영장(실외)",
+            "address": "서울특별시 광진구 자양동 112",
+            "rating": null,
+            "place_id": "tourapi:775883",
+            "source_keyword": "공원",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp",
+            "lat": 37.5296517901,
+            "lng": 127.0671167729,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "레포츠",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:775883"
+            }
+          },
+          {
+            "name": "응봉체육공원",
+            "address": "서울특별시 성동구 응봉동",
+            "rating": null,
+            "place_id": "tourapi:2757822",
+            "source_keyword": "공원",
+            "source": "tourapi",
+            "maps_url": null,
+            "image_url": "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG",
+            "lat": 37.5519542217,
+            "lng": 127.0374160667,
+            "score": 0.02,
+            "user_ratings_total": null,
+            "category": "관광지",
+            "sources": [
+              "tourapi"
+            ],
+            "source_ids": {
+              "tourapi": "tourapi:2757822"
+            }
+          },
+          {
+            "name": "러시아케이크",
+            "address": "서울 중구 을지로42길 7",
+            "rating": null,
+            "place_id": "38432219",
+            "source_keyword": "카페",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/38432219",
+            "image_url": null,
+            "lat": 37.5658294844621,
+            "lng": 127.005885831317,
+            "score": 0,
+            "user_ratings_total": null,
+            "category": "음식점 > 카페 > 테마카페 > 디저트카페",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "38432219"
+            }
+          },
+          {
+            "name": "콤포타블 남산",
+            "address": "서울 용산구 두텁바위로60길 49",
+            "rating": null,
+            "place_id": "1995791949",
+            "source_keyword": "카페",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/1995791949",
+            "image_url": null,
+            "lat": 37.54900597798612,
+            "lng": 126.98365125198461,
+            "score": 0,
+            "user_ratings_total": null,
+            "category": "음식점 > 카페",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "1995791949"
+            }
+          },
+          {
+            "name": "테라로사 포스코센터점",
+            "address": "서울 강남구 테헤란로 440",
+            "rating": null,
+            "place_id": "1860681564",
+            "source_keyword": "카페",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/1860681564",
+            "image_url": null,
+            "lat": 37.5059647440212,
+            "lng": 127.055879763068,
+            "score": 0,
+            "user_ratings_total": null,
+            "category": "음식점 > 카페 > 커피전문점 > 테라로사",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "1860681564"
+            }
+          },
+          {
+            "name": "국립현대미술관 서울",
+            "address": "서울 종로구 삼청로 30",
+            "rating": null,
+            "place_id": "17952661",
+            "source_keyword": "갤러리",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/17952661",
+            "image_url": null,
+            "lat": 37.578627489574416,
+            "lng": 126.9800979573524,
+            "score": 0,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 미술관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "17952661"
+            }
+          },
+          {
+            "name": "퐁피두센터 한화",
+            "address": "서울 영등포구 63로 50",
+            "rating": null,
+            "place_id": "1879508840",
+            "source_keyword": "갤러리",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/1879508840",
+            "image_url": null,
+            "lat": 37.5196615374817,
+            "lng": 126.939899725029,
+            "score": 0,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 미술관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "1879508840"
+            }
+          },
+          {
+            "name": "서울시립미술관 서소문본관",
+            "address": "서울 중구 덕수궁길 61",
+            "rating": null,
+            "place_id": "10507051",
+            "source_keyword": "갤러리",
+            "source": "kakao",
+            "maps_url": "http://place.map.kakao.com/10507051",
+            "image_url": null,
+            "lat": 37.56410579887691,
+            "lng": 126.9736988634857,
+            "score": 0,
+            "user_ratings_total": null,
+            "category": "문화,예술 > 문화시설 > 미술관",
+            "sources": [
+              "kakao"
+            ],
+            "source_ids": {
+              "kakao": "10507051"
+            }
+          }
+        ],
+        "find": {
+          "city": "서울",
+          "industries": [
+            "카페",
+            "전통시장",
+            "갤러리",
+            "방탈출",
+            "소품샵",
+            "향토음식점",
+            "박물관",
+            "공원",
+            "베이커리",
+            "테마파크",
+            "이자카야",
+            "길거리음식"
+          ],
+          "micro_industries": [
+            "전통시장",
+            "길거리 음식",
+            "로컬 체험",
+            "야시장",
+            "푸드트럭",
+            "향토음식점",
+            "재래시장",
+            "골목 투어"
+          ],
+          "keywords_searched": [
+            "카페",
+            "전통시장",
+            "갤러리",
+            "방탈출",
+            "소품샵",
+            "향토음식점",
+            "박물관",
+            "공원",
+            "베이커리",
+            "테마파크",
+            "이자카야",
+            "길거리음식",
+            "길거리 음식",
+            "로컬 체험"
+          ],
+          "shortlist": [
+            {
+              "name": "남대문시장",
+              "address": "서울 중구 남대문시장4길 21",
+              "rating": null,
+              "place_id": "7934963",
+              "source_keyword": "전통시장",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/7934963",
+              "image_url": null,
+              "lat": 37.55918176072071,
+              "lng": 126.9776267740439,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "가정,생활 > 시장",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "7934963"
+              }
+            },
+            {
+              "name": "광장시장",
+              "address": "서울 종로구 창경궁로 88",
+              "rating": null,
+              "place_id": "27383851",
+              "source_keyword": "전통시장",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/27383851",
+              "image_url": null,
+              "lat": 37.57005529646949,
+              "lng": 126.99894728223626,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "가정,생활 > 시장",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "27383851"
+              }
+            },
+            {
+              "name": "경동시장",
+              "address": "서울 동대문구 제기동 849",
+              "rating": null,
+              "place_id": "10174942",
+              "source_keyword": "전통시장",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/10174942",
+              "image_url": null,
+              "lat": 37.579039740933176,
+              "lng": 127.03943411053307,
+              "score": 0.55,
+              "user_ratings_total": null,
+              "category": "가정,생활 > 시장",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "10174942"
+              }
+            },
+            {
+              "name": "동작구름카페",
+              "address": "서울특별시 서초구 동작대로 350 (반포동)",
+              "rating": null,
+              "place_id": "tourapi:2784696",
+              "source_keyword": "카페",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/99/2784699_image2_1.png",
+              "lat": 37.5058141254,
+              "lng": 126.9811002794,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "음식점",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:2784696"
+              }
+            },
+            {
+              "name": "동작노을카페",
+              "address": "서울특별시 동작구 동작대로 335 (동작동)",
+              "rating": null,
+              "place_id": "tourapi:2763751",
+              "source_keyword": "카페",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": null,
+              "lat": 37.5060890748,
+              "lng": 126.9800614768,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "음식점",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:2763751"
+              }
+            },
+            {
+              "name": "[K드라마 촬영지] 공근혜갤러리",
+              "address": "서울특별시 종로구 삼청로7길 38",
+              "rating": null,
+              "place_id": "tourapi:3106658",
+              "source_keyword": "갤러리",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg",
+              "lat": 37.5840827831,
+              "lng": 126.9796815273,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "문화시설",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:3106658"
+              }
+            },
+            {
+              "name": "KCDF 갤러리숍 공예정원",
+              "address": "서울특별시 종로구 인사동11길 8 공예종합유통지원센터 KCDF갤러리 1층",
+              "rating": null,
+              "place_id": "tourapi:969831",
+              "source_keyword": "갤러리",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": null,
+              "lat": 37.5740618063,
+              "lng": 126.9841425159,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "쇼핑",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:969831"
+              }
+            },
+            {
+              "name": "국립중앙박물관 전통염료식물원",
+              "address": "서울특별시 용산구 서빙고로 137 (용산동6가)",
+              "rating": null,
+              "place_id": "tourapi:1604580",
+              "source_keyword": "박물관",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+              "lat": 37.5211706397,
+              "lng": 126.9791278024,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "관광지",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:1604580"
+              }
+            },
+            {
+              "name": "한강시민공원 뚝섬수영장(실외)",
+              "address": "서울특별시 광진구 자양동 112",
+              "rating": null,
+              "place_id": "tourapi:775883",
+              "source_keyword": "공원",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp",
+              "lat": 37.5296517901,
+              "lng": 127.0671167729,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "레포츠",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:775883"
+              }
+            },
+            {
+              "name": "응봉체육공원",
+              "address": "서울특별시 성동구 응봉동",
+              "rating": null,
+              "place_id": "tourapi:2757822",
+              "source_keyword": "공원",
+              "source": "tourapi",
+              "maps_url": null,
+              "image_url": "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG",
+              "lat": 37.5519542217,
+              "lng": 127.0374160667,
+              "score": 0.02,
+              "user_ratings_total": null,
+              "category": "관광지",
+              "sources": [
+                "tourapi"
+              ],
+              "source_ids": {
+                "tourapi": "tourapi:2757822"
+              }
+            },
+            {
+              "name": "러시아케이크",
+              "address": "서울 중구 을지로42길 7",
+              "rating": null,
+              "place_id": "38432219",
+              "source_keyword": "카페",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/38432219",
+              "image_url": null,
+              "lat": 37.5658294844621,
+              "lng": 127.005885831317,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "음식점 > 카페 > 테마카페 > 디저트카페",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "38432219"
+              }
+            },
+            {
+              "name": "콤포타블 남산",
+              "address": "서울 용산구 두텁바위로60길 49",
+              "rating": null,
+              "place_id": "1995791949",
+              "source_keyword": "카페",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/1995791949",
+              "image_url": null,
+              "lat": 37.54900597798612,
+              "lng": 126.98365125198461,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "음식점 > 카페",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "1995791949"
+              }
+            },
+            {
+              "name": "테라로사 포스코센터점",
+              "address": "서울 강남구 테헤란로 440",
+              "rating": null,
+              "place_id": "1860681564",
+              "source_keyword": "카페",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/1860681564",
+              "image_url": null,
+              "lat": 37.5059647440212,
+              "lng": 127.055879763068,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "음식점 > 카페 > 커피전문점 > 테라로사",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "1860681564"
+              }
+            },
+            {
+              "name": "국립현대미술관 서울",
+              "address": "서울 종로구 삼청로 30",
+              "rating": null,
+              "place_id": "17952661",
+              "source_keyword": "갤러리",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/17952661",
+              "image_url": null,
+              "lat": 37.578627489574416,
+              "lng": 126.9800979573524,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "17952661"
+              }
+            },
+            {
+              "name": "퐁피두센터 한화",
+              "address": "서울 영등포구 63로 50",
+              "rating": null,
+              "place_id": "1879508840",
+              "source_keyword": "갤러리",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/1879508840",
+              "image_url": null,
+              "lat": 37.5196615374817,
+              "lng": 126.939899725029,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "1879508840"
+              }
+            },
+            {
+              "name": "서울시립미술관 서소문본관",
+              "address": "서울 중구 덕수궁길 61",
+              "rating": null,
+              "place_id": "10507051",
+              "source_keyword": "갤러리",
+              "source": "kakao",
+              "maps_url": "http://place.map.kakao.com/10507051",
+              "image_url": null,
+              "lat": 37.56410579887691,
+              "lng": 126.9736988634857,
+              "score": 0,
+              "user_ratings_total": null,
+              "category": "문화,예술 > 문화시설 > 미술관",
+              "sources": [
+                "kakao"
+              ],
+              "source_ids": {
+                "kakao": "10507051"
+              }
+            }
+          ],
+          "excluded_count": 4,
+          "filters_applied": [
+            "city=서울",
+            "must_avoid_free_text_exclude",
+            "must_have_soft_boost",
+            "budget_soft=mid",
+            "party=2/friends",
+            "mobility=balanced"
+          ],
+          "sources_used": [
+            "places",
+            "tourapi"
+          ],
+          "places_configured": true,
+          "tourapi_configured": true,
+          "visitseoul": {
+            "configured": false,
+            "env": "VISITSEOUL_API_KEY",
+            "status": "stub_optional"
+          },
+          "raw_hit_count": 46,
+          "source_hit_counts": {
+            "kakao": 39,
+            "tourapi": 7
+          },
+          "merged_hit_count": 43
+        },
+        "filters_applied": [
+          "city=서울",
+          "must_avoid_free_text_exclude",
+          "must_have_soft_boost",
+          "budget_soft=mid",
+          "party=2/friends",
+          "mobility=balanced"
+        ]
+      },
+      "status": 200,
+      "elapsedMs": 15550
+    },
+    {
+      "method": "GET",
+      "path": "/api/dna-chat/golden-session",
+      "request": null,
+      "response": {
+        "session_id": "golden-session",
+        "phase": "confirmed",
+        "turn": 3,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "로컬·골목 취향이 강하네요. 어떤 느낌이 특히 좋나요?",
+            "chips": [
+              "로컬·골목",
+              "랜드마크"
+            ]
+          },
+          {
+            "role": "user",
+            "content": "지역 시장에서 먹거리를 맛보고 활기찬 체험을 하고 싶어요.",
+            "chips": []
+          },
+          {
+            "role": "assistant",
+            "content": "활기찬 시장과 번화한 핫플 중에서 에너지가 넘치는 곳과 한적한 골목 중 어떤 분위기가 더 끌리시나요?",
+            "chips": [
+              "핫플·번화가",
+              "골목·조용"
+            ]
+          },
+          {
+            "role": "user",
+            "content": "전통시장과 길거리 음식을 즐기고 직접 참여하는 활동을 좋아해요.",
+            "chips": []
+          },
+          {
+            "role": "assistant",
+            "content": "새롭게 뜨는 핫플레이스와 옛 정취가 가득한 전통 골목 중 어디가 더 끌리시나요?",
+            "chips": [
+              "핫플·번화가",
+              "골목·조용"
+            ]
+          },
+          {
+            "role": "user",
+            "content": "사람들이 북적이는 시장에서 로컬 음식을 먹고 싶어요.",
+            "chips": []
+          },
+          {
+            "role": "assistant",
+            "content": "이제 필수적으로 필요한 것(꼭 원하는 것)과 피해야 하는 것을 적어 주세요. 없으면 ‘없음’이라고 적어 주셔도 됩니다.",
+            "chips": [
+              "없음"
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": "취향 DNA 초안과 원하는 것/피하고 싶은 것을 정리했어요. 이대로 확정할까요?",
+            "chips": [
+              "확정",
+              "수정할래요"
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": "Travel DNA를 확정했어요.",
+            "chips": []
+          }
+        ],
+        "likert_answers": {
+          "ax_authenticity": 5,
+          "ax_energy": 5,
+          "ax_density": 5,
+          "ax_novelty": 5,
+          "ax_setting": 4
+        },
+        "seed_dna": {
+          "pillars": {
+            "do_play": 0.25,
+            "see_learn": 0.25,
+            "stay_vibe": 0.25,
+            "eat_local": 0.25
+          },
+          "axes": {
+            "authenticity": 1,
+            "energy": 1,
+            "density": 1,
+            "novelty": 1,
+            "setting": 0.5
+          },
+          "micro_keywords": []
+        },
+        "followups": [
+          {
+            "axis_or_pillar": "axes.novelty",
+            "reason": "extreme",
+            "suggested_chips": [
+              "새롭고 낯선",
+              "익숙한 명소"
+            ]
+          }
+        ],
+        "draft_dna": {
+          "pillars": {
+            "do_play": 0.2857142857142857,
+            "see_learn": 0.14285714285714285,
+            "stay_vibe": 0.14285714285714285,
+            "eat_local": 0.42857142857142855
+          },
+          "axes": {
+            "authenticity": 0.8,
+            "energy": 0.9,
+            "density": 0.8,
+            "novelty": 0.5,
+            "setting": -0.5
+          },
+          "micro_keywords": [
+            "전통시장",
+            "길거리 음식",
+            "로컬 체험",
+            "북적이는"
+          ]
+        },
+        "confirmed_dna": {
+          "pillars": {
+            "do_play": 0.2857142857142857,
+            "see_learn": 0.14285714285714285,
+            "stay_vibe": 0.14285714285714285,
+            "eat_local": 0.42857142857142855
+          },
+          "axes": {
+            "authenticity": 0.8,
+            "energy": 0.9,
+            "density": 0.8,
+            "novelty": 0.5,
+            "setting": -0.5
+          },
+          "micro_keywords": [
+            "전통시장",
+            "길거리 음식",
+            "로컬 체험",
+            "북적이는"
+          ]
+        },
+        "must_have": "여행 목적: 지역 먹거리를 즐기고 시장을 둘러보며 활동적인 체험을 하고 싶어요.\n전통시장, 지역 먹거리, 활동적인 체험",
+        "must_avoid": "술집",
+        "constraints_submitted": true,
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite"
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/place-photos",
+      "request": {
+        "places": [
+          {
+            "id": "api:kakao:7934963",
+            "name": "남대문시장",
+            "address": "서울 중구 남대문시장4길 21",
+            "latitude": 37.55918176072071,
+            "longitude": 126.9776267740439
+          },
+          {
+            "id": "api:kakao:27383851",
+            "name": "광장시장",
+            "address": "서울 종로구 창경궁로 88",
+            "latitude": 37.57005529646949,
+            "longitude": 126.99894728223626
+          },
+          {
+            "id": "api:kakao:10174942",
+            "name": "경동시장",
+            "address": "서울 동대문구 제기동 849",
+            "latitude": 37.579039740933176,
+            "longitude": 127.03943411053307
+          },
+          {
+            "id": "api:tourapi:tourapi%3A2784696",
+            "name": "동작구름카페",
+            "address": "서울특별시 서초구 동작대로 350 (반포동)",
+            "latitude": 37.5058141254,
+            "longitude": 126.9811002794
+          }
+        ]
+      },
+      "response": [
+        {
+          "id": "api:kakao:7934963",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:kakao:27383851",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:kakao:10174942",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A2784696",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/99/2784699_image2_1.png",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-3",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": false,
+            "match": [
+              "TourAPI contentId 2784696",
+              "exact place title; distance 0 m",
+              "road address exact",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "동작구름카페",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        }
+      ],
+      "status": 200,
+      "elapsedMs": 1999
+    },
+    {
+      "method": "POST",
+      "path": "/api/place-photos",
+      "request": {
+        "places": [
+          {
+            "id": "api:tourapi:tourapi%3A2763751",
+            "name": "동작노을카페",
+            "address": "서울특별시 동작구 동작대로 335 (동작동)",
+            "latitude": 37.5060890748,
+            "longitude": 126.9800614768
+          },
+          {
+            "id": "api:tourapi:tourapi%3A3106658",
+            "name": "[K드라마 촬영지] 공근혜갤러리",
+            "address": "서울특별시 종로구 삼청로7길 38",
+            "latitude": 37.5840827831,
+            "longitude": 126.9796815273
+          },
+          {
+            "id": "api:tourapi:tourapi%3A969831",
+            "name": "KCDF 갤러리숍 공예정원",
+            "address": "서울특별시 종로구 인사동11길 8 공예종합유통지원센터 KCDF갤러리 1층",
+            "latitude": 37.5740618063,
+            "longitude": 126.9841425159
+          },
+          {
+            "id": "api:tourapi:tourapi%3A1604580",
+            "name": "국립중앙박물관 전통염료식물원",
+            "address": "서울특별시 용산구 서빙고로 137 (용산동6가)",
+            "latitude": 37.5211706397,
+            "longitude": 126.9791278024
+          }
+        ]
+      },
+      "response": [
+        {
+          "id": "api:tourapi:tourapi%3A2763751",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A3106658",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-1",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": true,
+            "match": [
+              "TourAPI contentId 3106658",
+              "exact place title; distance 0 m",
+              "road address exact",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "[K드라마 촬영지] 공근혜갤러리",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A969831",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A1604580",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-1",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": true,
+            "match": [
+              "TourAPI contentId 1604580",
+              "exact place title; distance 0 m",
+              "road address exact",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "국립중앙박물관 전통염료식물원",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        }
+      ],
+      "status": 200,
+      "elapsedMs": 835
+    },
+    {
+      "method": "POST",
+      "path": "/api/place-photos",
+      "request": {
+        "places": [
+          {
+            "id": "api:tourapi:tourapi%3A775883",
+            "name": "한강시민공원 뚝섬수영장(실외)",
+            "address": "서울특별시 광진구 자양동 112",
+            "latitude": 37.5296517901,
+            "longitude": 127.0671167729
+          },
+          {
+            "id": "api:tourapi:tourapi%3A2757822",
+            "name": "응봉체육공원",
+            "address": "서울특별시 성동구 응봉동",
+            "latitude": 37.5519542217,
+            "longitude": 127.0374160667
+          },
+          {
+            "id": "api:kakao:38432219",
+            "name": "러시아케이크",
+            "address": "서울 중구 을지로42길 7",
+            "latitude": 37.5658294844621,
+            "longitude": 127.005885831317
+          },
+          {
+            "id": "api:kakao:1995791949",
+            "name": "콤포타블 남산",
+            "address": "서울 용산구 두텁바위로60길 49",
+            "latitude": 37.54900597798612,
+            "longitude": 126.98365125198461
+          }
+        ]
+      },
+      "response": [
+        {
+          "id": "api:tourapi:tourapi%3A775883",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-3",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": false,
+            "match": [
+              "TourAPI contentId 775883",
+              "exact place title; distance 0 m",
+              "provider object coordinates",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "한강시민공원 뚝섬수영장(실외)",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        },
+        {
+          "id": "api:tourapi:tourapi%3A2757822",
+          "photo": {
+            "url": "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG",
+            "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+            "provider": "tourapi",
+            "publisher": "한국관광공사 TourAPI",
+            "author": null,
+            "license": "KOGL-3",
+            "license_url": "https://www.kogl.or.kr/info/license.do",
+            "can_modify": false,
+            "match": [
+              "TourAPI contentId 2757822",
+              "exact place title; distance 0 m",
+              "provider object coordinates",
+              "rights code on same response row as firstimage"
+            ],
+            "description": "응봉체육공원",
+            "attribution": ""
+          },
+          "providers": {
+            "tourapi": "matched"
+          }
+        },
+        {
+          "id": "api:kakao:38432219",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:kakao:1995791949",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        }
+      ],
+      "status": 200,
+      "elapsedMs": 857
+    },
+    {
+      "method": "POST",
+      "path": "/api/place-photos",
+      "request": {
+        "places": [
+          {
+            "id": "api:kakao:1860681564",
+            "name": "테라로사 포스코센터점",
+            "address": "서울 강남구 테헤란로 440",
+            "latitude": 37.5059647440212,
+            "longitude": 127.055879763068
+          },
+          {
+            "id": "api:kakao:17952661",
+            "name": "국립현대미술관 서울",
+            "address": "서울 종로구 삼청로 30",
+            "latitude": 37.578627489574416,
+            "longitude": 126.9800979573524
+          },
+          {
+            "id": "api:kakao:1879508840",
+            "name": "퐁피두센터 한화",
+            "address": "서울 영등포구 63로 50",
+            "latitude": 37.5196615374817,
+            "longitude": 126.939899725029
+          },
+          {
+            "id": "api:kakao:10507051",
+            "name": "서울시립미술관 서소문본관",
+            "address": "서울 중구 덕수궁길 61",
+            "latitude": 37.56410579887691,
+            "longitude": 126.9736988634857
+          }
+        ]
+      },
+      "response": [
+        {
+          "id": "api:kakao:1860681564",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:kakao:17952661",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:kakao:1879508840",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        },
+        {
+          "id": "api:kakao:10507051",
+          "photo": null,
+          "providers": {
+            "tourapi": "no_verified_match",
+            "gallery": "not_configured",
+            "commons": "no_verified_match"
+          }
+        }
+      ],
+      "status": 200,
+      "elapsedMs": 2041
+    }
+  ],
+  "summary": {
+    "places": 16,
+    "verifiedPhotos": 5,
+    "messages": 3
+  }
+}

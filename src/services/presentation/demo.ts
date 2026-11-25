@@ -1,5 +1,6 @@
 type DemoBootstrap = {
   epoch: string;
+  scenario?: 'a' | 'b';
   photos: Record<string, string>;
 };
 
@@ -10,13 +11,14 @@ export const presentationMode = process.env.EXPO_PUBLIC_TRAVEL_PRESENTATION === 
 
 export const recommendationServerUrl = presentationMode
   ? bootstrap && typeof window !== 'undefined'
-    ? window.location.origin
+    ? `${window.location.origin}${bootstrap.scenario === 'a' ? '/demo-api/a' : ''}`
     : ''
   : process.env.EXPO_PUBLIC_RECOMMENDATION_SERVER_URL;
 
 export function travelStorageKey(normalKey: string): string {
   if (!presentationMode) return normalKey;
-  return `@travel-dna/presentation/${bootstrap?.epoch ?? 'inactive'}/${normalKey.slice('@travel-dna/'.length)}`;
+  const scenarioPrefix = bootstrap?.scenario === 'a' ? 'a/' : '';
+  return `@travel-dna/presentation/${scenarioPrefix}${bootstrap?.epoch ?? 'inactive'}/${normalKey.slice('@travel-dna/'.length)}`;
 }
 
 export function presentationPhotoUrl(source: string): string | undefined {

@@ -102,8 +102,8 @@ export function createReplay(record, { recommendationDelay = 920 } = {}) {
   };
 }
 
-export async function loadMedia(fixtureDir, photos) {
-  const index = JSON.parse(await readFile(join(fixtureDir, 'media.json'), 'utf8'));
+export async function loadMedia(fixtureDir, photos, manifest = 'media.json') {
+  const index = JSON.parse(await readFile(join(fixtureDir, manifest), 'utf8'));
   const mapping = {};
   const files = new Map();
   const unavailable = [];

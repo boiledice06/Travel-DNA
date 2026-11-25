@@ -7,9 +7,31 @@ import { createReplay, loadMedia } from './replay.mjs';
 import { build, fixtureDir, getEpoch, origin, root } from './runtime.mjs';
 
 const local = new URL(origin);
-const record = JSON.parse(await readFile(join(fixtureDir, 'recording.json'), 'utf8'));
-const replay = createReplay(record);
-const media = await loadMedia(fixtureDir, replay.healthyPhotos);
+const scenarios = new Map();
+for (const [id, suffix, label] of [
+  ['a', '-a', 'A. 활기찬 체험형'],
+  ['b', '', 'B. 조용한 휴식형'],
+]) {
+  const record = JSON.parse(
+    await readFile(join(fixtureDir, 'recording' + suffix + '.json'), 'utf8'),
+  );
+  const replay = createReplay(record);
+  const media = await loadMedia(fixtureDir, replay.healthyPhotos, 'media' + suffix + '.json');
+  scenarios.set(id, { id, label, replay, media, sessions: new Map() });
+}
+const files = new Map([...scenarios.values()].flatMap(({ media }) => [...media.files]));
+const launcher = `<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Travel DNA 발표 모드</title>
+<style>
+body{min-height:100vh;margin:0;display:grid;place-items:center;background:#102631;color:#fff;font:1rem system-ui,sans-serif}
+main{width:min(24rem,calc(100% - 3rem))}
+p{color:#bce2d7}
+a{display:block;margin:.75rem 0;padding:1rem;border-radius:1rem;background:#bce2d7;color:#102631;font-weight:700;text-decoration:none}
+</style></head><body><main><p>Travel DNA · 서울 2박 3일</p><h1>발표 시나리오 선택</h1>
+<a href="/?scenario=a">A. 활기찬 체험형</a>
+<a href="/?scenario=b">B. 조용한 휴식형</a>
+</main></body></html>`;
 const contentTypes = {
   '.js': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -21,14 +43,13 @@ const contentTypes = {
   '.ttf': 'font/ttf',
   '.json': 'application/json',
 };
-const sessions = new Map();
 let epoch = await getEpoch();
 
 async function refreshEpoch() {
   const next = await getEpoch();
   if (next !== epoch) {
     epoch = next;
-    sessions.clear();
+    for (const { sessions } of scenarios.values()) sessions.clear();
   }
 }
 async function buildPresentation() {
@@ -68,14 +89,20 @@ async function jsonBody(req) {
   }
   return JSON.parse(Buffer.concat(parts).toString('utf8'));
 }
-function sessionFor(req, res) {
-  const key = req.headers.cookie?.match(/(?:^|;\s*)travel_demo=([a-f\d-]{36})(?:;|$)/)?.[1];
-  if (key && sessions.has(key)) return sessions.get(key);
+function sessionFor(req, res, { id: scenario, replay, sessions }) {
+  const name = scenario === 'a' ? 'travel_demo_a' : 'travel_demo';
+  const cookie = req.headers.cookie
+    ?.split(';')
+    .map((value) => value.trim())
+    .find((value) => value.startsWith(name + '='));
+  const key = cookie?.slice(name.length + 1);
+  if (sessions.has(key)) return sessions.get(key);
   const state = replay.start();
   const id = randomUUID();
   if (sessions.size >= 128) sessions.delete(sessions.keys().next().value);
   sessions.set(id, state);
-  res.setHeader('Set-Cookie', `travel_demo=${id}; Path=/; HttpOnly; SameSite=Strict`);
+  const path = scenario === 'a' ? '/demo-api/a/api' : '/api';
+  res.setHeader('Set-Cookie', `${name}=${id}; Path=${path}; HttpOnly; SameSite=Strict`);
   return state;
 }
 function reply(res, status, body, type = 'application/json; charset=utf-8') {
@@ -95,8 +122,14 @@ const server = createServer(async (req, res) => {
     return reply(res, 403, { detail: { code: 'demo_local_only' } });
   try {
     await refreshEpoch();
-    const pathname = decodeURIComponent(new URL(req.url, origin).pathname);
-    if (pathname === '/api/demo/health' && req.method === 'GET')
+    const url = new URL(req.url, origin);
+    const pathname = decodeURIComponent(url.pathname);
+    if (pathname === '/demo' && req.method === 'GET')
+      return reply(res, 200, launcher, contentTypes['.html']);
+    const aRequest = pathname.startsWith('/demo-api/a/api/');
+    const apiPath = aRequest ? pathname.slice('/demo-api/a'.length) : pathname;
+    const { media, replay } = scenarios.get(aRequest ? 'a' : 'b');
+    if (apiPath === '/api/demo/health' && req.method === 'GET')
       return reply(res, media.unavailable.length ? 503 : 200, {
         mode: 'recorded-presentation',
         epoch,
@@ -105,8 +138,8 @@ const server = createServer(async (req, res) => {
         photos: media.files.size,
         unavailable: media.unavailable.length,
       });
-    if (pathname.startsWith('/api/')) {
-      const state = sessionFor(req, res);
+    if (apiPath.startsWith('/api/')) {
+      const state = sessionFor(req, res, scenarios.get(aRequest ? 'a' : 'b'));
       let input = null;
       if (req.method === 'POST') {
         try {
@@ -115,13 +148,13 @@ const server = createServer(async (req, res) => {
           return reply(res, 400, { detail: { code: 'demo_invalid_body' } });
         }
       }
-      const result = replay.use(state, req.method, pathname, input);
+      const result = replay.use(state, req.method, apiPath, input);
       if (result.delay) await new Promise((done) => setTimeout(done, result.delay));
       return reply(res, result.status, result.body);
     }
     if (req.method !== 'GET') return reply(res, 405, { detail: { code: 'demo_invalid_method' } });
     if (pathname.startsWith('/demo-assets/')) {
-      const asset = media.files.get(pathname);
+      const asset = files.get(pathname);
       if (!asset) return reply(res, 404, { detail: { code: 'demo_photo_missing' } });
       res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
       return reply(res, 200, asset.bytes, asset.type);
@@ -144,11 +177,25 @@ const server = createServer(async (req, res) => {
     }
     if (pathname.startsWith('/_expo/') || pathname.startsWith('/assets/'))
       return reply(res, 404, { detail: { code: 'demo_static_missing' } });
-    const data = JSON.stringify({ epoch, photos: media.mapping }).replaceAll('<', '\\u003c');
+    const photos = Object.fromEntries(
+      [...scenarios.values()].map(({ id, media }) => [id, media.mapping]),
+    );
+    const data = JSON.stringify({ epoch, photos }).replaceAll('<', '\\u003c');
+    const bootstrap = `(() => {
+      const key = 'travel-dna/demo-scenario';
+      const selected = new URLSearchParams(location.search).get('scenario');
+      let scenario = selected === 'a' ? 'a' : 'b';
+      try {
+        if (selected === 'a' || selected === 'b') sessionStorage.setItem(key, selected);
+        else if (sessionStorage.getItem(key) === 'a') scenario = 'a';
+      } catch {}
+      const data = ${data};
+      window.__TRAVEL_DNA_DEMO__ = { epoch: data.epoch, scenario, photos: data.photos[scenario] };
+    })();`;
     return reply(
       res,
       200,
-      index.replace('<head>', '<head><script>window.__TRAVEL_DNA_DEMO__=' + data + '</script>'),
+      index.replace('<head>', '<head><script>' + bootstrap + '</script>'),
       contentTypes['.html'],
     );
   } catch {
@@ -161,8 +208,7 @@ server.on('error', (error) => {
 });
 server.listen(Number(local.port), local.hostname, () => {
   console.log('Travel DNA 발표 모드 · 실제 추천 기록 재생');
-  console.log(origin);
-  console.log(
-    `사진 ${media.files.size}개 확인 · 누락 ${media.unavailable.length}개 · npm run demo:reset 으로 초기화`,
-  );
+  console.log(origin + '/demo');
+  for (const { label, media } of scenarios.values())
+    console.log(`${label} · 사진 ${media.files.size}개 확인 · 누락 ${media.unavailable.length}개`);
 });

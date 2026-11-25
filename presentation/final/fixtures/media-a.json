@@ -1,0 +1,32 @@
+{
+  "https://tong.visitkorea.or.kr/cms/resource/99/2784699_image2_1.png": {
+    "file": "026c3701491eb0af522f4634db5f40d9b0b683e09c5b1cc2a01535245028559c.png",
+    "sha256": "026c3701491eb0af522f4634db5f40d9b0b683e09c5b1cc2a01535245028559c",
+    "size": 542850,
+    "contentType": "image/png"
+  },
+  "https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg": {
+    "file": "b84a1a44fdcad1dbe4b950f4e01854ad0b260357f7284090db73c8f1d31a9c12.jpg",
+    "sha256": "b84a1a44fdcad1dbe4b950f4e01854ad0b260357f7284090db73c8f1d31a9c12",
+    "size": 648682,
+    "contentType": "image/jpeg"
+  },
+  "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg": {
+    "file": "63e7975d1e795fc84ea733d4e5c31a26a770e110117f345753bc451450fd89f2.jpg",
+    "sha256": "63e7975d1e795fc84ea733d4e5c31a26a770e110117f345753bc451450fd89f2",
+    "size": 142570,
+    "contentType": "image/jpeg"
+  },
+  "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp": {
+    "file": "964694adf234fb8dbe89d4bada273ace539c607ef6e6a50b53ce6be16b4a237e.bmp",
+    "sha256": "964694adf234fb8dbe89d4bada273ace539c607ef6e6a50b53ce6be16b4a237e",
+    "size": 980754,
+    "contentType": "image/bmp"
+  },
+  "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG": {
+    "file": "3688d5d8dc8865c8daa489b4a03ffd3f9bc6131344d42a789ad2429d7b72be7a.jpg",
+    "sha256": "3688d5d8dc8865c8daa489b4a03ffd3f9bc6131344d42a789ad2429d7b72be7a",
+    "size": 121447,
+    "contentType": "image/jpeg"
+  }
+}

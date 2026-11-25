@@ -12,12 +12,19 @@ const { chromium } = require(process.env.TRAVEL_PLAYWRIGHT ?? 'playwright');
 const flag = (name) => process.argv.includes('--' + name);
 const runs = Number(process.argv.find((arg) => arg.startsWith('--runs='))?.slice(7) ?? 1);
 const offline = flag('offline');
+const scenario = process.argv.find((arg) => arg.startsWith('--scenario='))?.slice(11) ?? 'b';
+assert(scenario === 'a' || scenario === 'b', 'Use --scenario=a or --scenario=b');
+const prefix = (id) => (id === 'a' ? '/demo-api/a' : '');
+const api = (path) => prefix(scenario) + path;
+const suffix = scenario === 'a' ? '-a' : '';
+const labels = { a: 'A. 활기찬 체험형', b: 'B. 조용한 휴식형' };
+const other = scenario === 'a' ? 'b' : 'a';
 const film = flag('film') ? 'full-demo' : flag('highlights') ? 'highlights' : '';
 assert(Number.isInteger(runs) && runs > 0 && runs <= 10);
 assert(!film || (runs === 1 && !offline), 'Film each video in one online run');
 const final = join(root, 'presentation', 'final');
-const shots = join(final, 'screenshots');
-const evidence = join(final, 'verification');
+const shots = join(final, 'screenshots', ...(suffix ? ['a'] : []));
+const evidence = flag('no-screenshots') ? workspace : join(final, 'verification');
 const reportName =
   film ||
   (offline
@@ -30,7 +37,7 @@ const reportName =
 for (const dir of [shots, evidence, join(final, 'videos'), workspace])
   await mkdir(dir, { recursive: true });
 
-const record = JSON.parse(await readFile(join(fixtureDir, 'recording.json'), 'utf8'));
+const record = JSON.parse(await readFile(join(fixtureDir, 'recording' + suffix + '.json'), 'utf8'));
 const endpoint = (path) => record.calls.find((call) => call.path === path);
 const messages = record.calls.filter((call) => call.path === '/api/dna-chat/message');
 const expectedPhotos = new Map(
@@ -46,7 +53,9 @@ const reference =
 assert(reference, 'Day 3 has no verified photograph');
 
 async function ready(epoch) {
-  const response = await fetch(origin + '/api/demo/health', { signal: AbortSignal.timeout(4500) });
+  const response = await fetch(origin + api('/api/demo/health'), {
+    signal: AbortSignal.timeout(4500),
+  });
   assert(response.ok, 'Start npm run demo and wait for photograph verification');
   const data = await response.json();
   assert.equal(data.mode, 'recorded-presentation');
@@ -102,7 +111,7 @@ async function run(index, result) {
     const url = new URL(response.url());
     if (url.origin === tilePolicy && !response.ok() && response.status() !== 304)
       tileFailures.add(url.pathname);
-    if (url.origin !== origin || url.pathname !== '/api/place-photos') return;
+    if (url.origin !== origin || url.pathname !== api('/api/place-photos')) return;
     pending.push(
       response.json().then((rows) => {
         assert(response.ok(), 'Recorded photo endpoint failed');
@@ -155,13 +164,13 @@ async function run(index, result) {
       if (!motion) await pause(film === 'highlights' ? Math.round(hold / 6.3) : hold);
     }
   };
-  const checkedCall = async (path, action) => {
-    const wait = page.waitForResponse((response) => new URL(response.url()).pathname === path);
+  const checkedCall = async (path, action, expected = endpoint(path)) => {
+    const wait = page.waitForResponse((response) => new URL(response.url()).pathname === api(path));
     await action();
     const response = await wait;
     assert(response.ok(), path + ' returned ' + response.status());
     const body = await response.json();
-    assert.deepEqual(body, endpoint(path).response, path + ' replay changed');
+    assert.deepEqual(body, expected.response, path + ' replay changed');
     return body;
   };
   const image = async (place) => {
@@ -174,8 +183,13 @@ async function run(index, result) {
     }, original);
   };
 
+  const choose = async (id) => {
+    await page.goto(origin + '/demo', { waitUntil: 'domcontentloaded' });
+    await page.getByRole('link', { name: labels[id], exact: true }).click();
+    await page.waitForFunction((id) => window.__TRAVEL_DNA_DEMO__?.scenario === id, id);
+  };
   step = 'start';
-  await page.goto(origin, { waitUntil: 'domcontentloaded' });
+  await choose(scenario);
   await b('서울 여행 시작하기').waitFor();
   await show('발표 모드 · 실제 추천 기록 재생');
   assert.equal(await page.evaluate(() => window.__TRAVEL_DNA_DEMO__.epoch), epoch);
@@ -214,7 +228,7 @@ async function run(index, result) {
   await screen('04-ai-chat', 10500);
   for (const turn of messages) {
     await answer.fill(turn.request.message);
-    await checkedCall(turn.path, () => b('답변 보내기').click());
+    await checkedCall(turn.path, () => b('답변 보내기').click(), turn);
   }
   await show(messages.at(-1).response.assistant_message);
   await page.getByLabel('꼭 원하는 것').fill(record.scenario.mustHave);
@@ -262,7 +276,7 @@ async function run(index, result) {
     await tab('Day ' + day).click();
     await show('서울 여행 · Day ' + day);
     await mapFrame('day' + day);
-    if (day === 2) await image(itinerary[1][0]);
+    if (scenario === 'b' && day === 2) await image(itinerary[1][0]);
     assert.equal(await tab('Day ' + day).getAttribute('aria-selected'), 'true');
     await screen(String(8 + day).padStart(2, '0') + '-day' + day, 7300);
   }
@@ -305,10 +319,9 @@ async function run(index, result) {
     result.bookmarkRestored = true;
   }
   const stored = await page.evaluate(() => {
-    const epoch = window.__TRAVEL_DNA_DEMO__.epoch;
-    return JSON.parse(
-      localStorage.getItem('@travel-dna/presentation/' + epoch + '/server-trip/v1'),
-    );
+    const { epoch, scenario } = window.__TRAVEL_DNA_DEMO__;
+    const key = '@travel-dna/presentation/' + (scenario === 'a' ? 'a/' : '') + epoch;
+    return JSON.parse(localStorage.getItem(key + '/server-trip/v1'));
   });
   const places = stored.entries.map((entry) => entry.place);
   assert.deepEqual(
@@ -336,27 +349,44 @@ async function run(index, result) {
   });
   await screen('19-my-trip-days-2-3', 4700);
   await tab('취향 DNA').click();
-  const dna = await page.evaluate(async () => {
-    const response = await fetch('/api/dna-chat/golden-session');
+  const dna = await page.evaluate(async (path) => {
+    const response = await fetch(path);
     return response.json();
-  });
+  }, api('/api/dna-chat/golden-session'));
   assert.deepEqual(dna, endpoint('/api/dna-chat/golden-session').response);
   result.dna = dna.confirmed_dna;
   for (const keyword of result.dna.micro_keywords) await show(keyword);
   await screen('16-dna-profile', 8500);
 
   if (!film) {
-    step = 'reset isolation and input rejection';
+    step = 'scenario isolation, reset and input rejection';
+    await choose(other);
+    await b('서울 여행 시작하기').waitFor();
+    const otherSession = await context.request.get(
+      origin + prefix(other) + '/api/dna-chat/golden-session',
+    );
+    assert.equal(otherSession.status(), 409);
+    await b('서울 여행 시작하기').click();
+    await tab('찜한 장소').click();
+    await show('마음에 드는 곳을 담아보세요');
+    await choose(scenario);
+    await page.goto(origin, { waitUntil: 'domcontentloaded' });
+    await tab('찜한 장소').click();
+    await card.waitFor();
+    result.scenarioIsolation = true;
     const next = await reset();
     await ready(next);
-    await page.goto(origin, { waitUntil: 'domcontentloaded' });
+    await choose(scenario);
     await b('서울 여행 시작하기').waitFor();
     const storage = await page.evaluate(() => ({
       epoch: window.__TRAVEL_DNA_DEMO__.epoch,
       user: localStorage.getItem('@travel-dna/v1'),
       userTrip: localStorage.getItem('@travel-dna/server-trip/v1'),
       newTrip: localStorage.getItem(
-        '@travel-dna/presentation/' + window.__TRAVEL_DNA_DEMO__.epoch + '/server-trip/v1',
+        '@travel-dna/presentation/' +
+          (window.__TRAVEL_DNA_DEMO__.scenario === 'a' ? 'a/' : '') +
+          window.__TRAVEL_DNA_DEMO__.epoch +
+          '/server-trip/v1',
       ),
     }));
     assert.deepEqual(storage, {
@@ -375,7 +405,7 @@ async function run(index, result) {
     const radio = page.getByRole('radio');
     for (let i = 0; i < record.scenario.answers.length; i++) await radio.nth(i * 5).click();
     const failed = page.waitForResponse(
-      (response) => new URL(response.url()).pathname === '/api/dna-chat/likert',
+      (response) => new URL(response.url()).pathname === api('/api/dna-chat/likert'),
     );
     await b('설문 제출').click();
     const rejected = await failed;
@@ -406,7 +436,7 @@ async function run(index, result) {
     await context.close();
     context = undefined;
     const input = await video.path();
-    const output = join(final, 'videos', film + '.mp4');
+    const output = join(final, 'videos', film + suffix + '.mp4');
     const process = spawnSync(
       'ffmpeg',
       [
@@ -451,7 +481,7 @@ try {
     } catch (error) {
       result.failedStep = step;
       result.error = String(error);
-      if (activePage)
+      if (activePage && !flag('no-screenshots'))
         await activePage
           .screenshot({ path: join(workspace, 'last-failure.png') })
           .catch(() => undefined);
@@ -464,5 +494,8 @@ try {
   }
 } finally {
   await browser.close();
-  await writeFile(join(evidence, reportName + '.json'), JSON.stringify(results, null, 2) + '\n');
+  await writeFile(
+    join(evidence, reportName + suffix + '.json'),
+    JSON.stringify(results, null, 2) + '\n',
+  );
 }

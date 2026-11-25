@@ -1,6 +1,6 @@
 # Travel DNA 최종 발표 패키지
 
-실험 `exp-20261125-golden-path`의 Expo Web 캡처와 발표 운영 파일입니다. 서울 2박 3일의 단일 실제 추천 기록을 사용합니다.
+실험 `exp-20261125-golden-path`의 Expo Web 캡처와 발표 운영 파일입니다. 서울 2박 3일의 실제 추천 기록 두 건을 사용합니다. A는 활기찬 체험형, B는 기존 조용한 휴식형입니다.
 
 ```powershell
 npm run demo
@@ -8,7 +8,7 @@ npm run demo
 npm run demo:reset
 ```
 
-[로컬 발표 화면](http://127.0.0.1:8785) · [발표 대본](DEMO_SCRIPT.md) · [실행 및 복구](RUNBOOK.md) · [검증 결과](VERIFICATION.md) · [사진 출처](PHOTO_SOURCES.md)
+[로컬 발표 시나리오 선택](http://127.0.0.1:8785/demo) · [발표 대본](DEMO_SCRIPT.md) · [실행 및 복구](RUNBOOK.md) · [검증 결과](VERIFICATION.md) · [사진 출처](PHOTO_SOURCES.md)
 
 - [전체 영상 2분 44초](videos/full-demo.mp4) · [핵심 영상 43초](videos/highlights.mp4). 두 파일은 인터넷 없이 재생할 수 있는 390 × 844, 25fps MP4입니다.
 - [Contact Sheet](contact-sheet.png) · [발표 스크린샷](screenshots/)

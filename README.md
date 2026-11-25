@@ -231,7 +231,7 @@ UX 개선 중간 검증: `verification/UX_REDESIGN_REPORT.md` (실험 `exp-20261
 
 ## Golden Path 발표
 
-서울 2박 3일의 실제 API 기록을 발표 모드에서 재생합니다. 프로젝트 루트에서 `npm run demo`를 실행한 뒤, 별도 PowerShell 창에서 `npm run demo:reset`을 실행하고 [발표 화면](http://127.0.0.1:8785)을 엽니다. 발표 데이터는 별도 로컬 저장 영역을 사용합니다.
+서울 2박 3일의 실제 API 기록을 발표 모드에서 재생합니다. 프로젝트 루트에서 `npm run demo`를 실행한 뒤, 별도 PowerShell 창에서 `npm run demo:reset`을 실행하고 [시나리오 선택](http://127.0.0.1:8785/demo)에서 A 또는 B를 엽니다. 발표 데이터는 별도 로컬 저장 영역을 사용합니다.
 
 - [발표 패키지](presentation/final/README.md) · [대본](presentation/final/DEMO_SCRIPT.md) · [복구 안내](presentation/final/RUNBOOK.md)
 - [실험 설명](experiments/exp-20261125-golden-path/README.md) · [프로젝트 상태](PROJECT_STATE.md)

@@ -1,6 +1,6 @@
 # 발표용 사진 출처와 라이선스
 
-아래는 2026-11-25 실제 추천 세션의 검증 사진 10장입니다. 앱과 발표 자료는 동일 파일 바이트를 사용합니다. 원본 URL별 SHA-256과 로컬 파일은 [미디어 매니페스트](fixtures/media.json), API의 사진별 설명과 전체 판정 근거는 [실제 기록](fixtures/recording.json)에 있습니다. KOGL-3 사진은 원본 비율로 담으며 크롭·편집된 에셋을 저장하지 않습니다. TourAPI 행에 개별 저작자가 없는 경우 제공기관을 표시합니다. Wikimedia의 CC BY-SA 사진은 원본 페이지 저작자와 개별 라이선스를 아래에 기록합니다.
+아래는 2026-11-25 B 유형 실제 추천 세션의 검증 사진 10장입니다. 앱과 발표 자료는 동일 파일 바이트를 사용합니다. 원본 URL별 SHA-256과 로컬 파일은 [미디어 매니페스트](fixtures/media.json), API의 사진별 설명과 전체 판정 근거는 [실제 기록](fixtures/recording.json)에 있습니다. KOGL-3 사진은 원본 비율로 담으며 크롭·편집된 에셋을 저장하지 않습니다. TourAPI 행에 개별 저작자가 없는 경우 제공기관을 표시합니다. Wikimedia의 CC BY-SA 사진은 원본 페이지 저작자와 개별 라이선스를 아래에 기록합니다.
 
 | 장소 | 공급처·저작자 | 라이선스·변경 허용 | 동일 장소 판정 | 출처 |
 | --- | --- | --- | --- | --- |
@@ -14,6 +14,8 @@
 | [K드라마 촬영지] 공근혜갤러리 | 한국관광공사 TourAPI · 개별 저작자 미표기 | [KOGL-1](https://www.kogl.or.kr/info/license.do) · 허용 | TourAPI contentId 3106658 · 명칭 및 위치 일치 · 동일 응답 행 이용 표기 | [페이지](https://www.data.go.kr/data/15101578/openapi.do) · [이미지](https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg) |
 | 한강시민공원 뚝섬수영장(실외) | 한국관광공사 TourAPI · 개별 저작자 미표기 | [KOGL-3](https://www.kogl.or.kr/info/license.do) · 불가 | TourAPI contentId 775883 · 명칭 및 위치 일치 · 동일 응답 행 이용 표기 | [페이지](https://www.data.go.kr/data/15101578/openapi.do) · [이미지](https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp) |
 | 응봉체육공원 | 한국관광공사 TourAPI · 개별 저작자 미표기 | [KOGL-3](https://www.kogl.or.kr/info/license.do) · 불가 | TourAPI contentId 2757822 · 명칭 및 위치 일치 · 동일 응답 행 이용 표기 | [페이지](https://www.data.go.kr/data/15101578/openapi.do) · [이미지](https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG) |
+
+A 유형은 위 사진 중 공근혜갤러리, 국립중앙박물관 전통염료식물원, 뚝섬수영장, 응봉체육공원의 원본을 사용합니다. 동작구름카페는 한국관광공사 TourAPI의 contentId 2784696 응답에 기록된 동일 장소 원본이며, KOGL-3 조건을 따라 편집 없이 표시합니다. [데이터 출처](https://www.data.go.kr/data/15101578/openapi.do) · [사진 원본](https://tong.visitkorea.or.kr/cms/resource/99/2784699_image2_1.png) · [공공누리 이용 조건](https://www.kogl.or.kr/info/license.do)
 
 인트로의 서울 야경은 Penmerahpenbiru의 CC BY 3.0 사진입니다. 화면 비율에 맞춰 잘라 표시하며 인트로에 출처가 남아 있습니다. [원본 페이지](https://commons.wikimedia.org/wiki/File:City_of_Seoul_View_From_N_Seoul_Tower.JPG) · [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
 
