@@ -1,0 +1,541 @@
+{
+  "mode": "after",
+  "browser": "158.0.4370.33",
+  "http": [
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 2978,
+      "elapsedMs": 55
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 3052,
+      "elapsedMs": 13
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 3083,
+      "elapsedMs": 15
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 3157,
+      "elapsedMs": 6
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 8800,
+      "elapsedMs": 12
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 8820,
+      "elapsedMs": 7
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 12447,
+      "elapsedMs": 12
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 12469,
+      "elapsedMs": 6
+    }
+  ],
+  "screenshots": [
+    "03-map.png",
+    "04-list.png",
+    "05-detail.png",
+    "06-itinerary.png",
+    "07-vector-fallback.png"
+  ],
+  "pageErrors": [],
+  "pointerTravel": 81,
+  "bookmarkRestored": true,
+  "orderPreserved": true,
+  "photoFailureFallback": true,
+  "completed": true,
+  "shortlist": [
+    {
+      "name": "국립중앙박물관 전통염료식물원",
+      "address": "서울특별시 용산구 서빙고로 137 (용산동6가)",
+      "lat": 37.5211706397,
+      "lng": 126.9791278024,
+      "place_id": "tourapi:1604580",
+      "source": "tourapi",
+      "source_keyword": "박물관",
+      "category": "관광지"
+    },
+    {
+      "name": "초전섬유·퀼트박물관",
+      "address": "서울특별시 중구 퇴계로18길 66 (남산동1가)",
+      "lat": 37.5581803204,
+      "lng": 126.9842429564,
+      "place_id": "tourapi:130263",
+      "source": "tourapi",
+      "source_keyword": "박물관",
+      "category": "문화시설"
+    },
+    {
+      "name": "김세중미술관",
+      "address": "서울특별시 용산구 효창원로70길 35 (효창동)",
+      "lat": 37.5420707165,
+      "lng": 126.9638980442,
+      "place_id": "tourapi:3080721",
+      "source": "tourapi",
+      "source_keyword": "미술관",
+      "category": "문화시설"
+    },
+    {
+      "name": "환기미술관",
+      "address": "서울특별시 종로구 자하문로40길 63 (부암동)",
+      "lat": 37.5940980426,
+      "lng": 126.9661269237,
+      "place_id": "tourapi:129760",
+      "source": "tourapi",
+      "source_keyword": "미술관",
+      "category": "문화시설"
+    },
+    {
+      "name": "서울역사박물관",
+      "address": "서울 종로구 새문안로 55",
+      "lat": 37.5705003227005,
+      "lng": 126.970546366796,
+      "place_id": "7934135",
+      "source": "kakao",
+      "source_keyword": "박물관",
+      "category": "문화,예술 > 문화시설 > 박물관"
+    },
+    {
+      "name": "국립중앙박물관",
+      "address": "서울 용산구 서빙고로 137",
+      "lat": 37.52392249364415,
+      "lng": 126.98018716127058,
+      "place_id": "8830150",
+      "source": "kakao",
+      "source_keyword": "박물관",
+      "category": "문화,예술 > 문화시설 > 박물관"
+    },
+    {
+      "name": "대한민국역사박물관",
+      "address": "서울 종로구 세종대로 198",
+      "lat": 37.573986969296435,
+      "lng": 126.97785780450153,
+      "place_id": "15104327",
+      "source": "kakao",
+      "source_keyword": "박물관",
+      "category": "문화,예술 > 문화시설 > 박물관"
+    },
+    {
+      "name": "리움미술관",
+      "address": "서울 용산구 이태원로55길 60-16",
+      "lat": 37.53833657002706,
+      "lng": 126.99911744955163,
+      "place_id": "10427225",
+      "source": "kakao",
+      "source_keyword": "미술관",
+      "category": "문화,예술 > 문화시설 > 미술관"
+    },
+    {
+      "name": "국립현대미술관 덕수궁",
+      "address": "서울 중구 세종대로 99",
+      "lat": 37.5659384342432,
+      "lng": 126.973740099183,
+      "place_id": "7836503",
+      "source": "kakao",
+      "source_keyword": "미술관",
+      "category": "문화,예술 > 문화시설 > 미술관"
+    },
+    {
+      "name": "국립현대미술관 서울",
+      "address": "서울 종로구 삼청로 30",
+      "lat": 37.578627489574416,
+      "lng": 126.9800979573524,
+      "place_id": "17952661",
+      "source": "kakao",
+      "source_keyword": "미술관",
+      "category": "문화,예술 > 문화시설 > 미술관"
+    },
+    {
+      "name": "한강시민공원 뚝섬수영장(실외)",
+      "address": "서울특별시 광진구 자양동 112",
+      "lat": 37.5296517901,
+      "lng": 127.0671167729,
+      "place_id": "tourapi:775883",
+      "source": "tourapi",
+      "source_keyword": "공원",
+      "category": "레포츠"
+    },
+    {
+      "name": "응봉체육공원",
+      "address": "서울특별시 성동구 응봉동",
+      "lat": 37.5519542217,
+      "lng": 127.0374160667,
+      "place_id": "tourapi:2757822",
+      "source": "tourapi",
+      "source_keyword": "공원",
+      "category": "관광지"
+    },
+    {
+      "name": "티하우스 청담",
+      "address": "서울 강남구 삼성로120길 52-1",
+      "lat": 37.51890825465803,
+      "lng": 127.05462588419054,
+      "place_id": "842804455",
+      "source": "kakao",
+      "source_keyword": "티하우스",
+      "category": "음식점 > 카페"
+    },
+    {
+      "name": "아도 티하우스",
+      "address": "서울 영등포구 도림로125길 16",
+      "lat": 37.513044514834,
+      "lng": 126.894765384221,
+      "place_id": "1637094739",
+      "source": "kakao",
+      "source_keyword": "티하우스",
+      "category": "음식점 > 카페 > 전통찻집"
+    },
+    {
+      "name": "산수화 티하우스",
+      "address": "서울 용산구 한남대로20길 21-14",
+      "lat": 37.5353142821435,
+      "lng": 127.008902085488,
+      "place_id": "26965498",
+      "source": "kakao",
+      "source_keyword": "티하우스",
+      "category": "음식점 > 카페 > 전통찻집"
+    },
+    {
+      "name": "서울숲",
+      "address": "서울 성동구 성수동1가 678-1",
+      "lat": 37.5443222301513,
+      "lng": 127.037617759165,
+      "place_id": "11331488",
+      "source": "kakao",
+      "source_keyword": "공원",
+      "category": "여행 > 공원 > 도시근린공원"
+    }
+  ],
+  "reference": "서울역사박물관",
+  "photos": [
+    {
+      "id": "api:tourapi:tourapi%3A1604580",
+      "photo": {
+        "url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+        "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+        "provider": "tourapi",
+        "publisher": "한국관광공사 TourAPI",
+        "author": null,
+        "license": "KOGL-1",
+        "license_url": "https://www.kogl.or.kr/info/license.do",
+        "can_modify": true,
+        "match": [
+          "TourAPI contentId 1604580",
+          "exact place title; distance 0 m",
+          "road address exact",
+          "rights code on same response row as firstimage"
+        ],
+        "description": "국립중앙박물관 전통염료식물원",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "matched"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A130263",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A3080721",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A129760",
+      "photo": {
+        "url": "https://tong.visitkorea.or.kr/cms/resource/52/3488552_image2_1.jpg",
+        "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+        "provider": "tourapi",
+        "publisher": "한국관광공사 TourAPI",
+        "author": null,
+        "license": "KOGL-3",
+        "license_url": "https://www.kogl.or.kr/info/license.do",
+        "can_modify": false,
+        "match": [
+          "TourAPI contentId 129760",
+          "exact place title; distance 0 m",
+          "road address exact",
+          "rights code on same response row as firstimage"
+        ],
+        "description": "환기미술관",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "matched"
+      }
+    },
+    {
+      "id": "api:kakao:7934135",
+      "photo": {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Seoul_Museum_of_History.JPG/960px-Seoul_Museum_of_History.JPG",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Seoul_Museum_of_History.JPG",
+        "provider": "commons",
+        "publisher": "Wikimedia Commons",
+        "author": "Jjw",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "can_modify": true,
+        "match": [
+          "Wikidata Q484862: exact Korean or English label/alias",
+          "P625 distance 10 m",
+          "P18 linked file, identity corroborated by Commons title/description"
+        ],
+        "description": "Seoul Museum of History",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "matched"
+      }
+    },
+    {
+      "id": "api:kakao:8830150",
+      "photo": {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Front_view_of_national_museum_of_korea.jpg/960px-Front_view_of_national_museum_of_korea.jpg",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Front_view_of_national_museum_of_korea.jpg",
+        "provider": "commons",
+        "publisher": "Wikimedia Commons",
+        "author": "Jinah78",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "can_modify": true,
+        "match": [
+          "Wikidata Q494407: exact Korean or English label/alias",
+          "P625 distance 9 m",
+          "P18 linked file, identity corroborated by Commons title/description"
+        ],
+        "description": "front view of National museum of Korea",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "matched"
+      }
+    },
+    {
+      "id": "api:kakao:15104327",
+      "photo": {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/National_Museum_of_Korean_Contemporary_History.jpg/960px-National_Museum_of_Korean_Contemporary_History.jpg",
+        "source_page": "https://commons.wikimedia.org/wiki/File:National_Museum_of_Korean_Contemporary_History.jpg",
+        "provider": "commons",
+        "publisher": "Wikimedia Commons",
+        "author": "National Museum of Korean Contemporary History",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "can_modify": true,
+        "match": [
+          "Wikidata Q12592360: exact Korean or English label/alias",
+          "P625 distance 28 m",
+          "P18 linked file, identity corroborated by Commons title/description"
+        ],
+        "description": "the building of National Museum of Korean Contemporary History",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "matched"
+      }
+    },
+    {
+      "id": "api:kakao:10427225",
+      "photo": {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Leeum%2C_Samsung_Museum_of_Art.jpg/960px-Leeum%2C_Samsung_Museum_of_Art.jpg",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Leeum,_Samsung_Museum_of_Art.jpg",
+        "provider": "commons",
+        "publisher": "Wikimedia Commons",
+        "author": "takato marui",
+        "license": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "can_modify": true,
+        "match": [
+          "Wikidata Q487498: exact Korean or English label/alias",
+          "P625 distance 52 m",
+          "P18 linked file, identity corroborated by Commons title/description"
+        ],
+        "description": "Nov 23, 2006 at 20:23 KST (Seoul/용산구)",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "matched"
+      }
+    },
+    {
+      "id": "api:kakao:7836503",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:kakao:17952661",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A775883",
+      "photo": {
+        "url": "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp",
+        "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+        "provider": "tourapi",
+        "publisher": "한국관광공사 TourAPI",
+        "author": null,
+        "license": "KOGL-3",
+        "license_url": "https://www.kogl.or.kr/info/license.do",
+        "can_modify": false,
+        "match": [
+          "TourAPI contentId 775883",
+          "exact place title; distance 0 m",
+          "provider object coordinates",
+          "rights code on same response row as firstimage"
+        ],
+        "description": "한강시민공원 뚝섬수영장(실외)",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "matched"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A2757822",
+      "photo": {
+        "url": "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG",
+        "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+        "provider": "tourapi",
+        "publisher": "한국관광공사 TourAPI",
+        "author": null,
+        "license": "KOGL-3",
+        "license_url": "https://www.kogl.or.kr/info/license.do",
+        "can_modify": false,
+        "match": [
+          "TourAPI contentId 2757822",
+          "exact place title; distance 0 m",
+          "provider object coordinates",
+          "rights code on same response row as firstimage"
+        ],
+        "description": "응봉체육공원",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "matched"
+      }
+    },
+    {
+      "id": "api:kakao:842804455",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:kakao:1637094739",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:kakao:26965498",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:kakao:11331488",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    }
+  ],
+  "providerNames": {
+    "tourapi": 6,
+    "kakao": 10
+  },
+  "coverageBefore": 0,
+  "coverageAfter": 8,
+  "decodedImages": [
+    {
+      "url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+      "decoded": true
+    },
+    {
+      "url": "https://tong.visitkorea.or.kr/cms/resource/52/3488552_image2_1.jpg",
+      "decoded": true
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Seoul_Museum_of_History.JPG/960px-Seoul_Museum_of_History.JPG",
+      "decoded": true
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Front_view_of_national_museum_of_korea.jpg/960px-Front_view_of_national_museum_of_korea.jpg",
+      "decoded": true
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/National_Museum_of_Korean_Contemporary_History.jpg/960px-National_Museum_of_Korean_Contemporary_History.jpg",
+      "decoded": true
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Leeum%2C_Samsung_Museum_of_Art.jpg/960px-Leeum%2C_Samsung_Museum_of_Art.jpg",
+      "decoded": true
+    },
+    {
+      "url": "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp",
+      "decoded": true
+    },
+    {
+      "url": "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG",
+      "decoded": true
+    }
+  ],
+  "photoBatches": 8
+}

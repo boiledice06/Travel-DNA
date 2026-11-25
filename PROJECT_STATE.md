@@ -39,3 +39,11 @@
 - 실제 여행 서버와 공급자 호출에서 200 성공 경로와 HTTP 502 실패가 모두 관찰됐다. 화면별 결과, 뷰포트 및 실제·fixture 구분은 [검증 보고서](presentation/ui-v2/VERIFICATION.md)를 참고한다.
 - Android 번들은 생성됐다. ADB에 연결된 실행 대상이 없어 네이티브 지도, OS 키보드, 네이티브 제스처 검증은 남아 있다.
 - 실험 방법과 증거는 [실험 README](experiments/exp-20261125-presentation-ui-v2/README.md), 보관 위치와 무결성 확인은 [아카이브 기록](experiments/exp-20261125-presentation-ui-v2/ARCHIVE.md)에 기록한다.
+
+## 2026-11-25 백엔드 안정화·사진 보강
+
+- 실험 `exp-20261125-image-enrichment`, 기준 `cffd8d4`, 구현 `7b737db` 및 대화 레이아웃 `65eebc1`.
+- Gemini 공급자 오류를 인증·설정·한도·일시 장애·효과가 불분명한 타임아웃·응답 형식으로 구분했다. 제한된 서버 재시도와 중복 요청 제어를 적용했다. 기존 성공 응답 계약과 일정 배정을 사용한다.
+- 기존 실제 서울 추천 후보 16곳에서 검증 사진을 0곳에서 8곳으로 늘렸다. 카카오 후보 4곳에는 Wikimedia Commons 사진을 연결했다. 별도의 신규 실제 추천 결과와 성능 수치는 [검증 결과](presentation/image-enrichment/VERIFICATION.md)에 있다.
+- 포토코리아는 기존 인증 요청에서 403이 관찰됐다. 공급자 승인 후 실제 응답을 검증할 수 있다. 네이티브 기기 동작, 공급자 장기 가용성과 전체 사진 라이선스 적용 범위 검토는 남아 있다.
+- [사진별 판정](presentation/image-enrichment/PHOTO_SOURCES.md) · [실험 README](experiments/exp-20261125-image-enrichment/README.md) · [보관 기록](experiments/exp-20261125-image-enrichment/ARCHIVE.md)

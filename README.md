@@ -220,3 +220,11 @@ UX 개선 중간 검증: `verification/UX_REDESIGN_REPORT.md` (실험 `exp-20261
 - [디자인 시스템](presentation/ui-v2/DESIGN_SYSTEM.md)과 [화면별 변경 내역](presentation/ui-v2/CHANGELOG.md)
 - [실행 검증](presentation/ui-v2/VERIFICATION.md)과 [수정 전후 비교](presentation/ui-v2/contact-sheet.png)
 - 실험 `exp-20261125-presentation-ui-v2`의 [재현과 데이터 provenance](experiments/exp-20261125-presentation-ui-v2/README.md)
+
+## 사진 보강과 Gemini 안정화
+
+추천 결과를 지도에 적용한 뒤 사진을 별도로 조회합니다. 라이선스와 동일 장소 판정이 완료된 사진은 지도 추천, 상세, 찜, 일정에 표시합니다. 사진 데이터는 TourAPI와 Wikimedia Commons에서 가져오며, 포토코리아는 별도 서비스 승인이 있으면 사용합니다. [공급원과 설정](presentation/image-enrichment/CHANGES.md)
+
+- [실행 검증과 성능 수치](presentation/image-enrichment/VERIFICATION.md)
+- [기존 서울 일정 전후 비교](presentation/image-enrichment/before-after.png) · [사진별 출처·라이선스](presentation/image-enrichment/PHOTO_SOURCES.md)
+- [실험 `exp-20261125-image-enrichment`](experiments/exp-20261125-image-enrichment/README.md)
