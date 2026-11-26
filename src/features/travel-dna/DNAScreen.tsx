@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ATTRIBUTES, CONFLICTS } from '../../types';
 import { attributeLabels, conflictLabels } from '../../data/mock/places';
 import { Button, FadeIn, Icon, Screen } from '../../components/common/UI';
+import { Helix, Reveal } from '../../components/common/Motion';
+import { confirmedKeywords, PreferenceSummary } from '../../components/profile/PreferenceSummary';
+import { theme as t } from '../../theme';
 import { DNABars } from '../../components/profile/DNABars';
 import { ui } from '../../components/common/ui.styles';
 import { useTravel } from '../../hooks/useTravel';
@@ -12,6 +15,8 @@ import { TripFlow } from '../trip/TripFlow';
 export default function DNAScreen({ onboarding = false }: { onboarding?: boolean }) {
   const { data, dna, completeOnboarding, serverTrip, applyServerResult } = useTravel();
   const [editing, setEditing] = useState(false);
+  const [sessionError, setSessionError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [session, setSession] = useState<{
     keywords: string[];
     mustHave: string;
@@ -20,29 +25,31 @@ export default function DNAScreen({ onboarding = false }: { onboarding?: boolean
   useEffect(() => {
     let active = true;
     setSession(null);
+    setSessionError(false);
     if (serverTrip)
       new BackendClient(serverTrip.serverUrl)
         .getSession(serverTrip.sessionId)
         .then((value) => {
-          if (!active || !value || typeof value !== 'object') return;
+          if (!active) return;
+          if (!value || typeof value !== 'object') throw new Error('Invalid session data');
           const v = value as Record<string, unknown>;
           const confirmed =
             v.confirmed_dna && typeof v.confirmed_dna === 'object'
               ? (v.confirmed_dna as Record<string, unknown>)
               : {};
           setSession({
-            keywords: Array.isArray(confirmed.micro_keywords)
-              ? confirmed.micro_keywords.filter((x): x is string => typeof x === 'string')
-              : [],
+            keywords: confirmedKeywords(confirmed),
             mustHave: typeof v.must_have === 'string' ? v.must_have : '',
             mustAvoid: typeof v.must_avoid === 'string' ? v.must_avoid : '',
           });
         })
-        .catch(() => {});
+        .catch(() => {
+          if (active) setSessionError(true);
+        });
     return () => {
       active = false;
     };
-  }, [serverTrip]);
+  }, [attempt, serverTrip]);
   const router = useRouter();
   const top = [...ATTRIBUTES]
     .filter((k) => dna.preferences[k] > 0)
@@ -50,56 +57,55 @@ export default function DNAScreen({ onboarding = false }: { onboarding?: boolean
     .slice(0, 3);
   return (
     <Screen>
-      <View style={ui.between}>
-        <Text style={ui.eyebrow}>YOUR TRAVEL DNA</Text>
-        <Text style={ui.badge}>
-          {data.demo ? '데모 프로필' : data.experiences.length + '개의 기억'}
+      <Reveal style={s.hero}>
+        <Text style={[ui.eyebrow, s.lightKicker]}>Travel DNA</Text>
+        <Text accessibilityRole="header" style={[ui.title, s.lightTitle]}>
+          나의 여행 취향
         </Text>
-      </View>
+        <Helix light feature />
+        <Text style={s.lightCopy}>
+          {data.demo ? '데모 여행 기록' : `${data.nickname}님의 여행 기록`} ·{' '}
+          {data.experiences.length}개
+        </Text>
+      </Reveal>
       {serverTrip && (
-        <View style={ui.card}>
+        <View style={s.section}>
+          <Text style={ui.eyebrow}>설문 · 대화</Text>
           <Text style={ui.subtitle}>최근 확정한 서버 취향</Text>
           {session ? (
+            <PreferenceSummary {...session} />
+          ) : sessionError ? (
             <>
-              <Text style={ui.body}>주요 키워드 · {session.keywords.join(', ') || '없음'}</Text>
-              <Text style={ui.body}>필수 조건 · {session.mustHave || '없음'}</Text>
-              <Text style={ui.body}>제외 조건 · {session.mustAvoid || '없음'}</Text>
+              <Text accessibilityRole="alert" style={ui.body}>
+                서버의 대화와 조건을 불러오지 못했어요. 최근 추천 일정은 이 기기에 남아 있어요.
+              </Text>
+              <Button
+                title="서버 취향 다시 불러오기"
+                secondary
+                onPress={() => setAttempt((value) => value + 1)}
+              />
             </>
           ) : (
-            <Text style={ui.body}>
-              서버 세션을 불러올 수 없어요. 일정은 이 기기에 남아 있지만 취향 대화와 조건은 서버
-              세션에 보관됩니다.
-            </Text>
+            <View style={ui.row}>
+              <ActivityIndicator size="small" color={t.colors.accent} />
+              <Text accessibilityLiveRegion="polite" style={ui.small}>
+                서버 취향을 불러오는 중
+              </Text>
+            </View>
           )}
           <Button title="여행 취향 다시 설정" secondary onPress={() => setEditing(true)} />
         </View>
       )}
-      <Text style={ui.small}>아래는 이 기기의 여행 기록으로 계산한 별도의 로컬 취향입니다.</Text>
       <FadeIn>
-        <View style={{ gap: 16 }}>
-          <View
-            style={{
-              width: 74,
-              height: 74,
-              borderRadius: 24,
-              backgroundColor: '#EAF4F6',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Icon name="finger-print-outline" size={46} color="#3DB8BC" />
-          </View>
-          <Text style={ui.title}>
-            {dna.title}
-            {dna.evidenceCount > 0 ? '입니다.' : '.'}
-          </Text>
+        <View style={s.section}>
+          <Text style={ui.eyebrow}>이 기기의 여행 기록</Text>
+          <Text style={ui.title}>{dna.title}</Text>
           <Text style={ui.body}>
-            {data.nickname}님의 여행 기억 속에서 발견한 취향이에요. 새로운 경험을 남기면 이 프로필도
-            함께 바뀝니다.
+            남긴 여행 기록에서 좋아하는 경험과 피하고 싶은 경험을 살펴볼 수 있어요.
           </Text>
         </View>
       </FadeIn>
-      <View style={ui.card}>
+      <View style={s.section}>
         <View style={ui.between}>
           <Text style={ui.subtitle}>취향의 스펙트럼</Text>
           <Icon name="analytics-outline" size={20} />
@@ -110,8 +116,8 @@ export default function DNAScreen({ onboarding = false }: { onboarding?: boolean
           아닙니다.
         </Text>
       </View>
-      <View style={ui.card}>
-        <Text style={ui.subtitle}>당신이 좋아하는 장면</Text>
+      <View style={s.section}>
+        <Text style={ui.subtitle}>좋아하는 장면</Text>
         <View style={ui.wrap}>
           {top.length ? (
             top.map((k) => (
@@ -158,6 +164,7 @@ export default function DNAScreen({ onboarding = false }: { onboarding?: boolean
         onResult={(trip) => {
           applyServerResult(trip);
           setEditing(false);
+          router.navigate('/(tabs)');
         }}
       />
       <Button
@@ -169,3 +176,10 @@ export default function DNAScreen({ onboarding = false }: { onboarding?: boolean
     </Screen>
   );
 }
+const s = StyleSheet.create({
+  hero: { backgroundColor: t.colors.ink, borderRadius: t.radius.lg, gap: 7, padding: 20 },
+  lightKicker: { color: t.colors.mint },
+  lightTitle: { color: t.colors.white },
+  lightCopy: { color: '#C6DCD5', fontSize: 13, lineHeight: 20 },
+  section: { paddingVertical: 14, borderTopWidth: 1, borderColor: t.colors.line, gap: 12 },
+});

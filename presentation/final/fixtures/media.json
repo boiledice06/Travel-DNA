@@ -1,0 +1,62 @@
+{
+  "https://tong.visitkorea.or.kr/cms/resource/52/3488552_image2_1.jpg": {
+    "file": "e1692fe539b29e5c799dcf87f95c4f7b527747dde91ef6670af0697aaab5bbe5.jpg",
+    "sha256": "e1692fe539b29e5c799dcf87f95c4f7b527747dde91ef6670af0697aaab5bbe5",
+    "size": 196513,
+    "contentType": "image/jpeg"
+  },
+  "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg": {
+    "file": "63e7975d1e795fc84ea733d4e5c31a26a770e110117f345753bc451450fd89f2.jpg",
+    "sha256": "63e7975d1e795fc84ea733d4e5c31a26a770e110117f345753bc451450fd89f2",
+    "size": 142570,
+    "contentType": "image/jpeg"
+  },
+  "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Leeum%2C_Samsung_Museum_of_Art.jpg/960px-Leeum%2C_Samsung_Museum_of_Art.jpg": {
+    "file": "dd084337acb8f7098362cf39a1607a54a769c7d701866af1dbcb76df47a5fd6d.jpg",
+    "sha256": "dd084337acb8f7098362cf39a1607a54a769c7d701866af1dbcb76df47a5fd6d",
+    "size": 128204,
+    "contentType": "image/jpeg"
+  },
+  "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Seoul_Museum_of_History.JPG/960px-Seoul_Museum_of_History.JPG": {
+    "file": "dff3d8a14ddd47f28249b856348870837e25a9519508af725f0932ba8f2e8a03.jpg",
+    "sha256": "dff3d8a14ddd47f28249b856348870837e25a9519508af725f0932ba8f2e8a03",
+    "size": 154000,
+    "contentType": "image/jpeg"
+  },
+  "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Front_view_of_national_museum_of_korea.jpg/960px-Front_view_of_national_museum_of_korea.jpg": {
+    "file": "495338fadb00c1d67ca452bd453a6a7ef0d5e44ea74f29e48200eb69c12bbad0.jpg",
+    "sha256": "495338fadb00c1d67ca452bd453a6a7ef0d5e44ea74f29e48200eb69c12bbad0",
+    "size": 126602,
+    "contentType": "image/jpeg"
+  },
+  "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/National_Museum_of_Korean_Contemporary_History.jpg/960px-National_Museum_of_Korean_Contemporary_History.jpg": {
+    "file": "9bd3af16cc6165a36bff1c5a81a87989f2c9066821dc6113f452e3b6251b187f.jpg",
+    "sha256": "9bd3af16cc6165a36bff1c5a81a87989f2c9066821dc6113f452e3b6251b187f",
+    "size": 164027,
+    "contentType": "image/jpeg"
+  },
+  "https://tong.visitkorea.or.kr/cms/resource/15/1868115_image2_1.jpg": {
+    "file": "4b79f9ae7f0716d612280c088af5a31b28f5aee6f28f249a7e0897a8e684a9ed.jpg",
+    "sha256": "4b79f9ae7f0716d612280c088af5a31b28f5aee6f28f249a7e0897a8e684a9ed",
+    "size": 382300,
+    "contentType": "image/jpeg"
+  },
+  "https://tong.visitkorea.or.kr/cms/resource/86/3095786_image2_1.jpg": {
+    "file": "b84a1a44fdcad1dbe4b950f4e01854ad0b260357f7284090db73c8f1d31a9c12.jpg",
+    "sha256": "b84a1a44fdcad1dbe4b950f4e01854ad0b260357f7284090db73c8f1d31a9c12",
+    "size": 648682,
+    "contentType": "image/jpeg"
+  },
+  "https://tong.visitkorea.or.kr/cms/resource/45/2612845_image2_1.bmp": {
+    "file": "964694adf234fb8dbe89d4bada273ace539c607ef6e6a50b53ce6be16b4a237e.bmp",
+    "sha256": "964694adf234fb8dbe89d4bada273ace539c607ef6e6a50b53ce6be16b4a237e",
+    "size": 980754,
+    "contentType": "image/bmp"
+  },
+  "https://tong.visitkorea.or.kr/cms/resource/53/3455553_image2_1.JPG": {
+    "file": "3688d5d8dc8865c8daa489b4a03ffd3f9bc6131344d42a789ad2429d7b72be7a.jpg",
+    "sha256": "3688d5d8dc8865c8daa489b4a03ffd3f9bc6131344d42a789ad2429d7b72be7a",
+    "size": 121447,
+    "contentType": "image/jpeg"
+  }
+}

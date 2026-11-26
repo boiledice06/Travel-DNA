@@ -1,0 +1,595 @@
+{
+  "mode": "live",
+  "browser": "158.0.4370.33",
+  "http": [
+    {
+      "endpoint": "/api/trip-profile",
+      "status": 200,
+      "startMs": 3240,
+      "elapsedMs": 24
+    },
+    {
+      "endpoint": "/api/dna-chat/start",
+      "status": 200,
+      "startMs": 3272,
+      "elapsedMs": 7
+    },
+    {
+      "endpoint": "/api/dna-chat/likert",
+      "status": 200,
+      "startMs": 3861,
+      "elapsedMs": 23
+    },
+    {
+      "endpoint": "/api/dna-chat/message",
+      "status": 200,
+      "startMs": 4635,
+      "elapsedMs": 7109
+    },
+    {
+      "endpoint": "/api/dna-chat/constraints",
+      "status": 200,
+      "startMs": 11855,
+      "elapsedMs": 24
+    },
+    {
+      "endpoint": "/api/dna-chat/finalize",
+      "status": 200,
+      "startMs": 11950,
+      "elapsedMs": 23
+    },
+    {
+      "endpoint": "/api/seoul-find",
+      "status": 200,
+      "startMs": 12545,
+      "elapsedMs": 5566
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 18229,
+      "elapsedMs": 889
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 19127,
+      "elapsedMs": 1384
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 20522,
+      "elapsedMs": 962
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 21496,
+      "elapsedMs": 804
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 27043,
+      "elapsedMs": 9
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 27062,
+      "elapsedMs": 6
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 27079,
+      "elapsedMs": 6
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 30052,
+      "elapsedMs": 6
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 30068,
+      "elapsedMs": 4
+    },
+    {
+      "endpoint": "/api/place-photos",
+      "status": 200,
+      "startMs": 30080,
+      "elapsedMs": 4
+    }
+  ],
+  "screenshots": [
+    "01-chat.png",
+    "02-confirmed-dna.png",
+    "03-map.png",
+    "04-list.png",
+    "05-detail.png",
+    "06-itinerary.png",
+    "07-vector-fallback.png"
+  ],
+  "pageErrors": [],
+  "composerViewport": true,
+  "mapSeenMs": 18257,
+  "photosWhenMapShown": 0,
+  "pointerTravel": 81,
+  "bookmarkRestored": true,
+  "orderPreserved": true,
+  "photoFailureFallback": true,
+  "completed": true,
+  "shortlist": [
+    {
+      "name": "동작구름카페",
+      "address": "서울특별시 서초구 동작대로 350 (반포동)",
+      "lat": 37.5058141254,
+      "lng": 126.9811002794,
+      "place_id": "tourapi:2784696",
+      "source": "tourapi",
+      "source_keyword": "카페",
+      "image_url": "https://tong.visitkorea.or.kr/cms/resource/99/2784699_image2_1.png",
+      "category": "음식점"
+    },
+    {
+      "name": "동작노을카페",
+      "address": "서울특별시 동작구 동작대로 335 (동작동)",
+      "lat": 37.5060890748,
+      "lng": 126.9800614768,
+      "place_id": "tourapi:2763751",
+      "source": "tourapi",
+      "source_keyword": "카페",
+      "image_url": null,
+      "category": "음식점"
+    },
+    {
+      "name": "하츠베이커리",
+      "address": "서울특별시 송파구 중대로 210 (가락동)",
+      "lat": 37.5004840363,
+      "lng": 127.1271899119,
+      "place_id": "tourapi:2783402",
+      "source": "tourapi",
+      "source_keyword": "베이커리",
+      "image_url": "https://tong.visitkorea.or.kr/cms/resource/39/2790439_image2_1.jpg",
+      "category": "음식점"
+    },
+    {
+      "name": "2025 서울 카페&베이커리페어",
+      "address": "서울특별시 강남구 남부순환로 3104 (대치동) SETEC",
+      "lat": 37.4960890861,
+      "lng": 127.0707673919,
+      "place_id": "tourapi:3432447",
+      "source": "tourapi",
+      "source_keyword": "베이커리",
+      "image_url": "https://tong.visitkorea.or.kr/cms/resource/64/3432064_image2_1.jpg",
+      "category": "관광지"
+    },
+    {
+      "name": "김세중미술관",
+      "address": "서울특별시 용산구 효창원로70길 35 (효창동)",
+      "lat": 37.5420707165,
+      "lng": 126.9638980442,
+      "place_id": "tourapi:3080721",
+      "source": "tourapi",
+      "source_keyword": "미술관",
+      "image_url": null,
+      "category": "문화시설"
+    },
+    {
+      "name": "환기미술관",
+      "address": "서울특별시 종로구 자하문로40길 63 (부암동)",
+      "lat": 37.5940980426,
+      "lng": 126.9661269237,
+      "place_id": "tourapi:129760",
+      "source": "tourapi",
+      "source_keyword": "미술관",
+      "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3488552_image2_1.jpg",
+      "category": "문화시설"
+    },
+    {
+      "name": "국립중앙박물관 전통염료식물원",
+      "address": "서울특별시 용산구 서빙고로 137 (용산동6가)",
+      "lat": 37.5211706397,
+      "lng": 126.9791278024,
+      "place_id": "tourapi:1604580",
+      "source": "tourapi",
+      "source_keyword": "식물원",
+      "image_url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+      "category": "관광지"
+    },
+    {
+      "name": "인사동찻집",
+      "address": "서울특별시 종로구 인사동길 33-1 (관훈동)",
+      "lat": 37.5736202148,
+      "lng": 126.9854729627,
+      "place_id": "tourapi:1063403",
+      "source": "tourapi",
+      "source_keyword": "찻집",
+      "image_url": null,
+      "category": "음식점"
+    },
+    {
+      "name": "러시아케이크",
+      "address": "서울 중구 을지로42길 7",
+      "lat": 37.5658294844621,
+      "lng": 127.005885831317,
+      "place_id": "38432219",
+      "source": "kakao",
+      "source_keyword": "카페",
+      "image_url": null,
+      "category": "음식점 > 카페 > 테마카페 > 디저트카페"
+    },
+    {
+      "name": "콤포타블 남산",
+      "address": "서울 용산구 두텁바위로60길 49",
+      "lat": 37.54900597798612,
+      "lng": 126.98365125198461,
+      "place_id": "1995791949",
+      "source": "kakao",
+      "source_keyword": "카페",
+      "image_url": null,
+      "category": "음식점 > 카페"
+    },
+    {
+      "name": "테라로사 포스코센터점",
+      "address": "서울 강남구 테헤란로 440",
+      "lat": 37.5059647440212,
+      "lng": 127.055879763068,
+      "place_id": "1860681564",
+      "source": "kakao",
+      "source_keyword": "카페",
+      "image_url": null,
+      "category": "음식점 > 카페 > 커피전문점 > 테라로사"
+    },
+    {
+      "name": "뺑드에코",
+      "address": "서울 성동구 성수일로 20",
+      "lat": 37.54226736353468,
+      "lng": 127.04904182802804,
+      "place_id": "304432238",
+      "source": "kakao",
+      "source_keyword": "베이커리",
+      "image_url": null,
+      "category": "음식점 > 간식 > 제과,베이커리"
+    },
+    {
+      "name": "노아베이커리 압구정본점",
+      "address": "서울 강남구 압구정로30길 9",
+      "lat": 37.5268163150621,
+      "lng": 127.029409298149,
+      "place_id": "19561065",
+      "source": "kakao",
+      "source_keyword": "베이커리",
+      "image_url": null,
+      "category": "음식점 > 간식 > 제과,베이커리"
+    },
+    {
+      "name": "스트로베리32",
+      "address": "서울 마포구 연남로5길 8",
+      "lat": 37.56224899936371,
+      "lng": 126.92134303107854,
+      "place_id": "1970375731",
+      "source": "kakao",
+      "source_keyword": "베이커리",
+      "image_url": null,
+      "category": "음식점 > 간식 > 제과,베이커리"
+    },
+    {
+      "name": "리움미술관",
+      "address": "서울 용산구 이태원로55길 60-16",
+      "lat": 37.53833657002706,
+      "lng": 126.99911744955163,
+      "place_id": "10427225",
+      "source": "kakao",
+      "source_keyword": "미술관",
+      "image_url": null,
+      "category": "문화,예술 > 문화시설 > 미술관"
+    },
+    {
+      "name": "국립현대미술관 덕수궁",
+      "address": "서울 중구 세종대로 99",
+      "lat": 37.5659384342432,
+      "lng": 126.973740099183,
+      "place_id": "7836503",
+      "source": "kakao",
+      "source_keyword": "미술관",
+      "image_url": null,
+      "category": "문화,예술 > 문화시설 > 미술관"
+    }
+  ],
+  "reference": "뺑드에코",
+  "photos": [
+    {
+      "id": "api:tourapi:tourapi%3A2784696",
+      "photo": {
+        "url": "https://tong.visitkorea.or.kr/cms/resource/99/2784699_image2_1.png",
+        "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+        "provider": "tourapi",
+        "publisher": "한국관광공사 TourAPI",
+        "author": null,
+        "license": "KOGL-3",
+        "license_url": "https://www.kogl.or.kr/info/license.do",
+        "can_modify": false,
+        "match": [
+          "TourAPI contentId 2784696",
+          "exact place title; distance 0 m",
+          "road address exact",
+          "rights code on same response row as firstimage"
+        ],
+        "description": "동작구름카페",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "matched"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A2763751",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A2783402",
+      "photo": {
+        "url": "https://tong.visitkorea.or.kr/cms/resource/39/2790439_image2_1.jpg",
+        "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+        "provider": "tourapi",
+        "publisher": "한국관광공사 TourAPI",
+        "author": null,
+        "license": "KOGL-3",
+        "license_url": "https://www.kogl.or.kr/info/license.do",
+        "can_modify": false,
+        "match": [
+          "TourAPI contentId 2783402",
+          "exact place title; distance 0 m",
+          "road address exact",
+          "rights code on same response row as firstimage"
+        ],
+        "description": "하츠베이커리",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "matched"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A3432447",
+      "photo": {
+        "url": "https://tong.visitkorea.or.kr/cms/resource/64/3432064_image2_1.jpg",
+        "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+        "provider": "tourapi",
+        "publisher": "한국관광공사 TourAPI",
+        "author": null,
+        "license": "KOGL-1",
+        "license_url": "https://www.kogl.or.kr/info/license.do",
+        "can_modify": true,
+        "match": [
+          "TourAPI contentId 3432447",
+          "exact place title; distance 0 m",
+          "road address exact",
+          "rights code on same response row as firstimage"
+        ],
+        "description": "2025 서울 카페&베이커리페어",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "matched"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A3080721",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A129760",
+      "photo": {
+        "url": "https://tong.visitkorea.or.kr/cms/resource/52/3488552_image2_1.jpg",
+        "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+        "provider": "tourapi",
+        "publisher": "한국관광공사 TourAPI",
+        "author": null,
+        "license": "KOGL-3",
+        "license_url": "https://www.kogl.or.kr/info/license.do",
+        "can_modify": false,
+        "match": [
+          "TourAPI contentId 129760",
+          "exact place title; distance 0 m",
+          "road address exact",
+          "rights code on same response row as firstimage"
+        ],
+        "description": "환기미술관",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "matched"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A1604580",
+      "photo": {
+        "url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+        "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+        "provider": "tourapi",
+        "publisher": "한국관광공사 TourAPI",
+        "author": null,
+        "license": "KOGL-1",
+        "license_url": "https://www.kogl.or.kr/info/license.do",
+        "can_modify": true,
+        "match": [
+          "TourAPI contentId 1604580",
+          "exact place title; distance 0 m",
+          "road address exact",
+          "rights code on same response row as firstimage"
+        ],
+        "description": "국립중앙박물관 전통염료식물원",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "matched"
+      }
+    },
+    {
+      "id": "api:tourapi:tourapi%3A1063403",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:kakao:38432219",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:kakao:1995791949",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:kakao:1860681564",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:kakao:304432238",
+      "photo": {
+        "url": "https://tong.visitkorea.or.kr/cms/resource/93/2899793_image2_1.jpg",
+        "source_page": "https://www.data.go.kr/data/15101578/openapi.do",
+        "provider": "tourapi",
+        "publisher": "한국관광공사 TourAPI",
+        "author": null,
+        "license": "KOGL-3",
+        "license_url": "https://www.kogl.or.kr/info/license.do",
+        "can_modify": false,
+        "match": [
+          "TourAPI contentId 2899802",
+          "exact place title; distance 7 m",
+          "road address exact",
+          "rights code on same response row as firstimage"
+        ],
+        "description": "뺑드에코",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "matched"
+      }
+    },
+    {
+      "id": "api:kakao:19561065",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:kakao:1970375731",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    },
+    {
+      "id": "api:kakao:10427225",
+      "photo": {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Leeum%2C_Samsung_Museum_of_Art.jpg/960px-Leeum%2C_Samsung_Museum_of_Art.jpg",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Leeum,_Samsung_Museum_of_Art.jpg",
+        "provider": "commons",
+        "publisher": "Wikimedia Commons",
+        "author": "takato marui",
+        "license": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "can_modify": true,
+        "match": [
+          "Wikidata Q487498: exact Korean or English label/alias",
+          "P625 distance 52 m",
+          "P18 linked file, identity corroborated by Commons title/description"
+        ],
+        "description": "Nov 23, 2006 at 20:23 KST (Seoul/용산구)",
+        "attribution": ""
+      },
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "matched"
+      }
+    },
+    {
+      "id": "api:kakao:7836503",
+      "photo": null,
+      "providers": {
+        "tourapi": "no_verified_match",
+        "gallery": "not_configured",
+        "commons": "no_verified_match"
+      }
+    }
+  ],
+  "providerNames": {
+    "tourapi": 8,
+    "kakao": 8
+  },
+  "coverageBefore": 5,
+  "coverageAfter": 7,
+  "decodedImages": [
+    {
+      "url": "https://tong.visitkorea.or.kr/cms/resource/99/2784699_image2_1.png",
+      "decoded": true
+    },
+    {
+      "url": "https://tong.visitkorea.or.kr/cms/resource/39/2790439_image2_1.jpg",
+      "decoded": true
+    },
+    {
+      "url": "https://tong.visitkorea.or.kr/cms/resource/64/3432064_image2_1.jpg",
+      "decoded": true
+    },
+    {
+      "url": "https://tong.visitkorea.or.kr/cms/resource/52/3488552_image2_1.jpg",
+      "decoded": true
+    },
+    {
+      "url": "https://tong.visitkorea.or.kr/cms/resource/52/3505552_image2_1.jpg",
+      "decoded": true
+    },
+    {
+      "url": "https://tong.visitkorea.or.kr/cms/resource/93/2899793_image2_1.jpg",
+      "decoded": true
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Leeum%2C_Samsung_Museum_of_Art.jpg/960px-Leeum%2C_Samsung_Museum_of_Art.jpg",
+      "decoded": true
+    }
+  ],
+  "photoBatches": 10,
+  "firstPhotoRequestAfterFindMs": 118
+}

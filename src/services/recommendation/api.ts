@@ -1,3 +1,4 @@
+import { decodePlacePhoto } from '../backend/photos.ts';
 import { safeTourImage } from '../backend/client.ts';
 import {
   ATTRIBUTES,
@@ -138,7 +139,9 @@ export function validateSavedPlaces(raw: unknown): SavedPlace[] {
     )
       throw new Error('저장된 장소 정보가 올바르지 않습니다.');
     ids.add(p.id as string);
-    return entry as unknown as SavedPlace;
+    const saved = entry as unknown as SavedPlace;
+    if (p.photo === undefined) return saved;
+    return { ...saved, place: { ...saved.place, photo: decodePlacePhoto(p.photo) } };
   });
 }
 export interface AsyncRecommendationService {

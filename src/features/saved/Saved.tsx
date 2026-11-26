@@ -1,4 +1,4 @@
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button, Empty, Screen } from '../../components/common/UI';
 import { PlaceCard } from '../../components/place/PlaceCard';
@@ -13,11 +13,13 @@ export default function Saved() {
   });
   return (
     <Screen>
-      <Text style={ui.eyebrow}>PLACES TO COME BACK TO</Text>
-      <Text style={ui.title}>다음 여행의{'\n'}작은 위시리스트.</Text>
-      <Text style={ui.body}>
-        마음에 닿은 장소 {saved.length}곳.{'\n'}저장한 장소는 이 기기에 계속 남아 있어요.
-      </Text>
+      <View style={{ gap: 8, paddingTop: 6 }}>
+        <Text style={ui.eyebrow}>북마크</Text>
+        <Text accessibilityRole="header" style={ui.title}>
+          찜한 장소
+        </Text>
+        <Text style={ui.body}>저장한 장소 {saved.length}곳을 이 기기에서 다시 볼 수 있어요.</Text>
+      </View>
       {saved.length === 0 && (
         <Empty
           title="마음에 드는 곳을 담아보세요"
@@ -28,7 +30,7 @@ export default function Saved() {
         <PlaceCard
           key={p.id}
           place={p}
-          recommendation={recommendations.find((r) => r.placeId === p.id)!}
+          recommendation={recommendations.find((r) => r.placeId === p.id)}
           saved
           onSave={() => toggleSave(p.id)}
           onOpen={() => router.push({ pathname: '/place/[id]', params: { id: p.id } })}

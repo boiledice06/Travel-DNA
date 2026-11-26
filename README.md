@@ -205,12 +205,35 @@ npx expo export --platform android --output-dir dist-android
 
 실제 외부 API의 인증 전 검증 결과와 설정 안내는 [라이브 API 검증 보고](docs/LIVE_API_VERIFICATION.md), 현재 연구 상태는 [PROJECT_STATE](PROJECT_STATE.md)를 참고하세요. 실험 ID `exp-20261117-live-api-preflight-v1`의 로컬 증거는 `experiments/`에 있습니다.
 
-
 Expo Web 모바일 검증 실험 `exp-20261118-expo-web-e2e-v1`: [검증 보고서](verification/E2E_VERIFICATION_REPORT.md), [실험 설명](experiments/exp-20261118-expo-web-e2e-v1/README.md).
-
 
 UX 개선 중간 검증: `verification/UX_REDESIGN_REPORT.md` (실험 `exp-20261118-ux-redesign-v1`, 미완료).
 
 최종 통합 검증: [보고서](verification/FINAL_INTEGRATION_REPORT.md), [실험 설명](experiments/exp-20261118-final-integration-v1/README.md), `verification/final-e2e-screenshots/`. 실제 API 및 사진 확인과 남은 제약을 구분해 기록합니다.
 
 최종 잔여 수정과 제한: [보고서](verification/FINAL_POLISH_REPORT.md), [실험 설명](experiments/exp-20261118-final-polish-v1/README.md).
+
+## Presentation UI V2
+
+기존 로컬 프로젝트에서 `npm run web`으로 UI V2를 열 수 있습니다. 첫 화면의 **데모로 먼저 둘러보기**는 서버 없이 지도와 로컬 취향을 살펴볼 수 있습니다. 서버 추천 흐름은 기존 FastAPI를 실행하고 `EXPO_PUBLIC_RECOMMENDATION_SERVER_URL`을 설정한 다음 지도에서 **여행 설계**를 누릅니다.
+
+- [디자인 시스템](presentation/ui-v2/DESIGN_SYSTEM.md)과 [화면별 변경 내역](presentation/ui-v2/CHANGELOG.md)
+- [실행 검증](presentation/ui-v2/VERIFICATION.md)과 [수정 전후 비교](presentation/ui-v2/contact-sheet.png)
+- 실험 `exp-20261125-presentation-ui-v2`의 [재현과 데이터 provenance](experiments/exp-20261125-presentation-ui-v2/README.md)
+
+## 사진 보강과 Gemini 안정화
+
+추천 결과를 지도에 적용한 뒤 사진을 별도로 조회합니다. 라이선스와 동일 장소 판정이 완료된 사진은 지도 추천, 상세, 찜, 일정에 표시합니다. 사진 데이터는 TourAPI와 Wikimedia Commons에서 가져오며, 포토코리아는 별도 서비스 승인이 있으면 사용합니다. [공급원과 설정](presentation/image-enrichment/CHANGES.md)
+
+- [실행 검증과 성능 수치](presentation/image-enrichment/VERIFICATION.md)
+- [기존 서울 일정 전후 비교](presentation/image-enrichment/before-after.png) · [사진별 출처·라이선스](presentation/image-enrichment/PHOTO_SOURCES.md)
+- [실험 `exp-20261125-image-enrichment`](experiments/exp-20261125-image-enrichment/README.md)
+
+## Golden Path 발표
+
+서울 2박 3일의 실제 API 기록을 발표 모드에서 재생합니다. 프로젝트 루트에서 `npm run demo`를 실행한 뒤, 별도 PowerShell 창에서 `npm run demo:reset`을 실행하고 [시나리오 선택](http://127.0.0.1:8785/demo)에서 A 또는 B를 엽니다. 발표 데이터는 별도 로컬 저장 영역을 사용합니다.
+
+- [발표 패키지](presentation/final/README.md) · [대본](presentation/final/DEMO_SCRIPT.md) · [복구 안내](presentation/final/RUNBOOK.md)
+- [실험 설명](experiments/exp-20261125-golden-path/README.md) · [프로젝트 상태](PROJECT_STATE.md)
+
+[서울 실제 장소 사진과 브라우저 검증](presentation/photo-coverage/README.md)에서 기본 데모와 발표 A/B의 사진 출처 및 전체 카드 화면을 확인할 수 있습니다.

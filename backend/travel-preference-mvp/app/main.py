@@ -1,11 +1,12 @@
-﻿"""FastAPI: TripProfile form + DNA chat + industry plan (Seoul MVP)."""
+"""FastAPI: TripProfile form + DNA chat + industry plan (Seoul MVP)."""
 from __future__ import annotations
 
+import logging
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -22,6 +23,10 @@ from category_agent.dna_chat import (
     submit_constraints,
     submit_likert,
 )
+from category_agent.llm.upstream import ModelFailure
+from category_agent.search.photo_enrichment import PhotoRequest, PhotoResult, enrich_photos
+from category_agent.search.photo_sources import photo_health
+from app.singleflight import run_once
 from category_agent.pipeline import run_nl_pipeline
 from category_agent.recommend import plan_industries
 from category_agent.schemas import IndustryPlanRequest, NlPipelineRequest
@@ -49,6 +54,19 @@ def _cors_allow_origins() -> list[str]:
 
 
 app = FastAPI(title="Travel Preference MVP", version="0.9.0")
+_log = logging.getLogger("uvicorn.error")
+
+
+@app.exception_handler(ModelFailure)
+def model_failure_response(_request: Request, exc: ModelFailure) -> JSONResponse:
+    status = 429 if exc.code == "model_rate_limit" else 503 if exc.transient else 502
+    return JSONResponse({"detail": {"code": exc.code, "retryable": exc.transient}}, status_code=status)
+
+
+@app.post("/api/place-photos", response_model=list[PhotoResult])
+def api_place_photos(body: PhotoRequest) -> list[PhotoResult]:
+    return enrich_photos(body)
+
 
 _cors_origins = _cors_allow_origins()
 if _cors_origins:
@@ -93,6 +111,7 @@ def health() -> dict:
         "adc_file_present": adc.exists(),
         "places_configured": places_configured(),
         "discovery": discovery_health(),
+        "place_photos": photo_health(),
         "nl_pipeline": True,
         "survey_deferred": True,
     }
@@ -125,8 +144,11 @@ def api_get_trip_profile(profile_id: str) -> JSONResponse:
 def api_dna_chat_start() -> JSONResponse:
     try:
         result = start_dna_chat()
+    except (ModelFailure, HTTPException):
+        raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        _log.warning("backend upstream failure exception_type=%s", type(exc).__name__)
+        raise HTTPException(status_code=502, detail="upstream request failed") from None
     return JSONResponse(result.model_dump())
 
 
@@ -138,21 +160,31 @@ def api_dna_chat_likert(body: DnaChatLikertRequest) -> JSONResponse:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except (ModelFailure, HTTPException):
+        raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        _log.warning("backend upstream failure exception_type=%s", type(exc).__name__)
+        raise HTTPException(status_code=502, detail="upstream request failed") from None
     return JSONResponse(result.model_dump())
 
 
 @app.post("/api/dna-chat/message")
-def api_dna_chat_message(body: DnaChatMessageRequest) -> JSONResponse:
+def api_dna_chat_message(
+    body: DnaChatMessageRequest,
+    idempotency_key: str = Header(default="", alias="Idempotency-Key", max_length=100),
+) -> JSONResponse:
     try:
-        result = send_dna_chat_message(body)
+        result = run_once("chat", body.session_id, body.model_dump_json(),
+                          lambda: send_dna_chat_message(body), replay=idempotency_key)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except (ModelFailure, HTTPException):
+        raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        _log.warning("backend upstream failure exception_type=%s", type(exc).__name__)
+        raise HTTPException(status_code=502, detail="upstream request failed") from None
     return JSONResponse(result.model_dump())
 
 
@@ -164,8 +196,11 @@ def api_dna_chat_constraints(body: DnaChatConstraintsRequest) -> JSONResponse:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except (ModelFailure, HTTPException):
+        raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        _log.warning("backend upstream failure exception_type=%s", type(exc).__name__)
+        raise HTTPException(status_code=502, detail="upstream request failed") from None
     return JSONResponse(result.model_dump())
 
 
@@ -177,8 +212,11 @@ def api_dna_chat_finalize(body: DnaChatFinalizeRequest) -> JSONResponse:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except (ModelFailure, HTTPException):
+        raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        _log.warning("backend upstream failure exception_type=%s", type(exc).__name__)
+        raise HTTPException(status_code=502, detail="upstream request failed") from None
     return JSONResponse(result.model_dump())
 
 
@@ -199,13 +237,17 @@ def api_dna_chat_get(session_id: str) -> JSONResponse:
 def api_seoul_run(body: SeoulRunRequest) -> JSONResponse:
     """Profile + DNA → industries → Seoul place shortlist (places on by default)."""
     try:
-        result = run_seoul_pipeline(body)
+        result = run_once("find", f"{body.profile_id}:{body.dna_session_id}",
+                          body.model_dump_json(), lambda: run_seoul_pipeline(body))
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except (ModelFailure, HTTPException):
+        raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        _log.warning("backend upstream failure exception_type=%s", type(exc).__name__)
+        raise HTTPException(status_code=502, detail="upstream request failed") from None
     return JSONResponse(result.model_dump())
 
 
@@ -218,8 +260,11 @@ def api_nl_pipeline(body: NlPipelineRequest) -> JSONResponse:
         result = run_nl_pipeline(body)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except (ModelFailure, HTTPException):
+        raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        _log.warning("backend upstream failure exception_type=%s", type(exc).__name__)
+        raise HTTPException(status_code=502, detail="upstream request failed") from None
     return JSONResponse(result.model_dump())
 
 
@@ -229,8 +274,11 @@ def api_industry_plan(body: IndustryPlanRequest) -> JSONResponse:
         result = plan_industries(body)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except (ModelFailure, HTTPException):
+        raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        _log.warning("backend upstream failure exception_type=%s", type(exc).__name__)
+        raise HTTPException(status_code=502, detail="upstream request failed") from None
     return JSONResponse(result.model_dump())
 
 
@@ -250,6 +298,9 @@ def api_places_search(body: PlacesSearchRequest) -> JSONResponse:
         result = search_places(body)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except (ModelFailure, HTTPException):
+        raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        _log.warning("backend upstream failure exception_type=%s", type(exc).__name__)
+        raise HTTPException(status_code=502, detail="upstream request failed") from None
     return JSONResponse(result.model_dump())

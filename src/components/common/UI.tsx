@@ -1,17 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  Image,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-  type ColorValue,
-  type ImageStyle,
-  type StyleProp,
-} from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Pressable, ScrollView, Text, View, type ColorValue } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, {
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+import { Reveal } from './Motion';
 import { Ionicons } from '@expo/vector-icons';
 import { ui } from './ui.styles';
 import { theme } from '../../theme';
@@ -27,6 +25,8 @@ export function Icon({
 }) {
   return (
     <Ionicons
+      accessible={false}
+      aria-hidden
       name={name}
       size={size}
       color={typeof color === 'string' ? color : theme.colors.primary}
@@ -39,27 +39,40 @@ export function Button({
   secondary = false,
   disabled = false,
   icon,
+  appearance,
 }: {
   title: string;
   onPress: () => void;
   secondary?: boolean;
   disabled?: boolean;
   icon?: IconName;
+  appearance?: 'light' | 'ghost';
 }) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={title}
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
         ui.button,
         secondary && ui.secondary,
+        appearance === 'light' && ui.lightButton,
+        appearance === 'ghost' && ui.ghostButton,
         { opacity: disabled ? 0.45 : pressed ? 0.75 : 1 },
       ]}
     >
-      {icon && <Icon name={icon} size={18} color={secondary ? theme.colors.primary : '#fff'} />}
-      <Text style={[ui.buttonText, secondary && ui.secondaryText]}>{title}</Text>
+      {icon && (
+        <Icon
+          name={icon}
+          size={18}
+          color={secondary || appearance === 'light' ? theme.colors.primary : theme.colors.white}
+        />
+      )}
+      <Text style={[ui.buttonText, (secondary || appearance === 'light') && ui.secondaryText]}>
+        {title}
+      </Text>
     </Pressable>
   );
 }
@@ -74,6 +87,7 @@ export function IconButton({
   onPress: () => void;
   active?: boolean;
 }) {
+  const pulse = useSelectionPulse(active);
   return (
     <Pressable
       accessibilityRole="button"
@@ -82,27 +96,54 @@ export function IconButton({
       onPress={onPress}
       style={({ pressed }) => [ui.iconButton, { opacity: pressed ? 0.65 : 1 }]}
     >
-      <Icon name={icon} color={active ? theme.colors.accent : theme.colors.primary} />
+      <Animated.View style={pulse}>
+        <Icon name={icon} color={active ? theme.colors.accent : theme.colors.primary} />
+      </Animated.View>
     </Pressable>
   );
+}
+export function useSelectionPulse(selected: boolean | undefined) {
+  const previous = useRef(selected);
+  const reduce = useReducedMotion();
+  const scale = useSharedValue(1);
+  useEffect(() => {
+    if (!reduce && selected && !previous.current) {
+      scale.value = withSequence(
+        withTiming(0.92, { duration: theme.motion.press / 2 }),
+        withSpring(1, theme.motion.spring),
+      );
+    }
+    previous.current = selected;
+  }, [reduce, scale, selected]);
+  return useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 }
 export function Chip({
   label,
   selected,
   onPress,
+  disabled = false,
 }: {
   label: string;
   selected: boolean;
   onPress: () => void;
+  disabled?: boolean;
 }) {
+  const pulse = useSelectionPulse(selected);
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityState={{ selected }}
+      accessibilityState={{ selected, disabled }}
+      disabled={disabled}
       onPress={onPress}
-      style={({ pressed }) => [ui.chip, selected && ui.chipActive, { opacity: pressed ? 0.7 : 1 }]}
+      style={({ pressed }) => [
+        ui.chip,
+        selected && ui.chipActive,
+        { opacity: disabled ? 0.5 : pressed ? 0.7 : 1 },
+      ]}
     >
-      <Text style={[ui.chipText, selected && { color: '#fff' }]}>{label}</Text>
+      <Animated.Text style={[ui.chipText, selected && ui.chipTextActive, pulse]}>
+        {label}
+      </Animated.Text>
     </Pressable>
   );
 }
@@ -116,61 +157,7 @@ export function Screen({ children }: React.PropsWithChildren) {
   );
 }
 export function FadeIn({ children }: React.PropsWithChildren) {
-  const opacity = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 280,
-      useNativeDriver: Platform.OS !== 'web',
-    }).start();
-  }, [opacity]);
-  return <Animated.View style={{ opacity }}>{children}</Animated.View>;
-}
-export function Photo({
-  uri,
-  style,
-  category,
-}: {
-  uri: string;
-  style?: StyleProp<ImageStyle>;
-  category?: string;
-}) {
-  const [failed, setFailed] = useState(false);
-  useEffect(() => setFailed(false), [uri]);
-  if (failed || !uri)
-    return (
-      <View
-        style={[
-          { backgroundColor: theme.colors.pale, alignItems: 'center', justifyContent: 'center' },
-          style,
-        ]}
-      >
-        <Icon
-          name={
-            category && /음식|맛집|카페/.test(category)
-              ? 'cafe-outline'
-              : category && /자연|공원|산책/.test(category)
-                ? 'leaf-outline'
-                : category && /문화|박물|미술|건축/.test(category)
-                  ? 'business-outline'
-                  : 'location-outline'
-          }
-          size={32}
-          color={theme.colors.accent}
-        />
-        <Text style={ui.small} numberOfLines={1}>
-          {category || '장소'} · 사진 없음
-        </Text>
-      </View>
-    );
-  return (
-    <Image
-      source={{ uri }}
-      style={style}
-      onError={() => setFailed(true)}
-      accessibilityLabel="여행 분위기 참고 이미지"
-    />
-  );
+  return <Reveal>{children}</Reveal>;
 }
 export function Empty({ title, message }: { title: string; message: string }) {
   return (

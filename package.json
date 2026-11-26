@@ -8,9 +8,12 @@
     "android": "expo start --android",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test": "node --experimental-strip-types --test tests/*.test.ts scripts/golden-path/*.test.mjs",
     "format": "prettier --write app src tests *.ts *.json *.md",
-    "format:check": "prettier --check app src tests *.ts *.json *.md"
+    "format:check": "prettier --check app src tests *.ts *.json *.md",
+    "demo": "node scripts/golden-path/server.mjs",
+    "demo:reset": "node scripts/golden-path/reset.mjs",
+    "demo:capture": "node --experimental-strip-types scripts/golden-path/capture.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",

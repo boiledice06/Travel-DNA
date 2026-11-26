@@ -25,6 +25,20 @@ export interface Experience {
   badReason: string;
   updatedAt: string;
 }
+export interface PlacePhoto {
+  provider: 'tourapi' | 'gallery' | 'commons' | 'archive';
+  url: string;
+  source_page: string;
+  publisher: string;
+  author: string | null;
+  license: string;
+  license_url: string;
+  can_modify: boolean;
+  match: string[];
+  description: string;
+  attribution: string;
+}
+
 export interface Place {
   id: string;
   name: string;
@@ -35,6 +49,7 @@ export interface Place {
   longitude: number;
   description: string;
   image: string;
+  photo?: PlacePhoto;
   category: string;
   positiveAttributes: Partial<Vector<Attribute>>;
   negativeAttributes: Partial<Vector<Conflict>>;

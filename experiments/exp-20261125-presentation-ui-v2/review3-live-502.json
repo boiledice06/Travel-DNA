@@ -1,0 +1,96 @@
+{
+  "stage": "after/live",
+  "mode": "live",
+  "dimension": "390x844",
+  "requests": [
+    [
+      "POST",
+      "/api/trip-profile",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/start",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/likert",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/message",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/message",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/constraints",
+      200
+    ],
+    [
+      "POST",
+      "/api/dna-chat/finalize",
+      200
+    ],
+    [
+      "POST",
+      "/api/seoul-find",
+      502
+    ]
+  ],
+  "errors": [],
+  "checks": [
+    {
+      "name": "01-intro",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "02-onboarding-dna",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "03-map",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "04-trip-setup",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "05-likert",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "06-chat",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "06-live-question",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "07-constraints",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "08-draft",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "09-confirmed-dna",
+      "horizontalPageOverflow": false
+    },
+    {
+      "name": "99-blocker",
+      "horizontalPageOverflow": false
+    }
+  ],
+  "imageFailures": [],
+  "error": "Error: Recommendation returned HTTP 502"
+}

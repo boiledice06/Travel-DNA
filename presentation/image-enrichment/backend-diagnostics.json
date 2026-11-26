@@ -1,0 +1,90 @@
+{
+  "historical_observation": {
+    "source": "verification/FINAL_INTEGRATION_REPORT.md",
+    "gemini_upstream_http": 503,
+    "fastapi_http": 502
+  },
+  "direct_timeout_probes": [
+    {
+      "timeout_ms": 6500,
+      "upstream_http": 400,
+      "status": "INVALID_ARGUMENT",
+      "elapsed_ms": [423, 245, 235]
+    },
+    {
+      "timeout_ms": 6500,
+      "upstream_http": 400,
+      "provider_diagnostic": "deadline too short; minimum allowed deadline"
+    },
+    {
+      "timeout_ms": 14000,
+      "upstream_http": 200
+    },
+    {
+      "timeout_ms": null,
+      "upstream_http": 200
+    }
+  ],
+  "photogallery_probe": {
+    "service": "PhotoGalleryService1/gallerySearchList1",
+    "authorization": "existing general TourAPI credential",
+    "http": 403
+  },
+  "code_policy": {
+    "sdk_attempts": 1,
+    "attempt_limit": 3,
+    "server_timeout_ms": 12000,
+    "budget_ms": 27000,
+    "quota_is_automatic_retry": false
+  },
+  "intermediary_live_attempts": [
+    {
+      "result": "success",
+      "attempt": 1,
+      "elapsed_ms": 6037
+    },
+    {
+      "result": "success",
+      "attempt": 1,
+      "elapsed_ms": 4287
+    },
+    {
+      "result": "success",
+      "attempt": 1,
+      "elapsed_ms": 5954
+    },
+    {
+      "result": "success",
+      "attempt": 1,
+      "elapsed_ms": 6707
+    },
+    {
+      "result": "success",
+      "attempt": 1,
+      "elapsed_ms": 6014
+    },
+    {
+      "result": "success",
+      "attempt": 1,
+      "elapsed_ms": 5833
+    }
+  ],
+  "note": "Records from the live browser runs before the final short-conversation layout. Status-only probe output; no request contents, keys or stored session IDs.",
+  "final_live_attempts": [
+    {
+      "result": "success",
+      "attempt": 1,
+      "elapsed_ms": 2215
+    },
+    {
+      "result": "success",
+      "attempt": 1,
+      "elapsed_ms": 1587
+    },
+    {
+      "result": "success",
+      "attempt": 1,
+      "elapsed_ms": 875
+    }
+  ]
+}

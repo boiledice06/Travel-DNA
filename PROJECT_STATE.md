@@ -13,11 +13,9 @@
 
 `Research/Travel-DNA/experiments/exp-20261117-live-api-preflight-v1/`에 실험 README, HTTP 결과, 스크립트, 상세 보고 파일 4개를 업로드했다. Drive 메타데이터에서 네 파일의 이름·부모·크기가 로컬과 일치했고 README 및 상세 보고는 텍스트를 재조회해 일치함을 확인했다. 커넥터가 체크섬을 반환하지 않아 JSON·Python 파일의 바이트 단위 일치는 검증하지 못했다. 따라서 전체 동기화의 완전한 무결성 검증은 미완료다. 로컬 파일을 보존한다.
 
-
 ## 2026-11-18 Expo Web 검증 — exp-20261118-expo-web-e2e-v1
 
 실제 서버 추천 15곳의 3일 지도 렌더링 및 날짜 전환을 확인했다. 모바일 긴 마커 라벨과 지도 버튼이 겹치며, AI 대화 캡처와 시작부터 연속 흐름은 미확보다. 따라서 전체 E2E는 미완료. 증거와 재현: `verification/E2E_VERIFICATION_REPORT.md`, `verification/e2e-screenshots/`; 실험 설명: `experiments/exp-20261118-expo-web-e2e-v1/README.md`.
-
 
 ## 2026-11-18 UX 개선 중간 검증
 
@@ -33,3 +31,27 @@
 
 - `exp-20261118-final-polish-v1`: 기존 일정의 날짜·순서를 유지하도록 필터 수정, 실제 저장 추천과 단위 테스트로 확인. 상세 사진 출처·이용 안내와 URL 없는 사진 fallback을 확인했다.
 - 시트 포인터 드래그는 재현되지 않았고 자동화 한계와 앱 결함을 구분하지 못했다. 모의 질문 표시는 확인했으나 실제 Gemini 질문 화면과 이미지 요청 실패 fallback은 미검증이다. 증거 및 재현: `verification/FINAL_POLISH_REPORT.md`, `experiments/exp-20261118-final-polish-v1/`.
+
+## 2026-11-25 발표용 UI V2
+
+- 실험 ID `exp-20261125-presentation-ui-v2`. 기준 `a3d604d`, 구현 `9ff7109`, 브랜치 `codex/presentation-ui-v2`.
+- 인트로, 여행 조건, 설문·대화, DNA, 추천 지도와 실시간 드래그 패널, 장소·찜·일정 화면을 개편했다.
+- 실제 여행 서버와 공급자 호출에서 200 성공 경로와 HTTP 502 실패가 모두 관찰됐다. 화면별 결과, 뷰포트 및 실제·fixture 구분은 [검증 보고서](presentation/ui-v2/VERIFICATION.md)를 참고한다.
+- Android 번들은 생성됐다. ADB에 연결된 실행 대상이 없어 네이티브 지도, OS 키보드, 네이티브 제스처 검증은 남아 있다.
+- 실험 방법과 증거는 [실험 README](experiments/exp-20261125-presentation-ui-v2/README.md), 보관 위치와 무결성 확인은 [아카이브 기록](experiments/exp-20261125-presentation-ui-v2/ARCHIVE.md)에 기록한다.
+
+## 2026-11-25 백엔드 안정화·사진 보강
+
+- 실험 `exp-20261125-image-enrichment`, 기준 `cffd8d4`, 구현 `7b737db` 및 대화 레이아웃 `65eebc1`.
+- Gemini 공급자 오류를 인증·설정·한도·일시 장애·효과가 불분명한 타임아웃·응답 형식으로 구분했다. 제한된 서버 재시도와 중복 요청 제어를 적용했다. 기존 성공 응답 계약과 일정 배정을 사용한다.
+- 기존 실제 서울 추천 후보 16곳에서 검증 사진을 0곳에서 8곳으로 늘렸다. 카카오 후보 4곳에는 Wikimedia Commons 사진을 연결했다. 별도의 신규 실제 추천 결과와 성능 수치는 [검증 결과](presentation/image-enrichment/VERIFICATION.md)에 있다.
+- 포토코리아는 기존 인증 요청에서 403이 관찰됐다. 공급자 승인 후 실제 응답을 검증할 수 있다. 네이티브 기기 동작, 공급자 장기 가용성과 전체 사진 라이선스 적용 범위 검토는 남아 있다.
+- [사진별 판정](presentation/image-enrichment/PHOTO_SOURCES.md) · [실험 README](experiments/exp-20261125-image-enrichment/README.md) · [보관 기록](experiments/exp-20261125-image-enrichment/ARCHIVE.md)
+
+## 2026-11-25 Golden Path 발표
+
+- 실험 `exp-20261125-golden-path`, 기준 `9c0dc1a`, 구현 `ffe0b3f`. [실험 README](experiments/exp-20261125-golden-path/README.md)
+- 단일 실제 서울 2박 3일 세션의 후보 16곳과 검증 사진 10장을 고정했다. 기존 일정 로직의 방문 15곳, 확정 키워드, 저장 동작과 입력 불일치 처리를 Expo Web에서 5회 연속 확인했다. [반복 검증](presentation/final/VERIFICATION.md)
+- 외부 HTTPS 차단 실행에서 기록과 로컬 사진은 재생됐다. 인터넷이 없는 지도는 로컬 영상으로 대응한다. 예비 영상과 발표 스크린샷은 [발표 패키지](presentation/final/README.md)에 있다.
+- Android 번들 빌드는 통과했다. Android·iOS 물리 기기 실행과 장기적인 상류 API 가용성은 미검증이다. 다음 현장 확인 대상은 행사 네트워크에서의 타일 로딩과 실제 발표 장비의 영상 재생이다.
+- Drive 경로는 `Research/Travel-DNA/experiments/exp-20261125-golden-path/`이다. [아카이브 기록](experiments/exp-20261125-golden-path/ARCHIVE.md)

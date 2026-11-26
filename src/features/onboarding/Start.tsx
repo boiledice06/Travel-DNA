@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, Icon, Screen } from '../../components/common/UI';
+import { Button, Screen } from '../../components/common/UI';
+import { Helix, Reveal } from '../../components/common/Motion';
 import { ui } from '../../components/common/ui.styles';
 import { useTravel } from '../../hooks/useTravel';
 export default function Start() {
@@ -10,9 +11,9 @@ export default function Start() {
   const [nickname, setNickname] = useState(data.nickname);
   return (
     <Screen>
-      <View style={{ paddingTop: 32, gap: 20 }}>
-        <Icon name="finger-print-outline" size={54} color="#3DB8BC" />
-        <Text style={ui.eyebrow}>01 / YOUR NAME</Text>
+      <Reveal style={{ paddingTop: 30, gap: 20 }}>
+        <Text style={ui.eyebrow}>Travel DNA</Text>
+        <Helix />
         <Text style={ui.title}>어떤 이름으로{'\n'}여행을 시작할까요?</Text>
         <Text style={ui.body}>닉네임 하나면 충분해요.{'\n'}나를 위한 추천을 함께 찾아볼게요.</Text>
         <View>
@@ -24,7 +25,6 @@ export default function Start() {
             onChangeText={setNickname}
             maxLength={16}
             placeholder="예: 민서"
-            autoFocus
             returnKeyType="next"
           />
         </View>
@@ -38,7 +38,7 @@ export default function Start() {
           }}
         />
         <Button title="뒤로" secondary onPress={() => router.back()} />
-      </View>
+      </Reveal>
     </Screen>
   );
 }

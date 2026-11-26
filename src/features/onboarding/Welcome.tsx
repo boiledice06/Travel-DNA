@@ -1,95 +1,112 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Image, Linking, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
+import Animated, {
+  cancelAnimation,
+  Easing,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { Button, Icon } from '../../components/common/UI';
-import { ui } from '../../components/common/ui.styles';
+import { Reveal } from '../../components/common/Motion';
 import { useTravel } from '../../hooks/useTravel';
+import { presentationMode } from '../../services/presentation/demo';
+import { theme } from '../../theme';
 import { s } from './onboarding.styles';
+
 export default function Welcome() {
   const router = useRouter();
-  const { start } = useTravel();
-  const [imageFailed, setImageFailed] = useState(false);
+  const { start, completeOnboarding } = useTravel();
+  const reduce = useReducedMotion();
+  const scale = useSharedValue(1);
+  useEffect(() => {
+    if (!reduce)
+      scale.value = withTiming(1.09, { duration: 11000, easing: Easing.out(Easing.quad) });
+    return () => cancelAnimation(scale);
+  }, [reduce, scale]);
+  const photoMotion = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+
   return (
-    <SafeAreaView style={s.root}>
-      <ScrollView
-        contentContainerStyle={{
-          paddingBottom: 28,
-          maxWidth: 760,
-          alignSelf: 'center',
-          width: '100%',
-        }}
-      >
-        <View style={s.hero}>
-          {!imageFailed && (
-            <Image
-              source={require('../../../assets/seoul-night.jpg')}
-              style={s.heroPhoto}
-              resizeMode="cover"
-              onError={() => setImageFailed(true)}
-              accessibilityLabel="N서울타워에서 바라본 서울 야경"
-            />
-          )}
-          <View style={s.logo}>
-            <Icon name="finger-print-outline" size={26} />
-            <Text style={{ fontWeight: '700', color: '#174A7E', letterSpacing: 1 }}>
-              TRAVEL DNA
+    <View style={s.root}>
+      <StatusBar style="light" />
+      <Animated.View pointerEvents="none" style={[s.photoLayer, photoMotion]}>
+        <Image
+          source={require('../../../assets/seoul-night.jpg')}
+          style={s.heroPhoto}
+          resizeMode="cover"
+          accessibilityLabel="N서울타워에서 바라본 서울 야경"
+        />
+      </Animated.View>
+      <View pointerEvents="none" style={s.shade} />
+      <SafeAreaView style={s.safe}>
+        <ScrollView contentContainerStyle={s.hero}>
+          <Reveal style={s.logo}>
+            <Icon name="finger-print-outline" size={24} color={theme.colors.mint} />
+            <Text style={s.wordmark}>Travel DNA</Text>
+          </Reveal>
+          <View style={s.content}>
+            <Reveal delay={75} style={s.story}>
+              <Text style={s.destination}>서울 · 2박 3일</Text>
+              <Text accessibilityRole="header" style={s.heroTitle}>
+                서울을 여행하는{'\n'}나만의 방식
+              </Text>
+              <Text style={s.description}>
+                좋아하는 장면에서 출발해{'\n'}내 취향을 담은 3일을 만들어 보세요.
+              </Text>
+            </Reveal>
+            <Reveal delay={150} style={s.actions}>
+              <Button
+                title="서울 여행 시작하기"
+                icon="arrow-forward"
+                appearance="light"
+                onPress={() => {
+                  if (!presentationMode) return router.push('/onboarding/start');
+                  start('발표', false);
+                  completeOnboarding();
+                  router.replace('/(tabs)');
+                }}
+              />
+              {!presentationMode && (
+                <Button
+                  title="데모로 먼저 둘러보기"
+                  appearance="ghost"
+                  onPress={() => {
+                    start('민서', true);
+                    router.push('/onboarding/dna');
+                  }}
+                />
+              )}
+            </Reveal>
+            <Text style={s.credit}>
+              서울 야경 ·{' '}
+              <Text
+                accessibilityRole="link"
+                style={s.creditLink}
+                onPress={() =>
+                  Linking.openURL(
+                    'https://commons.wikimedia.org/wiki/File:City_of_Seoul_View_From_N_Seoul_Tower.JPG',
+                  )
+                }
+              >
+                Penmerahpenbiru
+              </Text>
+              {' · '}
+              <Text
+                accessibilityRole="link"
+                style={s.creditLink}
+                onPress={() => Linking.openURL('https://creativecommons.org/licenses/by/3.0/')}
+              >
+                CC BY 3.0
+              </Text>
+              {' · 화면 자름'}
             </Text>
           </View>
-          <View style={s.heroShade}>
-            <Text style={ui.eyebrow}>A JOURNEY THAT FEELS LIKE YOU</Text>
-            <Text style={s.heroTitle}>나의 취향으로{'\n'}완성하는 서울 3일</Text>
-          </View>
-        </View>
-        <View style={s.content}>
-          <Text style={s.credit}>
-            서울 야경 사진:{' '}
-            <Text
-              accessibilityRole="link"
-              onPress={() =>
-                Linking.openURL(
-                  'https://commons.wikimedia.org/wiki/File:City_of_Seoul_View_From_N_Seoul_Tower.JPG',
-                )
-              }
-            >
-              Penmerahpenbiru
-            </Text>{' '}
-            ·{' '}
-            <Text
-              accessibilityRole="link"
-              onPress={() => Linking.openURL('https://creativecommons.org/licenses/by/3.0/')}
-            >
-              CC BY 3.0
-            </Text>{' '}
-            (크기 조정·화면 자름)
-          </Text>
-          <Text style={ui.title}>서울에서 만나는{'\n'}나만의 여행</Text>
-          <Text style={ui.body}>
-            여행 취향을 발견하고, 나에게 맞는 장소를 연결해 보세요.{'\n'}여행 조건을 정하고 · 취향을
-            발견하고 · 서울을 탐색해요.
-          </Text>
-          <View style={ui.row}>
-            <Icon name="map-outline" color="#3DB8BC" />
-            <Text style={ui.small}>기억을 남기고 · 취향을 발견하고 · 지도로 떠나요</Text>
-          </View>
-          <Button
-            title="서울 여행 시작하기"
-            icon="arrow-forward"
-            onPress={() => router.push('/onboarding/start')}
-          />
-          <Button
-            title="데모로 먼저 둘러보기"
-            secondary
-            onPress={() => {
-              start('민서', true);
-              router.push('/onboarding/dna');
-            }}
-          />
-          <Text style={[ui.small, { textAlign: 'center' }]}>
-            회원가입 없이 시작해요. 기록은 이 기기에만 저장됩니다.
-          </Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }

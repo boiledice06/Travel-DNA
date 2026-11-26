@@ -1,7 +1,10 @@
 import { Linking, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, Icon, IconButton, Photo, Screen } from '../../components/common/UI';
+import { Button, Icon, IconButton, Screen } from '../../components/common/UI';
+import { PlaceMedia } from '../../components/place/PlaceMedia';
+import { Reveal } from '../../components/common/Motion';
+import { theme } from '../../theme';
 import { ui } from '../../components/common/ui.styles';
 import { useTravel } from '../../hooks/useTravel';
 import { attributeLabels, conflictLabels, regions } from '../../data/mock/places';
@@ -30,30 +33,20 @@ export default function PlaceDetail() {
       </Screen>
     );
   const saved = data.savedIds.includes(place.id);
+  const photo = place.photo;
   return (
     <View style={s.root}>
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom }}>
         <View>
-          <Photo
-            uri={place.image}
-            category={place.category}
-            style={place.image ? s.image : s.noImage}
-          />
+          <PlaceMedia place={place} style={place.photo ? s.image : s.noImage} />
           <View style={[s.back, { top: insets.top + 12 }]}>
             <IconButton icon="arrow-back" label="이전 화면으로" onPress={back} />
           </View>
-          {place.image ? (
-            <View style={s.imageCaption}>
-              <Text style={ui.small}>
-                {place.source === 'api'
-                  ? '사진 출처: 한국관광공사 TourAPI'
-                  : '여행 분위기 참고 이미지 · 실제 장소 사진 아님'}
-              </Text>
-            </View>
-          ) : null}
         </View>
-        <View style={s.body}>
-          <Text style={ui.eyebrow}>{regions[place.region].english}</Text>
+        <Reveal style={s.body}>
+          <Text style={ui.eyebrow}>
+            {regions[place.region].name} · {place.category}
+          </Text>
           <View style={ui.between}>
             <View style={{ flex: 1 }}>
               <Text style={[ui.title, { fontSize: 32 }]}>{place.name}</Text>
@@ -66,15 +59,44 @@ export default function PlaceDetail() {
               onPress={() => toggleSave(place.id)}
             />
           </View>
-          <Text style={ui.body}>{place.description}</Text>
-          {place.source === 'api' && !!place.image && (
+          {photo && (
+            <View style={s.photoCredit}>
+              <Text style={ui.label}>사진 자료</Text>
+              <Text style={ui.small}>
+                {photo.publisher} · {photo.author || '저작자 표기 없음'}
+                {photo.attribution && photo.attribution !== photo.author
+                  ? ` · ${photo.attribution}`
+                  : ''}
+              </Text>
+              <Text style={ui.small}>
+                <Text
+                  accessibilityRole="link"
+                  style={s.photoLink}
+                  onPress={() => Linking.openURL(photo.source_page)}
+                >
+                  원본 출처
+                </Text>
+                {' · '}
+                <Text
+                  accessibilityRole="link"
+                  style={s.photoLink}
+                  onPress={() => Linking.openURL(photo.license_url)}
+                >
+                  {photo.license}
+                </Text>
+                {photo.can_modify ? '' : ' · 변경 금지'}
+              </Text>
+            </View>
+          )}
+          {place.description ? <Text style={ui.body}>{place.description}</Text> : null}
+          {(place.photo?.provider === 'tourapi' || place.photo?.provider === 'gallery') && (
             <Text style={ui.small}>
               사진별 이용 조건을 확인해 주세요. 피사체의 권리를 침해하는 이용과 기업 CI·BI 이용은
               금지됩니다.{' '}
               <Text
                 accessibilityRole="link"
                 onPress={() => Linking.openURL('https://www.data.go.kr/data/15101578/openapi.do')}
-                style={{ color: '#174A7E', textDecorationLine: 'underline' }}
+                style={{ color: theme.colors.primary, textDecorationLine: 'underline' }}
               >
                 TourAPI 이용 안내
               </Text>
@@ -93,16 +115,23 @@ export default function PlaceDetail() {
                   {r.score !== null && (
                     <Text style={s.score}>
                       {r.score}
-                      <Text style={{ fontSize: 16, letterSpacing: 0, color: '#68788A' }}>
+                      <Text style={{ fontSize: 16, letterSpacing: 0, color: theme.colors.muted }}>
                         {' '}
                         / 100
                       </Text>
                     </Text>
                   )}
                 </View>
-                <Icon name="finger-print-outline" size={42} color="#3DB8BC" />
+                <Icon name="finger-print-outline" size={42} color={theme.colors.accent} />
               </View>
-              <Text style={{ fontSize: 16, lineHeight: 25, fontWeight: '600', color: '#174A7E' }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  lineHeight: 25,
+                  fontWeight: '600',
+                  color: theme.colors.primary,
+                }}
+              >
                 {r.reason}
               </Text>
               {place.source === 'curated-demo' && (
@@ -127,7 +156,7 @@ export default function PlaceDetail() {
                 <Text style={ui.subtitle}>나의 취향과 연결해 보면</Text>
                 {r.matchedAttributes.map((k) => (
                   <View key={k} style={s.feature}>
-                    <Icon name="checkmark-circle-outline" color="#3DB8BC" size={19} />
+                    <Icon name="checkmark-circle-outline" color={theme.colors.accent} size={19} />
                     <Text style={[ui.body, { flex: 1 }]}>
                       {attributeLabels[k]} · 기록에서 선호한 특성과 일치
                     </Text>
@@ -135,7 +164,7 @@ export default function PlaceDetail() {
                 ))}
                 {r.conflictingAttributes.map((k) => (
                   <View key={k} style={s.feature}>
-                    <Icon name="alert-circle-outline" color="#F48B79" size={19} />
+                    <Icon name="alert-circle-outline" color={theme.colors.warm} size={19} />
                     <Text style={[ui.body, { flex: 1 }]}>
                       {conflictLabels[k]} · 기록에서 기피한 특성과 충돌 가능
                     </Text>
@@ -158,10 +187,10 @@ export default function PlaceDetail() {
           <Button
             title={saved ? '저장한 장소 · 저장 취소' : '다음 여행을 위해 저장'}
             icon={saved ? 'bookmark' : 'bookmark-outline'}
-            onPress={() => toggleSave(id)}
+            onPress={() => toggleSave(place.id)}
           />
           <Button title="지도 탐색 계속하기" secondary onPress={back} />
-        </View>
+        </Reveal>
       </ScrollView>
     </View>
   );
